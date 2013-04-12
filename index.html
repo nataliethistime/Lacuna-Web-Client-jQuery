@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Lacuna Expanse</title>
+	
+	<link rel="shortcut icon" href="assets/ui/favicon.ico"/>
+	<link rel="stylesheet" href="styles.css" type="text/css">
+	
+	<!-- Styles -->
+	<link rel="stylesheet" href="css/normalise.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="theme/jquery-ui.css">
+	
+	<!-- I think this is only for testing and development of the Delta Theme.
+	<script src="js/modernizr-2.0.6.min.js"></script> -->
+	
+	<!-- jQuery itself -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+	
+	<!-- Stuff for the Delta Theme -->
+	<script src="js/jquery.imgpreload.min.js"></script>
+	<script src="js/jquery-ui.toggleSwitch.js"></script>
+</head>
+<body id="body">
+
+<!-- Get the Loading Pulsar into position. -->
+<img src="assets/ui/pulsar.gif" id="pulsar" alt="Loading..."/>
+
+<!-- Parent for jQuery alert() confirm() and prompt() -->
+<div id="dialog"><div id="dialogText"></div></div>
+
+<!-- Check if JavaScript is operational. -->
+<div id="nojs"><p>Lacuna Expanse requires JavaScript to run - please enable it and try again.</p></div>
+<script type="text/javascript">
+	$('#nojs').remove();
+	
+	// Set up some globals.
+	window.server = 'us1';
+</script>
+
+<!-- Position the main HTML output for the JavaScript that follows. -->
+<div id="lacuna"></div>
+
+<!-- Now get stared with all the real JavaScript! -->
+<script type="text/javascript" src="load.js"></script>
+
+</body>
+</html>
