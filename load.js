@@ -3,45 +3,44 @@ $(document).ready(function() {
 	$('#lacuna').append([
 		'<div id="loadingScreen">',
 		'	<img src="assets/logo.png" id="loadingImage" alt="Lacuna Expanse is Loading..." />',
-		'	<div id="loadingProgressBar"><div id="loadingProgressBarMessage" style="position: absolute; float: left; margin-left: 25px; margin-top: 5px;"></div></div>',
+		'	<div id="loadingProgressBar" style="height: 25px;">',
+		'		<div id="loadingProgressBarMessage" style="position: absolute; float: left; margin-left: 25px; margin-top: 5px;"></div>',
+		'	</div>',
 		'</div>'
 	].join('')).ready(function() {
 	
 		$('#loadingProgressBar').progressbar({
-			value: 0,
+			value: 1,
 			
-			change: function() {
-				$('#loadingProgressBarMessage').html(makeRandomMessage());
-			},
-			
-			complete: function() {
-				console.log('Loading completed.');
+			complete: function(event, ui) {
+				Lacuna.debug('Loading completed.');
 				$('#loadingProgressBarMessage').html('Welcome!!');
 				
 				setTimeout(function() {
 					// Fade out and destroy the Loading Screen.
-					//$('#loadingScreen').fadeOut(500, function() {
-						//$('#loadingScreen').remove();
+					$('#loadingScreen').fadeOut(500, function() {
+						$('#loadingScreen').remove();
 						
-						//Login.build();
-					//});
+						Login.build();
+					});
 				}, 1000); // So that the 'Welcome!!' is visible. :)
 			}
 		});
-	});
-
-	loadModule('lacuna.js');
-	loadModule('login.js');
+		
+		// Begin loading.
+		loadModule('lacuna.js');
+		loadModule('login.js');
 	
+	});
 });
 
 var loadedModules = 0;
 function loadModule(name, successFunction) {
-	var url = window.location.href;
+	// $.getScript() only accepts full URLS.
+	var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	
-	// $.getScript() only accepts full URLs.
 	$.getScript(url + name).done(function() {
-		console.log('Correctly loaded ' + name + ' at ' + url + '.');
+		Lacuna.debug('Correctly loaded ' + name + ' at ' + url + '.');
 		
 		if (successFunction) {
 			successFunction();
@@ -50,11 +49,15 @@ function loadModule(name, successFunction) {
 		loadedModules++;
 		var percent = (loadedModules / 2) * 100; // 2 being the number of modules to load.
 		
-		$('#loadingProgressBar').progressbar({
-			value: percent
+		$("#loadingProgressBar .ui-progressbar-value").animate({
+			width: percent + '%'
+		}, 500, function() {
+			$('#loadingProgressBarMessage').html(percent + '% - ' + makeRandomMessage()); // TODO: Make this look prettier!
+			$('#loadingProgressBar').progressbar({value: percent}); // Register the percent change.
 		});
+		
 	}).fail(function() {
-		console.log('Failed to load ' + name + ' at ' + url + '.');
+		Lacuna.debug('Failed to load ' + name + ' at ' + url + '.');
 	});
 }
 
@@ -147,7 +150,7 @@ function makeRandomMessage() {
 	var number;
 	do {
 		number = Math.floor((Math.random()*100) + 1);
-	} while (number > 81)
+	} while (number > messages.length)
 	
 	return messages[number];
 }

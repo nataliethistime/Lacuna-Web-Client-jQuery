@@ -13,8 +13,6 @@ var Login = {
 		Lacuna.GameData.empire   = $('#empire').val();
 		Lacuna.GameData.password = $('#password').val();
 		
-		console.log('Logging into ' + Lacuna.GameData.empire + '.');
-		
 		Lacuna.send({
 			module: '/empire',
 			method: 'login',
