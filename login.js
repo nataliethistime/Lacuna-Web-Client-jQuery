@@ -42,6 +42,8 @@ Lacuna.Login = {
 				// Pop the sesion and empire name into a cookie.
 				$.cookie.write('lacuna-expanse-session-id', Lacuna.GameData.ClientData.SessionId, 2 * 60 * 60); // 2 hour session.
 				$.cookie.write('lacuna-expanse-empire-name', Lacuna.GameData.Empire.Name, 365 * 24 * 60 * 60); // 1 year.
+				
+				Lacuna.alert('You have now been logged into the game with a session Id of:<br />' + Lacuna.GameData.ClientData.SessionId); 
 			}
 		});
 	}
