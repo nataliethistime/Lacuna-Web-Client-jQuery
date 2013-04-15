@@ -1,5 +1,11 @@
 $(document).ready(function() {
 
+	// NOTE: this method affects ALL Ajax calls!
+	$.ajaxSetup({
+		async: false, // Need to do this or loading gets messed up sometimes.
+		cache: false
+	});
+
 	$('#lacuna').append([
 		'<div id="loadingScreen">',
 		'	<img src="assets/logo.png" id="loadingImage" alt="Lacuna Expanse is Loading..." />',
@@ -13,7 +19,7 @@ $(document).ready(function() {
 			value: 1,
 			
 			complete: function(event, ui) {
-				Lacuna.debug('Loading completed.');
+				$.Lacuna.debug('Loading completed.');
 				$('#loadingProgressBarMessage').html('Welcome!!');
 				
 				setTimeout(function() {
@@ -21,7 +27,7 @@ $(document).ready(function() {
 					$('#loadingScreen').fadeOut(500, function() {
 						$('#loadingScreen').remove();
 						
-						Lacuna.Login.build();
+						$.Lacuna.Login.build();
 					});
 				}, 1000); // So that the 'Welcome!!' is visible. :)
 			}
@@ -40,8 +46,8 @@ function loadModule(name, successFunction) {
 	var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	
 	$.getScript(url + name).done(function() {
-		if (typeof(Lacuna) === 'object') {
-			Lacuna.debug('Correctly loaded ' + name + ' at ' + url + '.');
+		if (typeof($.Lacuna) === 'object') {
+			$.Lacuna.debug('Correctly loaded ' + name + ' at ' + url + '.');
 		}
 		else {
 			console.log('Correctly loaded ' + name + ' at ' + url + '.');
@@ -62,8 +68,8 @@ function loadModule(name, successFunction) {
 		});
 		
 	}).fail(function() {
-		if (typeof(Lacuna) === 'object') {
-			Lacuna.debug('Failed to load ' + name + ' at ' + url + '.');
+		if (typeof($.Lacuna) === 'object') {
+			$.Lacuna.debug('Failed to load ' + name + ' at ' + url + '.');
 		}
 		else {
 			console.log('Failed to load ' + name + ' at ' + url + '.');
@@ -159,7 +165,7 @@ function makeRandomMessage() {
 	// Just keep generating the number until it's in range.
 	var number;
 	do {
-		number = Math.floor((Math.random()*100) + 1);
+		number = Math.floor((Math.random() * 100) + 1);
 	} while (number > messages.length)
 	
 	return messages[number];
