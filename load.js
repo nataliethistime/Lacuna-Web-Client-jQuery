@@ -21,7 +21,7 @@ $(document).ready(function() {
 					$('#loadingScreen').fadeOut(500, function() {
 						$('#loadingScreen').remove();
 						
-						Login.build();
+						Lacuna.Login.build();
 					});
 				}, 1000); // So that the 'Welcome!!' is visible. :)
 			}
@@ -40,7 +40,12 @@ function loadModule(name, successFunction) {
 	var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	
 	$.getScript(url + name).done(function() {
-		Lacuna.debug('Correctly loaded ' + name + ' at ' + url + '.');
+		if (typeof(Lacuna) === 'object') {
+			Lacuna.debug('Correctly loaded ' + name + ' at ' + url + '.');
+		}
+		else {
+			console.log('Correctly loaded ' + name + ' at ' + url + '.');
+		}
 		
 		if (successFunction) {
 			successFunction();
@@ -57,7 +62,12 @@ function loadModule(name, successFunction) {
 		});
 		
 	}).fail(function() {
-		Lacuna.debug('Failed to load ' + name + ' at ' + url + '.');
+		if (typeof(Lacuna) === 'object') {
+			Lacuna.debug('Failed to load ' + name + ' at ' + url + '.');
+		}
+		else {
+			console.log('Failed to load ' + name + ' at ' + url + '.');
+		}
 	});
 }
 

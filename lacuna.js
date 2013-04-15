@@ -4,10 +4,16 @@ var Lacuna = {
 			dialogClass: 'no-close',
 			title: 'Alert!',
 			modal: true, // Make the back ground black.
-			show: 500, // Show animation duration.
-			hide: 500, // Hide animation duration.
+			show: {
+				effect: 'fade',
+				duration: 500
+			},
+			hide: {
+				effect: 'fade',
+				duration: 500
+			},
 			open: function(event, ui) {
-				$('#dialogText').text(text);
+				$('#dialogText').html(text);
 			},
 			close: function(event, ui) {
 				$('#dialogText').text('');
@@ -17,7 +23,8 @@ var Lacuna = {
 				click: function() {
 					$(this).dialog('close');
 				}
-			}]
+			}],
+			resizable: false
 		});
 	},
 	
@@ -36,11 +43,11 @@ var Lacuna = {
 			}
 		}
 	},
-	showPulsar: function() {
+	showPulser: function() {
 		$('#pulsar').css({'visibility': 'visible'});
 	},
 	
-	hidePulsar: function() {
+	hidePulser: function() {
 		$('#pulsar').css({'visibility': 'hidden'});
 	},
 	send: function(args) {
@@ -79,6 +86,29 @@ var Lacuna = {
 	},
 	
 	GameData: {
-		// This is the game cache. For storing things like the: session Id, E balance, etc, etc.
+		// This is the game cache. For storing things like the: Session Id, E balance, etc, etc.
+		ClientData: {},
+		Empire: {}
+	},
+	
+	Panel: {
+		NewTabbedPanel: function(tabTitle, tabName, draggable, content) {
+			$('#lacuna').append([
+				'<div id="', tabName, '" title="', tabTitle, '" style="display:none;">',
+				content.join(''),
+				'</div>'
+			].join(''));
+			
+			// Initialize Tabs and fancy Buttons.
+			$('#' + tabName).tabs();
+			$('#' + tabName + ' :button').button();
+			
+			// .. and then the Dialog that everything sits in.
+			$('#' + tabName).dialog({
+				resizable: false,
+				draggable: draggable || false
+			});
+			$('#' + tabName).fadeIn(500);
+		}
 	}
 };
