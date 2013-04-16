@@ -32,3 +32,13 @@
 	text-align: center;
 	width: 65%;
 }
+
+/* Div that covers the entire screen. */
+#lacuna {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	overflow: hidden;
+}

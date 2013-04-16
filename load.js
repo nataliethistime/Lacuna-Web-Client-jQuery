@@ -3,7 +3,7 @@ $(document).ready(function() {
 	// NOTE: this method affects ALL Ajax calls!
 	$.ajaxSetup({
 		async: false, // Need to do this or loading gets messed up sometimes.
-		cache: false
+		cache: false // Has no benefit to the game.
 	});
 
 	$('#lacuna').append([
@@ -35,6 +35,7 @@ $(document).ready(function() {
 		
 		// Begin loading.
 		loadModule('lacuna.js');
+		loadModule('game.js');
 		loadModule('login.js');
 	
 	});
@@ -58,7 +59,7 @@ function loadModule(name, successFunction) {
 		}
 		
 		loadedModules++;
-		var percent = (loadedModules / 2) * 100; // 2 being the number of modules to load.
+		var percent = Math.round((loadedModules / 3) * 100); // 3 being the number of modules to load.
 		
 		$("#loadingProgressBar .ui-progressbar-value").animate({
 			width: percent + '%'

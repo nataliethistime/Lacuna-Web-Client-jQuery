@@ -26,10 +26,15 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						text: 'Okay',
 						click: function() {
 							$(this).dialog('close');
+							$(this).dialog('destroy');
 						}
 					}],
 					resizable: false
 				});
+			},
+			
+			GetSession: function() {
+				return this.GameData.ClientData.SessionId || '';
 			},
 	
 			// Posts a debug message if debug mode is switched on,
@@ -72,8 +77,19 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			
 					// Callbacks
 					success: function (data, status, xhr) {
+						
+						// Cache the status block for later use.
+						if (data.result.status) {
+							$.Lacuna.GameData.Status = data.result.status;
+							
+							// Then delete it from data to avoid duplication of data.
+							delete data.result.status;
+						}
+						
 						// 'this' isn't the Lacuna object.
 						$.Lacuna.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
+						
+						// ONWARD!
 						args.success(data);
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
@@ -94,7 +110,8 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			GameData: {
 				// This is the game cache. For storing things like the: Session Id, E balance, etc, etc.
 				ClientData: {},
-				Empire: {}
+				Empire: {},
+				Status: {}
 			},
 	
 			Panel: {
@@ -128,17 +145,16 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						}
 					});
 			
-					var returnValue = {
+					var tabbedPanel = {
 						el: el,
 						close: function() {
 							el.dialog('close');
 						}
 					};
 			
-					return returnValue;
+					return tabbedPanel;
 				}
 			}
 		};
-
 	}
 })();
