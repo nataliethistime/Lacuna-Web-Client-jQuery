@@ -34,7 +34,7 @@
 }
 
 /* Div that covers the entire screen. */
-#lacuna {
+#lacuna, #mainScreen {
 	position: absolute;
 	top: 0;
 	bottom: 0;

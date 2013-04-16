@@ -9,10 +9,7 @@
 				
 				$('#lacuna').html([
 					'<div id="mainScreen">',
-					'	<div id="buildingsParent" style="',
-//						'width: 1500px;',
-//						'height: 1500px',
-					'">',
+					'	<div id="buildingsParent">',
 					'	</div>',
 					'</div>'
 				].join(''))
@@ -55,6 +52,9 @@
 							].join('');
 						}
 						
+						$('#lacuna').css({
+							'background-image' : 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')'
+						});
 						$('#buildingsParent').html([
 							'<div id="buildingsDraggableChild">',
 								content.join(''),
