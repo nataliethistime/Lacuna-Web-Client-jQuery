@@ -12,10 +12,6 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						effect: 'fade',
 						duration: 500
 					},
-					hide: {
-						effect: 'fade',
-						duration: 500
-					},
 					open: function(event, ui) {
 						$('#dialogText').html(text);
 					},
@@ -25,8 +21,9 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					buttons: [{
 						text: 'Okay',
 						click: function() {
-							$(this).dialog('close');
-							$(this).dialog('destroy');
+							$(this).parent().fadeOut(500, function() {
+								$(this).dialog('destroy').empty().remove();
+							});
 						}
 					}],
 					resizable: false
@@ -89,19 +86,29 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						// 'this' isn't the Lacuna object.
 						$.Lacuna.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
 						
-						// ONWARD!
-						args.success(data);
+						if (data.result) {
+							// ONWARD!
+							args.success(data);
+						}
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
 						var error = $.parseJSON(jqXHR.responseText).error;
-				
-						// Call the failure function, or alert popup the human readable error message.
-						if (typeof(args.failure) === 'function') {
-							args.failure(error);
+						
+						if (error.code == 1006) {
+							$('#lacuna').html('');
+							$.Lacuna.Login.build();
+								
+							$.Lacuna.alert('Session expired. :(');
 						}
 						else {
-							// Same deal as above.
-							$.Lacuna.alert(error.message);
+							// Call the failure function, or alert popup the human readable error message.
+							if (typeof(args.failure) === 'function') {
+								args.failure(error);
+							}
+							else {
+								// Same deal as above.
+								$.Lacuna.alert(error.message);
+							}
 						}
 					}
 				});
@@ -135,20 +142,22 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						show: {
 							effect: 'fade',
 							duration: 500
-						},
-						hide: {
-							effect: 'fade',
-							duration: 500,
-							complete: function() {
-								el.dialog('destroy');
-							}
 						}
 					});
 			
 					var tabbedPanel = {
 						el: el,
-						close: function() {
-							el.dialog('close');
+						close: function(callback) {
+							el.parent().fadeOut(500, function() {
+								
+								// Clear the DOM element.
+								el.dialog('destroy').empty().remove();
+								
+								// Do the callback.
+								if (typeof(callback) != 'undefined') {
+									callback();
+								}
+							});
 						}
 					};
 			

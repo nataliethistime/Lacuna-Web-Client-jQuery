@@ -24,10 +24,7 @@
 				$('#loginButton').click(this.login);
 			},
 			destroy: function(callback) {
-				this.panel.close();
-				
-				// Wait for the Dialog to fade out.
-				setTimeout(callback, 600);
+				this.panel.close(callback);
 			},
 	
 			login: function() {
