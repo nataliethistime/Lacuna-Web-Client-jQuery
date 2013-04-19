@@ -15,9 +15,6 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					open: function(event, ui) {
 						$('#dialogText').html(text);
 					},
-					close: function(event, ui) {
-						$('#dialogText').text('');
-					},
 					buttons: [{
 						text: 'Okay',
 						click: function() {
@@ -122,18 +119,41 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			},
 	
 			Panel: {
-				NewTabbedPanel: function(tabTitle, tabName, draggable, content) {
-					$('#lacuna').append([
-						'<div id="', tabName, '" title="', tabTitle, '" style="display:none;">',
-						content.join(''),
+				NewTabbedPanel: function(name, options, draggable) {
+					// This method uses some tricks to generate the HTML that jQuery accepts for tabs.
+					// Check out http://jqueryui.com/tabs/ to see what I mean exactly.
+					//
+					// If you're only just starting in this codebase, please don't worry about how this code works,
+					// it's there and I've made it work for you. :)
+					
+					var tabHeaders = ['<ul>'],
+						tabContent = [],
+						finalContent = [],
+						DOMName = name.replace(' ', '_');
+						
+					for (var i = 0; i < options.length; i++) {
+						var tab = options[i];
+							
+						tabHeaders[tabHeaders.length] = '<li><a href="#' + DOMName + '_Tab-' + (i + 1) + '">' + tab.name + '</a></li>';
+						tabContent[tabContent.length] = '<div id="' + DOMName + '_Tab-' + (i + 1) + '">' + tab.content + '</div>';
+					}
+						
+					// Finish it all off.
+					tabHeaders[tabHeaders.length] = '</ul>';
+					finalContent = [
+						'<div id="', DOMName, '_Tab" title="', name, '">',
+							tabHeaders.join(''),
+							tabContent.join(''),
 						'</div>'
-					].join(''));
-			
-					var el = $('#' + tabName);
+					];
+						
+					$('#lacuna').append(finalContent.join(''));
+						
+					var el = $('#' + DOMName + '_Tab');
 			
 					// Initialize Tabs and fancy Buttons.
 					el.tabs();
-					$('#' + tabName + ' :button').button();
+					$('#' + DOMName + '_Tab' + ' :button').button();
 			
 					// .. and then the Dialog that everything sits in.
 					el.dialog({
@@ -142,9 +162,14 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						show: {
 							effect: 'fade',
 							duration: 500
+						},
+						hide: {
+							effect: 'fade',
+							duration: 500
 						}
 					});
-			
+						
+					// Create my custom Panel object.
 					var tabbedPanel = {
 						el: el,
 						close: function(callback) {
@@ -155,12 +180,12 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 								
 								// Do the callback.
 								if (typeof(callback) != 'undefined') {
-									callback();
+										callback();
 								}
 							});
 						}
 					};
-			
+					
 					return tabbedPanel;
 				}
 			}

@@ -8,17 +8,15 @@
 				$.Lacuna.GameData.Empire.Name = $.cookie.read('lacuna-expanse-empire-name') || '';
 			
 				// Buld the Login Panel.
-				this.panel = $.Lacuna.Panel.NewTabbedPanel('Login Panel', 'loginPanel', false, [
-					'<div id="loginPanelTabs">',
-					'	<ul>',
-					'		<li><a href="#loginPanelTabs-1">Login</a></li>',
-					'	</ul>',
-					'	<div id="loginPanelTabs-1">',
-					'		<input type="text" id="empire" value="', $.Lacuna.GameData.Empire.Name, '" /><br />',
-					'		<input type="password" id="password" /><br />',
-					'		<button type="button" id="loginButton">Login</button><br />',
-					'	</div>',
-					'</div>'
+				this.panel = $.Lacuna.Panel.NewTabbedPanel('Login Panel', [
+					{
+						name: 'Login',
+						content: [
+							'<input type="text" id="empire" value="', $.Lacuna.GameData.Empire.Name, '" /><br />',
+							'<input type="password" id="password" /><br />',
+							'<button type="button" id="loginButton">Login</button><br />'
+						].join('')
+					}
 				]);
 				
 				$('#loginButton').click(this.login);
