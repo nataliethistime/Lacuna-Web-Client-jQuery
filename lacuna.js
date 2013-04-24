@@ -3,12 +3,21 @@
 if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 
 		$.Lacuna = {
-			alert: function(text) {
+			// Simple dialog in replacement of Javascript's
+			// alert() function. This one allows the title
+			// bar text to be specified. Also, it's got
+			// fades and fancy styles that allow it to fit
+			// in with the rest of the client. :)
+			alert: function(text, title) {
 				$('#dialog').dialog({
 					dialogClass: 'no-close',
-					title: 'Alert!',
+					title: title || 'Alert!',
 					modal: true, // Make the background dark.
 					show: {
+						effect: 'fade',
+						duration: 500
+					},
+					hide: {
 						effect: 'fade',
 						duration: 500
 					},
@@ -26,11 +35,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					resizable: false
 				});
 			},
-			
-			GetSession: function() {
-				return this.GameData.ClientData.SessionId || '';
-			},
-	
+
 			// Posts a debug message if debug mode is switched on,
 			// either via the URL parameter or window.debug
 			// decalred in index.html.
@@ -46,13 +51,20 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					}
 				}
 			},
-			showPulser: function() {
-				$('#pulsar').css({'visibility': 'visible'});
-			},
-	
-			hidePulser: function() {
-				$('#pulsar').css({'visibility': 'hidden'});
-			},
+
+			// Function for sending data to the server. An
+			// object is passed in which looks like the 
+			// following:
+			//
+			//{
+			//	method: 'login',
+			//	module: '/empire',
+			//	params: [
+			//		'$stuff'
+			//	],
+			//	success: function(receivedData){},
+			//	failure: function(receivedError){}
+			//}
 			send: function(args) {
 				var data = JSON.stringify({
 					'jsonrpc': '2.0',
@@ -89,16 +101,20 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						}
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
+						// Get the error block the server returned.
 						var error = $.parseJSON(jqXHR.responseText).error;
 						
 						if (error.code == 1006) {
-							$('#lacuna').html('');
-							$.Lacuna.Login.build();
+							// Clear all the panels.
+							$('#lacuna').fadeOut(500, function() {
+								$('#lacuna').html('');
+								$.Lacuna.Login.build();
 								
-							$.Lacuna.alert('Session expired. :(');
+								$.Lacuna.alert('Session expired. :(');
+							});
 						}
 						else {
-							// Call the failure function, or alert popup the human readable error message.
+							// Call the failure function, or alert the human readable error message.
 							if (typeof(args.failure) === 'function') {
 								args.failure(error);
 							}
@@ -110,9 +126,24 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					}
 				});
 			},
+
+			// Easier to type, 
+			GetSession: function() {
+				return this.GameData.ClientData.SessionId || '';
+			},
+			GetCurrentPlanet: function() {
+				return this.GameData.Status.body.id || '';
+			},
+			showPulser: function() {
+				$('#pulsar').css({'visibility': 'visible'});
+			},
 	
+			hidePulser: function() {
+				$('#pulsar').css({'visibility': 'hidden'});
+			},
+			
+			// This is the game cache. For storing things like the: Session Id, Status, etc etc...
 			GameData: {
-				// This is the game cache. For storing things like the: Session Id, E balance, etc, etc.
 				ClientData: {},
 				Empire: {},
 				Status: {}
@@ -129,7 +160,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					var tabHeaders = ['<ul>'],
 						tabContent = [],
 						finalContent = [],
-						DOMName = name.replace(' ', '_');
+						DOMName = name.replace(' ', '_'); // So the DOM doesn't get confused.
 						
 					for (var i = 0; i < options.length; i++) {
 						var tab = options[i];

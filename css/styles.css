@@ -4,13 +4,14 @@
 	left: 50%;
 	width: 84px;  /* Actual width*/
 	height: 64px; /* and height of the pulsar.*/
-	margin-top: -50px; /*set to a negative number 1/2 of your height*/
-	margin-left: -75px; /*set to a negative number 1/2 of your width*/
+	margin-top: -42px; /*set to a negative number 1/2 of your height*/
+	margin-left: -32px; /*set to a negative number 1/2 of your width*/
 	visibility: hidden;
 }
 
 #body {
 	background-image: url('../assets/ui/field.png');
+	font: 13px/1.231 arial, helvetica, clean, sans-serif;
 }
 
 #nojs {

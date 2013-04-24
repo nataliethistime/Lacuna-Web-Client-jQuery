@@ -14,10 +14,10 @@ $(document).ready(function() {
 		'	</div>',
 		'</div>'
 	].join('')).ready(function() {
-	
+
 		$('#loadingProgressBar').progressbar({
 			value: 1,
-			
+		
 			complete: function(event, ui) {
 				$.Lacuna.debug('Loading completed.');
 				$('#loadingProgressBarMessage').html('Welcome!!');
@@ -35,14 +35,17 @@ $(document).ready(function() {
 		
 		// Begin loading.
 		loadModule('lacuna.js');
+		loadModule('library.js');
 		loadModule('game.js');
+		loadModule('mapPlanet.js');
+		loadModule('building.js');
 		loadModule('login.js');
 	
 	});
 });
 
 var loadedModules = 0;
-function loadModule(name, successFunction) {
+function loadModule(name) {
 	// $.getScript() only accepts full URLS.
 	var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	
@@ -54,12 +57,8 @@ function loadModule(name, successFunction) {
 			console.log('Correctly loaded ' + name + ' at ' + url + '.');
 		}
 		
-		if (successFunction) {
-			successFunction();
-		}
-		
 		loadedModules++;
-		var percent = Math.round((loadedModules / 3) * 100); // 3 being the number of modules to load.
+		var percent = Math.round((loadedModules / 6) * 100); // 6 being the number of modules to load.
 		
 		$("#loadingProgressBar .ui-progressbar-value").animate({
 			width: percent + '%'
@@ -161,13 +160,13 @@ function makeRandomMessage() {
 		'delving into the unthinkable',
 		'doing the impossible',
 		'pushing the button'
-	];
-	
+	],
+		number;
+
 	// Just keep generating the number until it's in range.
-	var number;
 	do {
 		number = Math.floor((Math.random() * 100) + 1);
-	} while (number > messages.length)
+	} while (number > messages.length);
 	
-	return messages[number];
+	return messages[number] || 'finding the bugs'; // lol
 }
