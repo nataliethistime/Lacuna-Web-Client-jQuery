@@ -7,7 +7,7 @@
 			renderPlanet: function(id) {
 				var buildingsTemplate = [];
 
-				// So that this method can be treated as an 'update planet view'
+				// So that this method can be treated as an 'update planet view'.
 				id = id || $.Lacuna.GameData.Status.body.id;
 
 				// Clear the intervals.

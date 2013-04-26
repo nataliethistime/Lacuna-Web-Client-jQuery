@@ -1,5 +1,21 @@
 $(document).ready(function() {
 
+	// This snippet prevents the user from navigating to
+	// one of the tabs that was on the screen when they 
+	// would've hit "F5" on their keyboard.
+	// When they do this, there's a lot of funk happening,
+	// so, I've found it's best to just remove the hash
+	// and load afresh.
+	if (window.location.hash != '') {
+		var newUrl = window.location.protocol + 
+	                 '//'                     +
+	                 window.location.hostname + 
+	                 (window.location.pathname || '') +
+	                 (window.location.search   || '');
+		window.location.href = newUrl; // Automatically refreshes.
+		window.location.hash = ''; // Remove the hash to prevent infate looping.
+	}
+
 	// NOTE: this method affects ALL Ajax calls!
 	$.ajaxSetup({
 		async: false, // Need to do this or loading gets messed up sometimes.
@@ -77,7 +93,7 @@ function loadModule(name) {
 	});
 }
 
-function makeRandomMessage() {
+var makeRandomMessage = function() {
 	var messages = [
 		'loading ships',
 		'starting engines',
@@ -161,7 +177,7 @@ function makeRandomMessage() {
 		'doing the impossible',
 		'pushing the button'
 	],
-		number;
+	/*var*/	number;
 
 	// Just keep generating the number until it's in range.
 	do {

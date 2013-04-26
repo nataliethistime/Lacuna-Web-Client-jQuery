@@ -13,9 +13,9 @@
 						'cursor: url(\'' + window.assetsUrl + '/ui/web/openhand.cur\'), default;',
 					'">',
 
-					// Bottom section of the screen, with the
+					// TODO: Bottom section of the screen, with the
 					// planet list and resource information of
-					// the selected planet. (TODO)
+					// the selected planet.
 					'	</div>',
 					'</div>'
 				].join(''));

@@ -150,20 +150,20 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			},
 	
 			Panel: {
-				NewTabbedPanel: function(name, options, draggable) {
+				newTabbedPanel: function(/*name, options, draggable*/ panel) {
 					// This method uses some tricks to generate the HTML that jQuery accepts for tabs.
 					// Check out http://jqueryui.com/tabs/ to see what I mean exactly.
 					//
 					// If you're only just starting in this codebase, please don't worry about how this code works,
 					// it's there and I've made it work for you. :)
 					
-					var tabHeaders = ['<ul>'],
-						tabContent = [],
+					var tabHeaders   = ['<ul>'],
+						tabContent   = [],
 						finalContent = [],
-						DOMName = name.replace(' ', '_'); // So the DOM doesn't get confused.
+						DOMName      = panel.name.replace(' ', '_'); // So the DOM doesn't get confused.
 						
-					for (var i = 0; i < options.length; i++) {
-						var tab = options[i];
+					for (var i = 0; i < panel.tabs.length; i++) {
+						var tab = panel.tabs[i];
 							
 						tabHeaders[tabHeaders.length] = '<li><a href="#' + DOMName + '_Tab-' + (i + 1) + '">' + tab.name + '</a></li>';
 						tabContent[tabContent.length] = '<div id="' + DOMName + '_Tab-' + (i + 1) + '">' + tab.content + '</div>';
@@ -172,24 +172,56 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					// Finish it all off.
 					tabHeaders[tabHeaders.length] = '</ul>';
 					finalContent = [
-						'<div id="', DOMName, '_Tab" title="', name, '">',
+						'<div id="', DOMName, '_Tab" title="', panel.name, '">',
+							// Place stuff above the tabs.
+							panel.preTabContent ? panel.preTabContent : '',
+							
+							// Then the Tabs themselves.
 							tabHeaders.join(''),
 							tabContent.join(''),
 						'</div>'
 					];
 						
 					$('#lacuna').append(finalContent.join(''));
-						
+
+					// Do this here ti get a current version of the DOM Object.
 					var el = $('#' + DOMName + '_Tab');
+
+					// Create my custom Panel object.
+					// Do this up here so that it can be used in .tabs().
+					var tabbedPanel = {
+						el: el,
+						close: function(callback) {
+							el.parent().fadeOut(500, function() {
+								
+								// Clear the DOM element.
+								el.dialog('destroy').empty().remove();
+								
+								// Run the call back, if there is one.
+								if (typeof(callback) != 'undefined') {
+										callback();
+								}
+							});
+						}
+					};
 			
-					// Initialize Tabs and fancy Buttons.
-					el.tabs();
-					$('#' + DOMName + '_Tab' + ' :button').button();
+					// Initialize Tabs...
+					el.tabs({
+						active: 0, // Set the defualt tab open to the first one.
+						select: function(event, ui) {
+							var tab = panel.tabs[ui.index];
+
+							if (typeof(tab.select) === 'function') {
+								tab.select(tabbedPanel);
+							}
+						}
+					});
+					$('#' + DOMName + '_Tab' + ' :button').button(); // ... and the fancy Buttons!
 			
 					// .. and then the Dialog that everything sits in.
 					el.dialog({
 						resizable: false,
-						draggable: draggable || false,
+						draggable: panel.draggable || false,
 						show: {
 							effect: 'fade',
 							duration: 500
@@ -199,23 +231,6 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 							duration: 500
 						}
 					});
-						
-					// Create my custom Panel object.
-					var tabbedPanel = {
-						el: el,
-						close: function(callback) {
-							el.parent().fadeOut(500, function() {
-								
-								// Clear the DOM element.
-								el.dialog('destroy').empty().remove();
-								
-								// Do the callback.
-								if (typeof(callback) != 'undefined') {
-										callback();
-								}
-							});
-						}
-					};
 					
 					return tabbedPanel;
 				}
