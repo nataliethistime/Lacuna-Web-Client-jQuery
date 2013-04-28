@@ -22,6 +22,14 @@
 				
 				// Now for the fun stuff.
 				$.Lacuna.MapPlanet.renderPlanet($.Lacuna.GameData.Status.empire.home_planet_id);
+			},
+			// Does some stuff, opens the login Panel.
+			Start: function() {
+				$.Lacuna.Panel.panelWidth = 800/*px*/;
+				// A Panel's height can be decided manually or left up to jQuery.
+
+				// Open the login screen.
+				$.Lacuna.Login.build();
 			}
 		};
 	}

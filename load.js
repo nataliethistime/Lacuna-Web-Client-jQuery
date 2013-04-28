@@ -43,7 +43,7 @@ $(document).ready(function() {
 					$('#loadingScreen').fadeOut(500, function() {
 						$('#loadingScreen').remove();
 						
-						$.Lacuna.Login.build();
+						$.Lacuna.Game.Start();
 					});
 				}, 1000); // So that the 'Welcome!!' is visible. :)
 			}

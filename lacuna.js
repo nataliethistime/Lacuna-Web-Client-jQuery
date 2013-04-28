@@ -9,8 +9,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			// fades and fancy styles that allow it to fit
 			// in with the rest of the client. :)
 			alert: function(text, title) {
-				$('#dialog').dialog({
-					dialogClass: 'no-close',
+				$(document.createElement('div')).dialog({
 					title: title || 'Alert!',
 					modal: true, // Make the background dark.
 					show: {
@@ -22,14 +21,15 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						duration: 500
 					},
 					open: function(event, ui) {
-						$('#dialogText').html(text);
+						$(this).html(text);
+					},
+					close: function() {
+						$(this).dialog('destroy');
 					},
 					buttons: [{
 						text: 'Okay',
 						click: function() {
-							$(this).parent().fadeOut(500, function() {
-								$(this).dialog('destroy').empty().remove();
-							});
+							$(this).dialog('close');
 						}
 					}],
 					resizable: false
@@ -197,38 +197,50 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 								// Clear the DOM element.
 								el.dialog('destroy').empty().remove();
 								
-								// Run the call back, if there is one.
+								// Run the callback, if there is one.
 								if (typeof(callback) != 'undefined') {
 										callback();
 								}
 							});
+						},
+						gotoTab: function(index) {
+							el.tabs('option', 'selected', index);
 						}
 					};
-			
-					// Initialize Tabs...
-					el.tabs({
-						active: 0, // Set the defualt tab open to the first one.
-						select: function(event, ui) {
-							var tab = panel.tabs[ui.index];
 
-							if (typeof(tab.select) === 'function') {
-								tab.select(tabbedPanel);
-							}
-						}
-					});
-					$('#' + DOMName + '_Tab' + ' :button').button(); // ... and the fancy Buttons!
+					// Do some fancy Buttons!
+					$('#' + DOMName + '_Tab' + ' :button').button();
 			
 					// .. and then the Dialog that everything sits in.
 					el.dialog({
 						resizable: false,
 						draggable: panel.draggable || false,
+						width: panel.width || $.Lacuna.Panel.panelWidth,
 						show: {
 							effect: 'fade',
 							duration: 500
 						},
 						hide: {
 							effect: 'fade',
-							duration: 500
+							duration: 500,
+						},
+						open: function() {
+							// Initialize Tabs when the Dialog opens.
+							el.tabs({
+								active: 0, // Set the defualt tab open to the first one.
+								heightStyle: 'auto',
+								select: function(event, ui) {
+									var tab = panel.tabs[ui.index];
+
+									if (typeof(tab.select) === 'function') {
+										tab.select(tabbedPanel);
+									}
+								}
+							});
+						},
+						close: function() { // Called when the Dialog is closed with the 'X'.
+							// Clear the DOM element.
+							el.dialog('destroy').empty().remove();
 						}
 					});
 					

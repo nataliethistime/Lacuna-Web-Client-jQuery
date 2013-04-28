@@ -14,14 +14,43 @@
 						{
 							name: 'Login',
 							content: [
-								'<input type="text" id="empire" value="', $.Lacuna.GameData.Empire.Name, '" /><br />',
-								'<input type="password" id="password" /><br />',
-								'<button type="button" id="loginButton">Login</button><br />'
+								'<table class="centerTable" id="loginPanel">',
+								'	<tr>',
+								'		<td><label>Empire Name</label></td>',
+								'		<td><input type="text" id="empire" value="', $.Lacuna.GameData.Empire.Name, '" /></td>',
+								'	</tr>',
+								'	<tr>',
+								'		<td><label>Password</label>',
+								'		<td><input type="password" id="password" /></td>',
+								'	</tr>',
+								'	<tr>',
+								'		<td><label>Remember Empire?</label></td>',
+								'		<td>',
+								'			<input id="rememberEmpire" type="checkbox" checked="checked" />',
+								'			<button type="button" style="float:right;" id="loginButton">Login</button>',
+								'		</td>',
+								'	</tr>',
+								'</table>'
 							].join('')
+						},
+						{
+							name: 'Create Empire',
+							content: 'TODO!'
+						},
+						{
+							name: 'Forgot Password?',
+							content: 'TODO!'
 						}
 					]
 				});
 				
+				// Add the login event handlers.
+				$('#password').keydown(function(event) {
+					// Check if the 'enter' key was hit.
+					if (event.which === 13) {
+						$.Lacuna.Login.login();
+					}
+				});
 				$('#loginButton').click(this.login);
 			},
 			destroy: function(callback) {

@@ -43,3 +43,43 @@
 	left: 0;
 	overflow: hidden;
 }
+
+label {
+	width: 150px;
+}
+
+/* Remove the point from <li>'s. */
+.noDot {
+	list-style: none outside none;
+}
+
+.textbox, input[type="text"], input[type="password"] {
+	width: 250px;
+}
+
+.centerEverything {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.centerText {
+	text-align: center;
+}
+
+.centerTable {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+	/*
+	*
+	****************** DIALOGS ******************
+	*
+	*/
+
+
+/* Hide the glitchy close button at the top right of every Dialog. */
+.ui-dialog-titlebar-close {
+  visibility: hidden;
+}
