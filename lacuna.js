@@ -197,27 +197,6 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					// Do this here to get a current version of the DOM Object.
 					var el = $('#' + DOMName + '_Tab');
 
-					// Create my custom Panel object.
-					// Do this up here so that it can be used in .tabs().
-					var tabbedPanel = {
-						el: el,
-						close: function(callback) {
-							el.parent().fadeOut(500, function() {
-								
-								// Clear the DOM element.
-								el.dialog('destroy').empty().remove();
-								
-								// Run the callback, if there is one.
-								if (typeof(callback) != 'undefined') {
-										callback();
-								}
-							});
-						},
-						gotoTab: function(index) {
-							el.tabs('option', 'selected', index);
-						}
-					};
-
 					// Do some fancy Buttons!
 					$('#' + DOMName + '_Tab' + ' :button').button();
 			
@@ -239,11 +218,21 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 							el.tabs({
 								active: 0, // Set the defualt tab open to the first one.
 								heightStyle: 'auto',
-								select: function(event, ui) {
-									var tab = panel.tabs[ui.index];
+								activate: function(event, ui) {
+									var tab = panel.tabs[ui.newTab.index()];
 
+									// Generate the Tab object then pass it through.
 									if (typeof(tab.select) === 'function') {
-										tab.select(tabbedPanel);
+
+										var tabObject = {
+											el: ui.newTab,
+											index: ui.newTab.index(),
+											add: function(html) {
+												$(ui.newTab.context.hash).append(html);
+											}
+										};
+
+										tab.select(tabObject);
 									}
 								}
 							});
@@ -253,8 +242,24 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 							el.dialog('destroy').empty().remove();
 						}
 					});
-					
-					return tabbedPanel;
+
+					// Return a fancy Panel object.
+					return {
+						el: $('#' + DOMName + '_Tab'), // Get newest version of the jQuery object.
+						close: function(callback) {
+							this.el.dialog('close');
+
+							// Run the callback, if there is one.
+							// This should wait for the animation to finish,
+							// but it doesn't need to, so far...
+							if (typeof(callback) != 'undefined') {
+									callback();
+							}
+						},
+						gotoTab: function(index) {
+							this.el.tabs('option', 'active', index);
+						}
+					};
 				}
 			}
 		};

@@ -1,6 +1,6 @@
 #pulser {
 	position: absolute;
-	z-index: 10000; /* Keep at the top. */
+	z-index: 10000; /* Keep at the top of the element "stack". */
 	top: 50%;
 	left: 50%;
 	width: 84px;  /* Actual width*/
@@ -32,6 +32,8 @@ body {
 	margin-top: 5%;
 	text-align: center;
 	width: 65%;
+	line-height: 15px;
+	color: black;
 }
 
 /* Div that covers the entire screen. */

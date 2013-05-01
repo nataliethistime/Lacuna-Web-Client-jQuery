@@ -16,7 +16,7 @@ $(document).ready(function() {
 		window.location.hash = ''; // Remove the hash to prevent infate looping.
 	}
 
-	// NOTE: this method affects ALL Ajax calls!
+	// NOTE: this method affects **ALL** Ajax calls!
 	$.ajaxSetup({
 		async: false, // Need to do this or loading gets messed up sometimes.
 		cache: false // Has no benefit to the game.
