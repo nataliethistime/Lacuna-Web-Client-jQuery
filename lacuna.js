@@ -10,7 +10,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			// in with the rest of the client. :)
 			alert: function(text, title) {
 				$(document.createElement('div')).dialog({
-					title: title || 'Alert!',
+					title: title || 'Woopsie!',
 					modal: true, // Make the background dark.
 					show: {
 						effect: 'fade',
@@ -66,6 +66,9 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			//	failure: function(receivedError){}
 			//}
 			send: function(args) {
+				// Show the Blue "loading" animation.
+				$.Lacuna.showPulser();
+				
 				var data = JSON.stringify({
 					'jsonrpc': '2.0',
 					'id': 1,
@@ -99,8 +102,14 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 							// ONWARD!
 							args.success(data);
 						}
+
+						// And finally, hide the "loading" animation.
+						$.Lacuna.hidePulser();
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
+						// Hide the "loading" animation.
+						$.Lacuna.hidePulser();
+
 						// Get the error block the server returned.
 						var error = $.parseJSON(jqXHR.responseText).error;
 						
@@ -127,19 +136,19 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 				});
 			},
 
-			// Easier to type, 
-			GetSession: function() {
+			// Utility functions/helpers.
+			getSession: function() {
 				return this.GameData.ClientData.SessionId || '';
 			},
-			GetCurrentPlanet: function() {
+			getCurrentPlanet: function() {
 				return this.GameData.Status.body.id || '';
 			},
 			showPulser: function() {
-				$('#pulsar').css({'visibility': 'visible'});
+				$('#pulser').css('visibility', 'visible');
 			},
 	
 			hidePulser: function() {
-				$('#pulsar').css({'visibility': 'hidden'});
+				$('#pulser').css('visibility', 'hidden');
 			},
 			
 			// This is the game cache. For storing things like the: Session Id, Status, etc etc...
@@ -148,7 +157,8 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 				Empire: {},
 				Status: {}
 			},
-	
+			
+			// All the fun stuff with Panels.
 			Panel: {
 				newTabbedPanel: function(/*name, options, draggable*/ panel) {
 					// This method uses some tricks to generate the HTML that jQuery accepts for tabs.
@@ -184,7 +194,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						
 					$('#lacuna').append(finalContent.join(''));
 
-					// Do this here ti get a current version of the DOM Object.
+					// Do this here to get a current version of the DOM Object.
 					var el = $('#' + DOMName + '_Tab');
 
 					// Create my custom Panel object.

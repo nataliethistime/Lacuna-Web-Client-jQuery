@@ -10,26 +10,127 @@
 				// So that this method can be treated as an 'update planet view'.
 				id = id || $.Lacuna.GameData.Status.body.id;
 
-				// Clear the intervals.
+				// Clean everything up.
 				this.clearBuildTimers();
+				$('#buildingsParent').fadeOut(500, function() {
 				
-				for (var x = -5; x < 6; x++) {
-					for (var y = -5; y < 6; y++) {
-						var idStr       = 'plot_' + x + '_' + y,
-							idStrCenter = idStr + '_center';
+					for (var x = -5; x < 6; x++) {
+						for (var y = -5; y < 6; y++) {
+							var idStr       = 'plot_' + x + '_' + y,
+								idStrCenter = idStr + '_center';
 						
-						buildingsTemplate[buildingsTemplate.length] = [
-							'<div id="', idStr, '" title="Ground" style="',
+							buildingsTemplate[buildingsTemplate.length] = [
+								'<div id="', idStr, '" title="Ground" style="',
 									'width: 100px;',
 									'height: 100px;',
 									'left: ', (parseInt(x) + 5) * 100, 'px;',
 									'top: ', (parseInt(y) - 5) * 100 * -1, 'px;',
 									'position: absolute;',
 									'margin: 2px',
-							'">',
-							// Give it the build icon by defualt.
-							'	<div id="', idStrCenter, '" style="display:none;">',
-							'		<img id="build_icon" src="', window.assetsUrl, '/ui/l/build.png" style="',
+								'">',
+								// Give it the build icon by defualt.
+								'	<div id="', idStrCenter, '" style="display:none;">',
+								'		<img id="build_icon" src="', window.assetsUrl, '/ui/l/build.png" style="',
+											'position: absolute;',
+											'width: 58px;',
+											'height: 45px;',
+											'top: 50%;',
+											'left: 50%;',
+											'margin-top: -22.5px;',
+											'margin-left: -29px;',
+								'		" />',
+								'	</div>',
+								'</div>'
+							].join('');
+
+							$('#buildingsParent').on({
+								mouseenter: function(e) {
+									// Display the pretty border.
+									$('#' + e.data.borderEl).css({
+										'border-style': 'dashed',
+										'border-color': 'white',
+										'border-width': '2px',
+										'margin'      : '0px' // Stop the images jumping around.
+									});
+
+									// Then the level/build number/image.
+									$('#' + e.data.centerEl).css('display', '');
+								},
+								mouseleave: function(e) {
+									// Hide the border.
+									$('#' + e.data.borderEl).css({
+										'border-style': '',
+										'border-color': '',
+										'border-width': '',
+										'margin'      : '2px' // Stop the images jumping around.
+									});
+
+									// Then the level/build number/image.
+									$('#' + e.data.centerEl).css('display', 'none');
+								},
+								click: function(e) {
+									// This bit is rather fun. If there's an item
+									// in the this.buildings object thet matches
+									// the selected plot, then the building view
+									// panel will be opened. Otherwise, the plot
+									// will be assumed empty, and the build panel
+									// will be opened.
+								
+									if ($.Lacuna.MapPlanet.buildings[e.data.borderEl]) {
+										// Open view panel.
+										$.Lacuna.Building.view($.Lacuna.MapPlanet.buildings[e.data.borderEl]);
+									}
+									else {
+										// Open build panel.
+									}
+								}
+							}, '#' + idStr, {borderEl: idStr, centerEl: idStrCenter});
+						}
+					}
+				
+					// Send it to the DOM.
+					$('#buildingsParent').html([
+						'<div id="buildingsDraggableChild">',
+						buildingsTemplate.join(''),
+						'</div>'
+					].join(''));
+				
+					// Right, now that that's out of the way, onward we must go...
+					$.Lacuna.send({
+						module: '/body',
+						method: 'get_buildings',
+						params: [
+							$.Lacuna.getSession(), // Session Id
+							id // Body Id
+						],
+					
+						success: function(o) {
+							var buildings = o.result.buildings,
+								body      = o.result.body;
+								keys      = Object.keys(buildings);
+							
+							for (var i = 0; i < keys.length; i++) {
+								var buildingId   = keys[i],
+									building     = buildings[buildingId],
+									idStr        = 'plot_' + parseInt(building.x) + '_' + parseInt(building.y),
+									idStrCenter  = idStr + '_center',
+									idStrCounter = idStr + '_counter',
+									el           = $('#' + idStr);
+								
+								// Woopsie! Long line alert!!
+								el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
+								el.attr('title', building.name);
+
+								el.html([
+									// Only position the element if there's a build time to put in it.
+									building.pending_build ? '<div id="' + idStrCounter + '" style="' +
+										'font-family: impact;' +
+										'color: white;' +
+										'text-align: right;' +
+										'font-size: 120%;' +
+									'"></div>' : '',
+									'<div id="', idStrCenter, '" style="',
+										'display: none;',
 										'position: absolute;',
 										'width: 58px;',
 										'height: 45px;',
@@ -37,134 +138,38 @@
 										'left: 50%;',
 										'margin-top: -22.5px;',
 										'margin-left: -29px;',
-							'		" />',
-							'	</div>',
-							'</div>'
-						].join('');
+										'color: white;',
+										'font-size: 300%;',
+										'font-weight: bold;',
+										'font-family: impact;',
+										'text-align: center;',
+									'">',
+										building.level,
+									'</div>'
+								].join(''));
 
-						$('#buildingsParent').on({
-							mouseenter: function(e) {
-								// Display the pretty border.
-								$('#' + e.data.borderEl).css({
-									'border-style': 'dashed',
-									'border-color': 'white',
-									'border-width': '2px',
-									'margin'      : '0px' // Stop the images jumping around.
-								});
-
-								// Then the level/build number/image.
-								$('#' + e.data.centerEl).css('display', '');
-							},
-							mouseleave: function(e) {
-								// Hide the border.
-								$('#' + e.data.borderEl).css({
-									'border-style': '',
-									'border-color': '',
-									'border-width': '',
-									'margin'      : '2px' // Stop the images jumping around.
-								});
-
-								// Then the level/build number/image.
-								$('#' + e.data.centerEl).css('display', 'none');
-							},
-							click: function(e) {
-								// This bit is rather fun. If there's an item
-								// in the this.buildings object thet matches
-								// the selected plot, then the building view
-								// panel will be opened. Otherwise, the plot
-								// will be assumed empty, and the build panel
-								// will be opened.
-								
-								if ($.Lacuna.MapPlanet.buildings[e.data.borderEl]) {
-									// Open view panel.
-									$.Lacuna.Building.view($.Lacuna.MapPlanet.buildings[e.data.borderEl]);
+								// Set up the build timer.
+								if (building.pending_build) {
+									$.Lacuna.MapPlanet.createBuildTimer(building.pending_build.seconds_remaining, idStrCounter);
 								}
-								else {
-									// Open build panel.
-								}
+
+								// Check out the click handling of each tile above.
+								$.Lacuna.MapPlanet.buildings[idStr] = building;
 							}
-						}, '#' + idStr, {borderEl: idStr, centerEl: idStrCenter});
-					}
-				}
-				
-				// Send it to the DOM.
-				$('#buildingsParent').html([
-					'<div id="buildingsDraggableChild">',
-					buildingsTemplate.join(''),
-					'</div>'
-				].join(''));
-				
-				// Right, now that that's out of the way, onward we must go...
-				$.Lacuna.send({
-					module: '/body',
-					method: 'get_buildings',
-					params: [
-						$.Lacuna.GetSession(), // Session Id
-						id // Body Id
-					],
-					
-					success: function(o) {
-						var buildings = o.result.buildings,
-							body      = o.result.body;
-							keys      = Object.keys(buildings);
-							
-						for (var i = 0; i < keys.length; i++) {
-							var buildingId   = keys[i],
-								building     = buildings[buildingId],
-								idStr        = 'plot_' + parseInt(building.x) + '_' + parseInt(building.y),
-								idStrCenter  = idStr + '_center',
-								idStrCounter = idStr + '_counter',
-								el           = $('#' + idStr);
-								
-							// Woopsie! Long line alert!!
-							el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
-							el.attr('title', building.name);
+						
+							$('#lacuna').css(
+								'background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')'
+							);
+						
+							// Start the Draggable.
+							$('#buildingsDraggableChild').draggable();
 
-							el.html([
-								// Only position the element if there's a build time to put in it.
-								building.pending_build ? '<div id="' + idStrCounter + '" style="' +
-									'font-family: impact;' +
-									'color: white;' +
-									'text-align: right;' +
-									'font-size: 120%;' +
-								'"></div>' : '',
-								'<div id="', idStrCenter, '" style="',
-									'display: none;',
-									'position: absolute;',
-									'width: 58px;',
-									'height: 45px;',
-									'top: 50%;',
-									'left: 50%;',
-									'margin-top: -22.5px;',
-									'margin-left: -29px;',
-									'color: white;',
-									'font-size: 300%;',
-									'font-weight: bold;',
-									'font-family: impact;',
-									'text-align: center;',
-								'">',
-									building.level,
-								'</div>'
-							].join(''));
-
-							// Set up the build timer.
-							if (building.pending_build) {
-								$.Lacuna.MapPlanet.createBuildTimer(building.pending_build.seconds_remaining, idStrCounter);
-							}
-
-							// Check out the click handling of each tile above.
-							$.Lacuna.MapPlanet.buildings[idStr] = building;
+							// Now that everything is ready, fade it all in!
+							setTimeout(function() { // Wait for the DOM to update.
+								$('#buildingsParent').fadeIn(500);
+							}, 20);
 						}
-						
-						$('#lacuna').css({
-							'background-image' : 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')'
-						});
-						
-						// Start the Draggable.
-						$('#buildingsDraggableChild').draggable({
-							scroll: false
-						});
-					}
+					});
 				});
 			},
 

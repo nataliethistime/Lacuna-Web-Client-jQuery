@@ -1,5 +1,6 @@
 #pulser {
 	position: absolute;
+	z-index: 10000; /* Keep at the top. */
 	top: 50%;
 	left: 50%;
 	width: 84px;  /* Actual width*/
@@ -9,9 +10,8 @@
 	visibility: hidden;
 }
 
-#body {
+body {
 	background-image: url('../assets/ui/field.png');
-	font: 13px/1.231 arial, helvetica, clean, sans-serif;
 }
 
 #nojs {
@@ -35,13 +35,17 @@
 }
 
 /* Div that covers the entire screen. */
-#lacuna, #mainScreen {
+#lacuna, #mainScreen, #page {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	right: 0;
 	left: 0;
 	overflow: hidden;
+}
+
+#page {
+	background-image: url('../assets/ui/field.png');
 }
 
 label {
@@ -77,9 +81,3 @@ label {
 	****************** DIALOGS ******************
 	*
 	*/
-
-
-/* Hide the glitchy close button at the top right of every Dialog. */
-.ui-dialog-titlebar-close {
-  visibility: hidden;
-}

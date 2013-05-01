@@ -27,6 +27,7 @@
 								'		<td><label>Remember Empire?</label></td>',
 								'		<td>',
 								'			<input id="rememberEmpire" type="checkbox" checked="checked" />',
+								'			<b>(<u>Warning:</u> not implemented, yet.)</b>',
 								'			<button type="button" style="float:right;" id="loginButton">Login</button>',
 								'		</td>',
 								'	</tr>',
