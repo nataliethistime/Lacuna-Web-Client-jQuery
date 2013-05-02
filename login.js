@@ -27,7 +27,6 @@
 								'		<td><label>Remember Empire?</label></td>',
 								'		<td>',
 								'			<input id="rememberEmpire" type="checkbox" checked="checked" />',
-								'			<b>(<u>Warning:</u> not implemented, yet.)</b>',
 								'			<button type="button" style="float:right;" id="loginButton">Login</button>',
 								'		</td>',
 								'	</tr>',
@@ -78,9 +77,16 @@
 						$.Lacuna.GameData.ClientData.SessionId = o.result.session_id;
 				
 						// Pop the sesion and empire name into a cookie.
-						$.cookie.write('lacuna-expanse-session-id', $.Lacuna.GameData.ClientData.SessionId, 2 * 60 * 60); // 2 hour session.
-						$.cookie.write('lacuna-expanse-empire-name', $.Lacuna.GameData.Empire.Name, 365 * 24 * 60 * 60); // 1 year.
-					
+						// Unused as yet, any volunteers for implementing loging in from Cookie?
+						//$.cookie.write('lacuna-expanse-session-id', $.Lacuna.GameData.ClientData.SessionId, 2 * 60 * 60); // 2 hour session.
+						
+						if ($('#rememberEmpire').prop('checked')) {
+							$.cookie.write('lacuna-expanse-empire-name', $.Lacuna.GameData.Empire.Name, 365 * 24 * 60 * 60); // 1 year.
+						}
+						else {
+							$.cookie.destroy('lacuna-expanse-empire-name');
+						}
+
 						// Over here goes the building of the main game panel(s).
 						$.Lacuna.Login.destroy(function() {
 							$.Lacuna.Game.BuildMainScreen();

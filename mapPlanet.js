@@ -112,7 +112,7 @@
 							for (var i = 0; i < keys.length; i++) {
 								var buildingId   = keys[i],
 									building     = buildings[buildingId],
-									idStr        = 'plot_' + parseInt(building.x) + '_' + parseInt(building.y),
+									idStr        = 'plot_' + building.x + '_' + building.y,
 									idStrCenter  = idStr + '_center',
 									idStrCounter = idStr + '_counter',
 									el           = $('#' + idStr);
@@ -123,26 +123,9 @@
 
 								el.html([
 									// Only position the element if there's a build time to put in it.
-									building.pending_build ? '<div id="' + idStrCounter + '" style="' +
-										'font-family: impact;' +
-										'color: white;' +
-										'text-align: right;' +
-										'font-size: 120%;' +
-									'"></div>' : '',
-									'<div id="', idStrCenter, '" style="',
-										'display: none;',
-										'position: absolute;',
-										'width: 45px;',
-										'height: 45px;',
-										'top: 27.5%;',
-										'left: 27.5%;',
-										'color: white;',
-										'font-size: 40px;',
-										'font-weight: bold;',
-										'font-family: impact;',
-										'text-align: center;',
-										'line-height: 1;',
-									'">',
+									building.pending_build ? 
+									'<div id="' + idStrCounter + '" class="buildings-build-timer"></div>' : '',
+									'<div id="', idStrCenter, '" class="buildings-level-center" style="display:none;">',
 										building.level,
 									'</div>'
 								].join(''));
@@ -156,10 +139,19 @@
 								$.Lacuna.MapPlanet.buildings[idStr] = building;
 							}
 						
-							$('#lacuna').css(
-								'background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')'
-							);
-						
+							// I'd like this to be some sort of fade, one day..
+							$('#lacuna').css('background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')');
+							
+							// Center the view.
+							var parent = $('#lacuna'), // Basically, the height of the screen.
+								height = parent.height() - 110, // 110 is the header and footer.
+								width  = parent.width();
+
+							$('#buildingsDraggableChild').css({
+								top: ((height / 2) - 50) * -1,
+								left: (width / 2) - 550
+							});
+
 							// Start the Draggable.
 							$('#buildingsDraggableChild').draggable();
 

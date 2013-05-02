@@ -10,8 +10,11 @@
 	visibility: hidden;
 }
 
-body {
+html, body {
 	background-image: url('../assets/ui/field.png');
+
+	/* Remove scroll bar - doesn't work on Firefox */
+	overflow: hidden;
 }
 
 #nojs {
@@ -46,10 +49,6 @@ body {
 	overflow: hidden;
 }
 
-#page {
-	background-image: url('../assets/ui/field.png');
-}
-
 label {
 	width: 150px;
 }
@@ -79,7 +78,46 @@ label {
 }
 
 	/*
-	*
-	****************** DIALOGS ******************
-	*
+		+================+
+		|Game UI Elements|
+		+================+
 	*/
+
+#gameHeader {
+	top: 0px;
+	height: 55px;
+	width: 100%;
+	position: fixed;
+	background-color: rgb(82, 172, 255); /* Displays if the image doesn't load. */
+	z-index: 1000;
+}
+
+#gameFooter {
+	bottom: 0px;
+	height: 55px;
+	width: 100%;
+	position: fixed;
+	background-color: rgb(82, 172, 255); /* Displays if the image doesn't load. */
+	z-index: 1000;
+}
+
+.buildings-build-timer {
+	font-family: impact;
+	color: white;
+	text-align: right;
+	font-size: 120%;
+}
+
+.buildings-level-center {
+	position: absolute;
+	width: 45px;
+	height: 45px;
+	top: 27.5%;
+	left: 27.5%;
+	color: white;
+	font-size: 40px;
+	font-weight: bold;
+	font-family: impact;
+	text-align: center;
+	line-height: 1;
+}

@@ -9,13 +9,15 @@
 				
 				$('#lacuna').html([
 					'<div id="mainScreen">',
+					'	<div id="gameHeader" style="background-image: url(\'',window.assetsUrl, '/ui/web/bar_top_back.png\')">',
+					'		', //TODO
+					'	</div>',
 					'	<div id="buildingsParent" style="',
 						'cursor: url(\'' + window.assetsUrl + '/ui/web/openhand.cur\'), default;',
 					'">',
-
-					// TODO: Bottom section of the screen, with the
-					// planet list and resource information of
-					// the selected planet.
+					'	</div>',
+					'	<div id="gameFooter" style="background-image: url(\'',window.assetsUrl, '/ui/web/bar_bottom_back.png\')">',
+					'		',//TODO
 					'	</div>',
 					'</div>'
 				].join(''));
