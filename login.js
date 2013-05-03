@@ -9,7 +9,7 @@
 			
 				// Buld the Login Panel.
 				this.panel = $.Lacuna.Panel.newTabbedPanel({
-					name: 'Login Panel', // Could somone please come up with something more creative?
+					name: 'Welcome', // Could somone please come up with something more creative?
 					tabs: [
 						{
 							name: 'Login',

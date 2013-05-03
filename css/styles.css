@@ -121,3 +121,37 @@ label {
 	text-align: center;
 	line-height: 1;
 }
+
+.building-details-num {
+	display: inline-block;
+	width: 120px;
+	text-align: right;
+}
+
+.low-resource {
+	color: rgb(255, 0, 0);;
+}
+
+.small-img {
+	display: inline-block;
+	width: 25px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#currentProduction {
+	float: left;
+	width: 32%;
+}
+
+#upgradeProduction {
+	margin-left: 1.99%;
+	float: left;
+	width: 32%;
+}
+
+#upgradeCost {
+	margin-left: 1.99%;
+	float: left;
+	width: 32%;
+}

@@ -82,7 +82,12 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					data: data,
 					dataType: 'json',
 					type: 'POST',
-					url: window.url || window.location.protocol + '//' + window.server + '.lacunaexpanse.com' + args.module,
+					url: window.url + args.module 
+						|| window.location.protocol +
+						   '//' +
+						   window.server +
+						   '.lacunaexpanse.com' +
+						   args.module,
 			
 					// Callbacks
 					success: function (data, status, xhr) {
@@ -160,7 +165,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 			
 			// All the fun stuff with Panels.
 			Panel: {
-				newTabbedPanel: function(/*name, options, draggable*/ panel) {
+				newTabbedPanel: function(panel) {
 					// This method uses some tricks to generate the HTML that jQuery accepts for tabs.
 					// Check out http://jqueryui.com/tabs/ to see what I mean exactly.
 					//
@@ -170,7 +175,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					var tabHeaders   = ['<ul>'],
 						tabContent   = [],
 						finalContent = [],
-						DOMName      = panel.name.replace(' ', '_'); // So the DOM doesn't get confused.
+						DOMName      = panel.name.replace(/ /g, '_'); // So the DOM doesn't get confused.
 						
 					for (var i = 0; i < panel.tabs.length; i++) {
 						var tab = panel.tabs[i];
@@ -182,7 +187,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					// Finish it all off.
 					tabHeaders[tabHeaders.length] = '</ul>';
 					finalContent = [
-						'<div id="', DOMName, '_Tab" title="', panel.name, '">',
+						'<div id="', DOMName, '_Tab" title="', panel.name, '" style="z-index:1001;">',
 							// Place stuff above the tabs.
 							panel.preTabContent ? panel.preTabContent : '',
 							
@@ -192,7 +197,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						'</div>'
 					];
 						
-					$('#lacuna').append(finalContent.join(''));
+					$('#page').append(finalContent.join(''));
 
 					// Do this here to get a current version of the DOM Object.
 					var el = $('#' + DOMName + '_Tab');

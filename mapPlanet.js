@@ -116,6 +116,9 @@
 									idStrCenter  = idStr + '_center',
 									idStrCounter = idStr + '_counter',
 									el           = $('#' + idStr);
+
+								// Add the Id into the building data.
+								building.id = buildingId;
 								
 								// Woopsie! Long line alert!!
 								el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
@@ -144,11 +147,11 @@
 							
 							// Center the view.
 							var parent = $('#lacuna'), // Basically, the height of the screen.
-								height = parent.height() - 110, // 110 is the header and footer.
+								height = parent.height(),
 								width  = parent.width();
 
 							$('#buildingsDraggableChild').css({
-								top: ((height / 2) - 50) * -1,
+								top: (height / 2) - 550,
 								left: (width / 2) - 550
 							});
 
@@ -166,64 +169,41 @@
 
 			// Cache for the buildings rendered on the planet.
 			buildings: {},
+			
 			// Cache for all the build timers that are set.
 			intervals: {},
 
-
 			// Then a few helper functions to make things work.
-			// All of the build timer stuff needs to get moved to lacuna.js, sometime.
+			// All of the build timer stuff needs to get moved to library.js, sometime.
 			createBuildTimer: function(seconds, targetEl) {
-					var formattedTime = this.formatTime(seconds);
-					$('#' + targetEl).html(formattedTime);
+				var formattedTime = $.Lacuna.Library.formatTime(seconds);
+				
+				// This is faster than jQuery.
+				document.getElementById(targetEl).innerHTML = formattedTime;
 
-					var interval = setInterval(function() {
-						seconds--;
+				var interval = setInterval(function() {
+					seconds--;
 
-						if (seconds === 0) {
-							// Remove the timer.
-							clearInterval(interval);
+					if (seconds === 0) {
+						// Remove the timer.
+						clearInterval(interval);
 
-							// Refresh the planet.
-							$.Lacuna.MapPlanet.renderPlanet();
+						// Remove the interval from the log.
+						delete this.intervals[interval];
+						
+						// Refresh the planet.
+						$.Lacuna.MapPlanet.renderPlanet();
+					}
+					else {
+						formattedTime = $.Lacuna.Library.formatTime(seconds);
 
-							// Remove the interval from the log.
-							delete this.intervals[interval];
-						}
-						else {
-							formattedTime = $.Lacuna.MapPlanet.formatTime(seconds);
-							$('#' + targetEl).html(formattedTime);
-						}
-					}, 1000);
+						// This is faster than jQuery.
+						document.getElementById(targetEl).innerHTML = formattedTime;
+					}
+				}, 1000);
 
-					// Log the interval. For later destruction.
-					this.intervals[interval] = 1;
-				},
-
-			// This was stolen straight from the original Lacuna Web Client.
-			// I don't know how it works.
-			formatTime: function(seconds) {
-				if (seconds < 0) {
-					return "";
-				}
-			
-				var secondsInDay = 60 * 60 * 24,
-					secondsInHour = 60 * 60,
-					day = Math.floor(seconds / secondsInDay),
-					hleft = seconds % secondsInDay,
-					hour = Math.floor(hleft / secondsInHour),
-					sleft = hleft % secondsInHour,
-					min = Math.floor(sleft / 60),
-					seconds = Math.floor(sleft % 60);
-			
-				if (day > 0) {
-					return [day, hour, min, seconds].join(':');
-				}
-				else if (hour > 0) {
-					return [hour, min, seconds].join(':');
-				}
-				else {
-					return [min, seconds].join(':');
-				}
+				// Log the interval. For later destruction.
+				this.intervals[interval] = 1;
 			},
 			clearBuildTimers: function() {
 				var keys = Object.keys(this.intervals);
