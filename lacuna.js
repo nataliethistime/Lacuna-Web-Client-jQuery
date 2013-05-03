@@ -74,7 +74,16 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					'id': 1,
 					'method': args.method,
 					'params': args.params
-				});
+				}),
+					url = '';
+
+				// Create the url.
+				if (window.serverUrl) {
+					url = window.serverUrl + args.module;
+				}
+				else {
+					url = window.location.protocol + '//' + window.server + '.lacunaexpanse.com' + args.module;
+				}
 		
 				this.debug('Sending to server: ' + data);
 		
@@ -82,12 +91,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					data: data,
 					dataType: 'json',
 					type: 'POST',
-					url: window.url + args.module 
-						|| window.location.protocol +
-						   '//' +
-						   window.server +
-						   '.lacunaexpanse.com' +
-						   args.module,
+					url: url,
 			
 					// Callbacks
 					success: function (data, status, xhr) {
@@ -116,7 +120,8 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						$.Lacuna.hidePulser();
 
 						// Get the error block the server returned.
-						var error = $.parseJSON(jqXHR.responseText).error;
+						var response = $.parseJSON(jqXHR.responseText),
+							error    = response.error || {message:'Response content type is not JSON.'};
 						
 						if (error.code == 1006) {
 							// Clear all the panels.

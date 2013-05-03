@@ -49,14 +49,20 @@ $(document).ready(function() {
 			}
 		});
 		
-		// Begin loading.
+		// Core functions.
 		loadModule('lacuna.js');
-		loadModule('library.js');
 		loadModule('game.js');
 		loadModule('mapPlanet.js');
-		loadModule('building.js');
+		loadModule('library.js');
+		
+		// Interface items.
 		loadModule('login.js');
-	
+		
+		// Buildings
+		loadModule('buildings/planetaryCommand.js');
+		
+		// Load this last so everything works.
+		loadModule('building.js');
 	});
 });
 
@@ -74,11 +80,11 @@ function loadModule(name) {
 		}
 		
 		loadedModules++;
-		var percent = Math.round((loadedModules / 6) * 100); // 6 being the number of modules to load.
+		var percent = Math.round((loadedModules / 7) * 100); // 7 being the number of modules to load.
 		
 		$("#loadingProgressBar .ui-progressbar-value").animate({
 			width: percent + '%'
-		}, 500, function() {
+		}, 200, function() {
 			$('#loadingProgressBarMessage').html(percent + '% - ' + makeRandomMessage()); // TODO: Make this look prettier!
 			$('#loadingProgressBar').progressbar({value: percent}); // Register the percent change.
 		});

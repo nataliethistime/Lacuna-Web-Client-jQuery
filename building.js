@@ -22,8 +22,16 @@
 							}
 						];
 
-						// In here will be the "get extra tabs" stuff.
+						// Remove the leading slash.
+						building.url = building.url.replace('/', '');
+						
+						var extraTabs = $.Lacuna.Building.buildings[building.url] ? 
+							$.Lacuna.Building.buildings[building.url].getTabs() : [];
 
+						// Put 'em together.
+						if (extraTabs) {
+							tabs = tabs.concat(extraTabs);
+						}
 
 						$.Lacuna.Building.panel = $.Lacuna.Panel.newTabbedPanel({
 							draggable: true,
@@ -143,6 +151,10 @@
 				].join('');
 
 				return content;
+			},
+
+			buildings: {
+				'planetarycommand' : $.Lacuna.PlanetaryCommand
 			}
 		};
 	}
