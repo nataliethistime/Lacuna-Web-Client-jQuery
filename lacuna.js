@@ -192,26 +192,29 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					// Finish it all off.
 					tabHeaders[tabHeaders.length] = '</ul>';
 					finalContent = [
-						'<div id="', DOMName, '_Tab" title="', panel.name, '" style="z-index:1001;">',
+						'<div id="', DOMName, '_Panel" title="', panel.name, '" style="z-index:1001;">',
 							// Place stuff above the tabs.
 							panel.preTabContent ? panel.preTabContent : '',
 							
 							// Then the Tabs themselves.
-							tabHeaders.join(''),
-							tabContent.join(''),
+							'<div id="', DOMName, '_Tab">',
+								tabHeaders.join(''),
+								tabContent.join(''),
+							'</div>',
 						'</div>'
 					];
 						
 					$('#page').append(finalContent.join(''));
 
 					// Do this here to get a current version of the DOM Object.
-					var el = $('#' + DOMName + '_Tab');
+					var dialogEl = $('#' + DOMName + '_Panel'),
+						tabEl    = $('#' + DOMName + '_Tab');
 
 					// Do some fancy Buttons!
-					$('#' + DOMName + '_Tab' + ' :button').button();
+					$('#' + DOMName + '_Panel' + ' :button').button();
 			
 					// .. and then the Dialog that everything sits in.
-					el.dialog({
+					dialogEl.dialog({
 						resizable: false,
 						draggable: panel.draggable || false,
 						width: panel.width || $.Lacuna.Panel.panelWidth,
@@ -225,7 +228,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						},
 						open: function() {
 							// Initialize Tabs when the Dialog opens.
-							el.tabs({
+							tabEl.tabs({
 								active: 0, // Set the defualt tab open to the first one.
 								heightStyle: 'auto',
 								activate: function(event, ui) {
@@ -249,15 +252,16 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						},
 						close: function() { // Called when the Dialog is closed with the 'X'.
 							// Clear the DOM element.
-							el.dialog('destroy').empty().remove();
+							dialogEl.dialog('destroy').empty().remove();
 						}
 					});
 
 					// Return a fancy Panel object.
 					return {
-						el: $('#' + DOMName + '_Tab'), // Get newest version of the jQuery object.
+						dialogEl: $('#' + DOMName + '_Panel'), // Get newest version of the jQuery object.
+						tabEl: $('#' + DOMName + '_Tab'),
 						close: function(callback) {
-							this.el.dialog('close');
+							this.dialogEl.dialog('close');
 
 							// Run the callback, if there is one.
 							// This should wait for the animation to finish,
@@ -267,7 +271,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 							}
 						},
 						gotoTab: function(index) {
-							this.el.tabs('option', 'active', index);
+							this.tabEl.tabs('option', 'active', index);
 						}
 					};
 				}

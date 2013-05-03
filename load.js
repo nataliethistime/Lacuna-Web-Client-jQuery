@@ -84,7 +84,7 @@ function loadModule(name) {
 		
 		$("#loadingProgressBar .ui-progressbar-value").animate({
 			width: percent + '%'
-		}, 200, function() {
+		}, 300, function() {
 			$('#loadingProgressBarMessage').html(percent + '% - ' + makeRandomMessage()); // TODO: Make this look prettier!
 			$('#loadingProgressBar').progressbar({value: percent}); // Register the percent change.
 		});

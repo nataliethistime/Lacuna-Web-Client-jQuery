@@ -30,6 +30,9 @@
 				$.Lacuna.Panel.panelWidth = 800/*px*/;
 				// A Panel's height can be decided manually or left up to jQuery.
 
+				// Load resources.json for later use.
+				// TODO!
+
 				// Open the login screen.
 				$.Lacuna.Login.build();
 			}

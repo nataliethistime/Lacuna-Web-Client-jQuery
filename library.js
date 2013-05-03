@@ -15,7 +15,7 @@
 			// This was stolen straight from the original Lacuna Web Client.
 			formatTime: function(seconds) {
 				if (seconds < 0) {
-					return "";
+					return '';
 				}
 			
 				var secondsInDay = 60 * 60 * 24,
