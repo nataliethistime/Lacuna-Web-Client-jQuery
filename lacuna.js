@@ -74,16 +74,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					'id': 1,
 					'method': args.method,
 					'params': args.params
-				}),
-					url = '';
-
-				// Create the url.
-				if (window.serverUrl) {
-					url = window.serverUrl + args.module;
-				}
-				else {
-					url = window.location.protocol + '//' + window.server + '.lacunaexpanse.com' + args.module;
-				}
+				});
 		
 				this.debug('Sending to server: ' + data);
 		
@@ -91,7 +82,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					data: data,
 					dataType: 'json',
 					type: 'POST',
-					url: url,
+					url: window.url + args.module,
 			
 					// Callbacks
 					success: function (data, status, xhr) {
@@ -159,6 +150,17 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 	
 			hidePulser: function() {
 				$('#pulser').css('visibility', 'hidden');
+			},
+
+			// Resources
+			getBuildingDesc: function(url) {
+				return [
+					this.Resources.buildings[url].description || '',
+					'<br />',
+					'<a href="', this.Resources.buildings[url].wiki, '" target="_blank">',
+					'	More information on the Wiki.',
+					'</a>'
+				].join('');
 			},
 			
 			// This is the game cache. For storing things like the: Session Id, Status, etc etc...

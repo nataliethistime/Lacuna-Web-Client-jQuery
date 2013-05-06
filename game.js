@@ -3,10 +3,7 @@
 	if (!$.Lacuna.Game || typeof($.Lacuna.Game) === 'undefined') {
 	
 		$.Lacuna.Game = {
-			BuildMainScreen: function() {
-				// The Main screen doesn't contain very much. For the
-				// moment, I'll only do the buildings view.
-				
+			buildMainScreen: function() {
 				$('#lacuna').html([
 					'<div id="mainScreen">',
 					'	<div id="gameHeader" style="background-image: url(\'',window.assetsUrl, '/ui/web/bar_top_back.png\')">',
@@ -25,13 +22,21 @@
 				// Now for the fun stuff.
 				$.Lacuna.MapPlanet.renderPlanet($.Lacuna.GameData.Status.empire.home_planet_id);
 			},
+
 			// Does some stuff, opens the login Panel.
-			Start: function() {
+			start: function() {
 				$.Lacuna.Panel.panelWidth = 800/*px*/;
 				// A Panel's height can be decided manually or left up to jQuery.
 
-				// Load resources.json for later use.
-				// TODO!
+				var url = window.location.protocol + 
+					'//' + 
+					window.location.hostname + 
+					window.location.pathname + 
+					'resources.json';
+				console.log(url);
+				$.getJSON(url, function(json) {
+						$.Lacuna.Resources = json;
+				});
 
 				// Open the login screen.
 				$.Lacuna.Login.build();

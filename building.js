@@ -35,7 +35,7 @@
 
 						$.Lacuna.Building.panel = $.Lacuna.Panel.newTabbedPanel({
 							draggable: true,
-							name: building.name,
+							name: building.name + ' ' + building.level,
 							preTabContent: $.Lacuna.Building.getBuildingHeader(building),
 
 							tabs: tabs
@@ -46,19 +46,20 @@
 
 			getBuildingHeader: function(building) {
 				return [
-					'<div id="buildingDetailsHeader">',
+					'<div id="buildingDetailsHeaderImage">',
 					'	<div style=\'',
 							'width: 100px;',
 							'height: 100px;',
 							'background-image: ', $('#lacuna').css('background-image'), ';',
 							'border-style: solid;',
 							'border-width: 1px;',
+							'float: left;',
 					'	\'>',
-					'		<img src="', window.assetsUrl, '/planet_side/100/', building.image, '.png" style="',
-								'width: 100px',
-								'height: 100px',
-					'		" />',
+					'		<img src="', window.assetsUrl, '/planet_side/100/', building.image, '.png">',
 					'	</div>',
+					'</div>',
+					'<div id="buildingDetailsHeaderText" style="margin-left: 110px;">',
+						$.Lacuna.getBuildingDesc(building.url),
 					'</div>'
 				].join('');
 			},

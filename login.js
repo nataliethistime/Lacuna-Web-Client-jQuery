@@ -89,7 +89,7 @@
 
 						// Over here goes the building of the main game panel(s).
 						$.Lacuna.Login.destroy(function() {
-							$.Lacuna.Game.BuildMainScreen();
+							$.Lacuna.Game.buildMainScreen();
 						});
 					}
 				});

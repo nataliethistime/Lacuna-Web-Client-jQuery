@@ -19,8 +19,15 @@ $(document).ready(function() {
 	// NOTE: this method affects **ALL** Ajax calls!
 	$.ajaxSetup({
 		async: false, // Need to do this or loading gets messed up sometimes.
-		cache: false // Has no benefit to the game.
 	});
+
+	// Create the URL for use within the client.
+	if (typeof(window.serverUrl) != 'undefined') {
+		window.url = window.serverUrl;
+	}
+	else {
+		window.url = window.location.protocol + '//' + window.server+ '.lacunaexpanse.com';
+	}
 
 	$('#lacuna').append([
 		'<div id="loadingScreen">',
@@ -43,7 +50,7 @@ $(document).ready(function() {
 					$('#loadingScreen').fadeOut(500, function() {
 						$('#loadingScreen').remove();
 						
-						$.Lacuna.Game.Start();
+						$.Lacuna.Game.start();
 					});
 				}, 1000); // So that the 'Welcome!!' is visible. :)
 			}
