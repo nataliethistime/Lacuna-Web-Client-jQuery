@@ -33,7 +33,6 @@
 					window.location.hostname + 
 					window.location.pathname + 
 					'resources.json';
-				console.log(url);
 				$.getJSON(url, function(json) {
 						$.Lacuna.Resources = json;
 				});

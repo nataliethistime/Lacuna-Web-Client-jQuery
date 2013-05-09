@@ -77,6 +77,14 @@ label {
 	margin-right: auto;
 }
 
+.bold {
+	font-weight: bold;
+}
+
+.wide {
+	width: 100%;
+}
+
 	/*
 		+================+
 		|Game UI Elements|
@@ -144,14 +152,12 @@ label {
 	width: 32%;
 }
 
-#upgradeProduction {
+#upgradeProduction, #upgradeCost {
 	margin-left: 1.99%;
 	float: left;
 	width: 32%;
 }
 
-#upgradeCost {
-	margin-left: 1.99%;
-	float: left;
-	width: 32%;
+.building-error {
+	color: pink;
 }

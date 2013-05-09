@@ -3,15 +3,10 @@
 if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 
 		$.Lacuna = {
-			// Simple dialog in replacement of Javascript's
-			// alert() function. This one allows the title
-			// bar text to be specified. Also, it's got
-			// fades and fancy styles that allow it to fit
-			// in with the rest of the client. :)
-			alert: function(text, title) {
+			dialog: function(args) {
 				$(document.createElement('div')).dialog({
-					title: title || 'Woopsie!',
-					modal: true, // Make the background dark.
+					title: args.title || 'Woopsie!',
+					modal: args.modal || true, // Make the background dark.
 					show: {
 						effect: 'fade',
 						duration: 500
@@ -21,18 +16,50 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						duration: 500
 					},
 					open: function(event, ui) {
-						$(this).html(text);
+						$(this).html(args.text);
 					},
 					close: function() {
 						$(this).dialog('destroy');
 					},
-					buttons: [{
-						text: 'Okay',
-						click: function() {
-							$(this).dialog('close');
+					buttons: args.buttons || [
+						{
+							text: 'Okay',
+							click: function() {
+								$(this).dialog('close');
+							}
 						}
-					}],
+					],
 					resizable: false
+				});
+			},
+			
+			alert: function(text, title) {
+				this.dialog({
+					text: text,
+					title: title
+				});
+			},
+
+			confirm: function(text, title, callback) {
+				this.dialog({
+					text: text,
+					title: title,
+					buttons: [
+						{
+							text: 'Yes!',
+							click: function() {
+								$(this).dialog('close');
+								callback(true);
+							}
+						},
+						{
+							text: 'No!',
+							click: function() {
+								$(this).dialog('close');
+								callback(false);
+							}
+						}
+					]
 				});
 			},
 
@@ -110,8 +137,11 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						// Hide the "loading" animation.
 						$.Lacuna.hidePulser();
 
+						// Log the returned data for debugging.
+						$.Lacuna.debug(jqXHR.responseText);
+
 						// Get the error block the server returned.
-						var response = $.parseJSON(jqXHR.responseText),
+						var response = $.parseJSON(jqXHR.responseText || ''),
 							error    = response.error || {message:'Response content type is not JSON.'};
 						
 						if (error.code == 1006) {
@@ -182,7 +212,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 					var tabHeaders   = ['<ul>'],
 						tabContent   = [],
 						finalContent = [],
-						DOMName      = panel.name.replace(/ /g, '_'); // So the DOM doesn't get confused.
+						DOMName      = panel.name.replace(/ |\(|\)/g, '_'); // So the DOM doesn't get confused.
 						
 					for (var i = 0; i < panel.tabs.length; i++) {
 						var tab = panel.tabs[i];
@@ -254,7 +284,7 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						},
 						close: function() { // Called when the Dialog is closed with the 'X'.
 							// Clear the DOM element.
-							dialogEl.dialog('destroy').empty().remove();
+							$(this).dialog('destroy').remove();
 						}
 					});
 
@@ -263,13 +293,11 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
 						dialogEl: $('#' + DOMName + '_Panel'), // Get newest version of the jQuery object.
 						tabEl: $('#' + DOMName + '_Tab'),
 						close: function(callback) {
-							this.dialogEl.dialog('close');
+							$('#' + DOMName + '_Panel').dialog('close');
 
 							// Run the callback, if there is one.
-							// This should wait for the animation to finish,
-							// but it doesn't need to, so far...
 							if (typeof(callback) != 'undefined') {
-									callback();
+									setTimeout(callback, 500);
 							}
 						},
 						gotoTab: function(index) {

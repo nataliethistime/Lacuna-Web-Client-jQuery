@@ -11,8 +11,9 @@
 				id = id || $.Lacuna.GameData.Status.body.id;
 
 				// Clean everything up.
-				this.clearBuildTimers();
-				$('#buildingsParent').fadeOut(500, function() {
+				this.clearBuildTimers(); // Remove Build timers.
+				$('#buildingsParent').off('click mouseenter mouseleave'); // Remove event listeners.
+				$('#buildingsParent').fadeOut(500, function() { // Fade out planet surface.
 				
 					for (var x = -5; x < 6; x++) {
 						for (var y = -5; y < 6; y++) {
@@ -189,7 +190,7 @@
 						clearInterval(interval);
 
 						// Remove the interval from the log.
-						delete this.intervals[interval];
+						delete $.Lacuna.MapPlanet.intervals[interval];
 						
 						// Refresh the planet.
 						$.Lacuna.MapPlanet.renderPlanet();
