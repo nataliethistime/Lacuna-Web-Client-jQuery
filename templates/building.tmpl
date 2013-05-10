@@ -1,0 +1,141 @@
+<script id="tmpl_building_header">
+<![CDATA[
+  <div id="buildingDetailsHeaderImage">
+    <div style='
+      width             : 100px;
+      height            : 100px;
+      background-image  : <%= background_image %>;
+      border-style      : solid;
+      border-width      : 1px;
+      float             : left;
+      '>
+      <img src="<%= assets_url %>/planet_side/100/<%= building_image %>.png">
+    </div>
+  </div>
+  <div id="buildingDetailsHeaderText" style="margin-left:110px;height:100px;"><%= building_desc %></div>
+]]>
+</script>
+
+<script id="tmpl_building_current_production">
+<![CDATA[
+  <div id="currentProduction">
+    <ul class="noDot">
+      <li>Current Production</li>
+      <li>
+        <span class="small-img"><img src="<%= assets_url %>/ui/s/food.png" /></span>
+        <span class="building-details-num"><%= food_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assets_url %>/ui/s/ore.png" /></span>
+        <span class="building-details-num"><%= ore_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assets_url %>/ui/s/water.png" /></span>
+        <span class="building-details-num"><%= water_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assets_url %>/ui/s/energy.png" /></span>
+        <span class="building-details-num"><%= energy_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assets_url %>/ui/s/waste.png" /></span>
+        <span class="building-details-num"><%= waste_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assets_url %>/ui/s/happiness.png" /></span>
+        <span class="building-details-num"><%= happiness_hour %>/hr</span>
+      </li>
+      <li>
+        <button type="button" class="wide" id="demolishButton_<%= building_id %>">Demolish</button>
+      </li>
+    </ul>
+  </div>
+]]>
+</script>
+
+<script id="tmpl_building_upgrade_production">
+<![CDATA[
+  <div id="upgradeProduction">
+    <ul class="noDot">
+      <li>Upgrade Production</li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/food.png" /></span>
+        <span class="building-details-num <% print(up_food_bad ? 'low-resource' : ''); %>"><%= up_food_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/ore.png" /></span>
+        <span class="building-details-num <% print(up_ore_bad ? 'low-resource' : ''); %>"><%= up_ore_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/water.png" /></span>
+        <span class="building-details-num <% print(up_water_bad ? 'low-resource' : ''); %>"><%= up_water_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/energy.png" /></span>
+        <span class="building-details-num <% print(up_energy_bad ? 'low-resource' : ''); %>"><%= up_energy_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/waste.png" /></span>
+        <span class="building-details-num"><%= up_waste_hour %>/hr</span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/happiness.png" /></span>
+        <span class="building-details-num  <% print(up_happy_bad ? 'low-resource' : ''); %>"><%= up_happy_hour %>/hr</span>
+      </li>
+<% if (can_downgrade) { %>
+        <li><button class="wide" type="button" id="downgradeButton_<%= building_id %>">Downgrade to level <%= to_level %></button></li>
+<% } else { %>
+        <li>
+          <div class="ui-state-highlight centerText wide">
+            <span class="bold wide">Unable to downgrade:</span><br /><%= downgrade_reason %>
+          </div>
+        </li>
+<% } %>
+    </ul>
+  </div>
+]]>
+</script>
+
+<script id="tmpl_building_upgrade_cost">
+<![CDATA[
+  <div id="upgradeCost">
+    <ul class="noDot">
+      <li>Upgrade Cost</li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/food.png" /></span>
+        <span class="building-details-num  <% print(up_food_bad ? 'low-resource' : ''); %>"><%= up_food_cost %></span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/ore.png" /></span>
+        <span class="building-details-num  <% print(up_ore_bad ? 'low-resource' : ''); %>"><%= up_ore_cost %></span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/water.png" /></span>
+        <span class="building-details-num  <% print(up_water_bad ? 'low-resource' : ''); %>"><%= up_water_cost %></span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/energy.png" /></span>
+        <span class="building-details-num  <% print(up_energy_bad ? 'low-resource' : ''); %>"><%= up_energy_cost %></span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/waste.png" /></span>
+        <span class="building-details-num  <% print(up_waste_bad ? 'low-resource' : ''); %>"><%= up_waste_cost %></span>
+      </li>
+      <li>
+        <span class="small-img"><img src="<%= assetsUrl %>/ui/s/time.png" /></span>
+        <span class="building-details-num"><%= up_time_cost %></span>
+      </li>
+      <li>
+<% if (can_upgrade) { %>
+        <button class="wide" type="button" id="upgradeButton_<%= building_id %>">Upgrade to level <%= to_level %></button>
+<% } else { %>
+        <div class="ui-state-highlight centerText wide">
+          <span class="bold wide">Unable to upgrade:</span><br /><%= upgrade_reason %>
+        </div>
+<% } %>
+      </li>
+    </ul>
+  <div>
+]]>
+</script>
+
