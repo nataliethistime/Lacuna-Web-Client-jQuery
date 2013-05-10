@@ -69,7 +69,8 @@ $(document).ready(function() {
             'building'                  // Load this last so everything works!
         ];
         var template_files = [
-            'building'
+            'building',
+            'game'
         ];
 
         var filesToLoad = js_files.length + template_files.length;
