@@ -58,35 +58,41 @@ $(document).ready(function() {
                 }, 1000); // So that the 'Welcome!!' is visible. :)
             }
         });
-       
-        // Core functions.
-        loadModule('lacuna.js');
-        loadModule('game.js');
-        loadModule('mapPlanet.js');
-        loadModule('library.js');
-        
-        // Interface items.
-        loadModule('login.js');
-        
-        // Buildings
-        loadModule('buildings/planetaryCommand.js');
-        
-        // Load this last so everything works.
-        loadModule('building.js');
+      
+        var js_files = [
+            'lacuna',
+            'game',
+            'mapPlanet',
+            'library',
+            'login',
+            'buildings/planetaryCommand',
+            'building'                  // Load this last so everything works!
+        ];
+        var template_files = [
+            'building'
+        ];
 
-        // Load templates
+        var filesToLoad = js_files.length + template_files.length;
+
+        _.each(js_files, function(file){
+            loadModule(filesToLoad, file);
+        });
         $.Lacuna.templates = {};
-        loadTemplate('building');
+
+        _.each(template_files, function(file){
+            loadTemplate(filesToLoad, file);
+        });
+
     });
 });
 
-function loadModule(name) {
+function loadModule(total, name) {
     // $.getScript() only accepts full URLS.
     var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
     
-    $.getScript(url + name).done(function() {
+    $.getScript(url + name + '.js').done(function() {
         debug_console('Correctly loaded ' + name + ' at ' + url + '.');
-        animate();
+        animate(total);
         
     }).fail(function() {
         debug_console('Failed to load ' + name + ' at ' + url + '.');
@@ -94,9 +100,9 @@ function loadModule(name) {
 }
 
 var loadedModules = 0;
-function animate() {
+function animate(total) {
     loadedModules++;
-    var percent = Math.round((loadedModules / 8) * 100); // 8 being the number of modules/templates to load
+    var percent = Math.round((loadedModules / total) * 100);
     $("#loadingProgressBar .ui-progressbar-value").animate({
         width: percent + '%'
     }, 300, function() {
@@ -114,12 +120,12 @@ function debug_console(message) {
     }
 }
 
-function loadTemplate(name) {
+function loadTemplate(total, name) {
     var url = 'templates/' + name + '.tmpl';
     $.get(url, function(data) {
         var tmpls = $(data).filter('script');
 
-        animate();
+        animate(total);
 
         tmpls.each(function() {
             var textContent = $(this).html();
