@@ -141,8 +141,8 @@ if (!$.Lacuna || typeof($.Lacuna) === 'undefined') {
                         $.Lacuna.debug(jqXHR.responseText);
 
                         // Get the error block the server returned.
-                        var response = $.parseJSON(jqXHR.responseText || ''),
-                            error    = response.error || {message:'Response content type is not JSON.'};
+                        var response = $.parseJSON(jqXHR.responseJSON || '');
+                        var error    = response.error || {message:'Response content type is not JSON.'};
                         
                         if (error.code == 1006) {
                             // Clear all the panels.

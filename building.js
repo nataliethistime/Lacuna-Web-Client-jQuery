@@ -83,60 +83,28 @@
             }, 
 
             getBuildingHeader: function(building) {
-                return [
-                    '<div id="buildingDetailsHeaderImage">',
-                    '    <div style=\'',
-                            'width: 100px;',
-                            'height: 100px;',
-                            'background-image: ', $('#lacuna').css('background-image'), ';',
-                            'border-style: solid;',
-                            'border-width: 1px;',
-                            'float: left;',
-                    '    \'>',
-                    '        <img src="', window.assetsUrl, '/planet_side/100/', building.image, '.png">',
-                    '    </div>',
-                    '</div>',
-                    '<div id="buildingDetailsHeaderText" style="margin-left:110px;height:100px;">',
-                        $.Lacuna.getBuildingDesc(building.url),
-                    '</div>'
-                ].join('');
+                return $.Lacuna.templates['tmpl_building_header']({
+                    background_image    : $('#lacuna').css('background-image'),
+                    assets_url          : window.assetsUrl,
+                    building_image      : building.image,
+                    building_desc       : $.Lacuna.getBuildingDesc(building.url)
+                });
             },
             getViewTab: function(o) {
-                return [
-                    // Current Production
-                    '<div id="currentProduction">',
-                    '    <ul class="noDot">',
-                    '        <li>Current Production</li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/food.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.food_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/ore.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.ore_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/water.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.water_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/energy.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.energy_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/waste.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.waste_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/happiness.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.happiness_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>' +
-                    '            <button type="button" class="wide" id="demolishButton_', o.id, '">Demolish</button>',
-                    '        </li>',
-                    '    </ul>',
-                    '</div>',
+                var currentProduction = $.Lacuna.templates['tmpl_building_current_production']({
+                    assets_url      : window.assetsUrl,
+                    food_hour       : $.Lacuna.Library.formatNum(o.food_hour),
+                    ore_hour        : $.Lacuna.Library.formatNum(o.ore_hour),
+                    water_hour      : $.Lacuna.Library.formatNum(o.water_hour),
+                    energy_hour     : $.Lacuna.Library.formatNum(o.energy_hour),
+                    waste_hour      : $.Lacuna.Library.formatNum(o.waste_hour),
+                    happiness_hour  : $.Lacuna.Library.formatNum(o.happiness_hour),
+                    id              : o.id
+                });
 
+
+                return [
+                    currentProduction,
                     // Upgrade Production
                     '<div id="upgradeProduction">',
                     '    <ul class="noDot">',

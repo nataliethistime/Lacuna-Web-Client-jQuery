@@ -17,9 +17,11 @@ $(document).ready(function() {
     }
 
     // NOTE: this method affects **ALL** Ajax calls!
+    // We *must* make all AJAX calls asyncronous otherwise it will affect the user experience.
     $.ajaxSetup({
         async: false, // Need to do this or loading gets messed up sometimes.
     });
+    $.support.cors = true;
 
     // Create the URL for use within the client.
     if (typeof(window.serverUrl) != 'undefined') {
@@ -28,7 +30,8 @@ $(document).ready(function() {
     else {
         window.url = window.location.protocol + '//' + window.server+ '.lacunaexpanse.com';
     }
-
+    
+    // We can't put this in a template, since we have not loaded them yet!
     $('#lacuna').append([
         '<div id="loadingScreen">',
         '    <img src="assets/logo.png" id="loadingImage" alt="Lacuna Expanse is Loading..." />',
@@ -55,7 +58,7 @@ $(document).ready(function() {
                 }, 1000); // So that the 'Welcome!!' is visible. :)
             }
         });
-        
+       
         // Core functions.
         loadModule('lacuna.js');
         loadModule('game.js');
@@ -70,39 +73,60 @@ $(document).ready(function() {
         
         // Load this last so everything works.
         loadModule('building.js');
+
+        // Load templates
+        $.Lacuna.templates = {};
+        loadTemplate('building');
     });
 });
 
-var loadedModules = 0;
 function loadModule(name) {
     // $.getScript() only accepts full URLS.
     var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
     
     $.getScript(url + name).done(function() {
-        if (typeof($.Lacuna) === 'object') {
-            $.Lacuna.debug('Correctly loaded ' + name + ' at ' + url + '.');
-        }
-        else {
-            console.log('Correctly loaded ' + name + ' at ' + url + '.');
-        }
-        
-        loadedModules++;
-        var percent = Math.round((loadedModules / 7) * 100); // 7 being the number of modules to load.
-        
-        $("#loadingProgressBar .ui-progressbar-value").animate({
-            width: percent + '%'
-        }, 300, function() {
-            $('#loadingProgressBarMessage').html(percent + '% - ' + makeRandomMessage()); // TODO: Make this look prettier!
-            $('#loadingProgressBar').progressbar({value: percent}); // Register the percent change.
-        });
+        debug_console('Correctly loaded ' + name + ' at ' + url + '.');
+        animate();
         
     }).fail(function() {
-        if (typeof($.Lacuna) === 'object') {
-            $.Lacuna.debug('Failed to load ' + name + ' at ' + url + '.');
-        }
-        else {
-            console.log('Failed to load ' + name + ' at ' + url + '.');
-        }
+        debug_console('Failed to load ' + name + ' at ' + url + '.');
+    });
+}
+
+var loadedModules = 0;
+function animate() {
+    loadedModules++;
+    var percent = Math.round((loadedModules / 8) * 100); // 8 being the number of modules/templates to load
+    $("#loadingProgressBar .ui-progressbar-value").animate({
+        width: percent + '%'
+    }, 300, function() {
+        $('#loadingProgressBarMessage').html(percent + '% - ' + makeRandomMessage()); // TODO: Make this look prettier!
+        $('#loadingProgressBar').progressbar({value: percent}); // Register the percent change.
+    });
+}
+
+function debug_console(message) {
+    if (typeof($.Lacuna) === 'object') {
+        $.Lacuna.debug(message);
+    }
+    else {
+        console.log(message);
+    }
+}
+
+function loadTemplate(name) {
+    var url = 'templates/' + name + '.tmpl';
+    $.get(url, function(data) {
+        var tmpls = $(data).filter('script');
+
+        animate();
+
+        tmpls.each(function() {
+            var textContent = $(this).html();
+            textContent = textContent.replace('<![CDATA[','');
+            textContent = textContent.replace(']]>','');
+            $.Lacuna.templates[this.id] = _.template(textContent);          
+        });
     });
 }
 
