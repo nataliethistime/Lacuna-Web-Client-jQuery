@@ -83,7 +83,7 @@
             }, 
 
             getBuildingHeader: function(building) {
-                return $.Lacuna.templates['tmpl_building_header']({
+                return $.Lacuna.templates.tmpl_building_header({
                     background_image    : $('#lacuna').css('background-image'),
                     assets_url          : window.assetsUrl,
                     building_image      : building.image,
@@ -91,121 +91,58 @@
                 });
             },
             getViewTab: function(o) {
-                var currentProduction = $.Lacuna.templates['tmpl_building_current_production']({
-                    assets_url      : window.assetsUrl,
-                    food_hour       : $.Lacuna.Library.formatNum(o.food_hour),
-                    ore_hour        : $.Lacuna.Library.formatNum(o.ore_hour),
-                    water_hour      : $.Lacuna.Library.formatNum(o.water_hour),
-                    energy_hour     : $.Lacuna.Library.formatNum(o.energy_hour),
-                    waste_hour      : $.Lacuna.Library.formatNum(o.waste_hour),
-                    happiness_hour  : $.Lacuna.Library.formatNum(o.happiness_hour),
-                    id              : o.id
+                var currentProduction = $.Lacuna.templates.tmpl_building_current_production({
+                    assets_url          : window.assetsUrl,
+                    food_hour           : $.Lacuna.Library.formatNum(o.food_hour),
+                    ore_hour            : $.Lacuna.Library.formatNum(o.ore_hour),
+                    water_hour          : $.Lacuna.Library.formatNum(o.water_hour),
+                    energy_hour         : $.Lacuna.Library.formatNum(o.energy_hour),
+                    waste_hour          : $.Lacuna.Library.formatNum(o.waste_hour),
+                    happiness_hour      : $.Lacuna.Library.formatNum(o.happiness_hour),
+                    building_id         : o.id
                 });
 
+                var upgradeProduction = $.Lacuna.templates.tmpl_building_upgrade_production({
+                    assets_url          : window.assetsUrl,
+                    up_food_hour        : $.Lacuna.Library.formatNum(o.upgrade.production.food_hour),
+                    up_ore_hour         : $.Lacuna.Library.formatNum(o.upgrade.production.ore_hour),
+                    up_water_hour       : $.Lacuna.Library.formatNum(o.upgrade.production.water_hour),
+                    up_energy_hour      : $.Lacuna.Library.formatNum(o.upgrade.production.energy_hour),
+                    up_waste_hour       : $.Lacuna.Library.formatNum(o.upgrade.production.waste_hour),                   
+                    up_happy_hour       : $.Lacuna.Library.formatNum(o.upgrade.production.happiness_hour),
+                    up_food_bad         : parseInt(o.upgrade.production.food_hour) > parseInt($.Lacuna.GameData.Status.body.food_hour),
+                    up_ore_bad          : parseInt(o.upgrade.production.ore_hour) > parseInt($.Lacuna.GameData.Status.body.ore_hour),
+                    up_water_bad        : parseInt(o.upgrade.production.water_hour) > parseInt($.Lacuna.GameData.Status.body.water_hour),
+                    up_energy_bad       : parseInt(o.upgrade.production.energy_hour) > parseInt($.Lacuna.GameData.Status.body.energy_hour),
+                    up_happy_bad        : parseInt(o.upgrade.production.happiness_hour) > parseInt($.Lacuna.GameData.Status.body.happiness_hour),
+                    building_id         : o.id,
+                    to_level            : parseInt(o.level) - 1,
+                    downgrade_reason    : o.downgrade.reason[1],
+                    can_downgrade       : o.downgrade.can
+                });
+                var upgradeCost = $.Lacuna.templates.tmpl_building_upgrade_cost({
+                    assets_url          : window.assetsUrl,
+                    up_food_cost        : $.Lacuna.Library.formatNum(o.upgrade.cost.food),
+                    up_ore_cost         : $.Lacuna.Library.formatNum(o.upgrade.cost.ore),
+                    up_water_cost       : $.Lacuna.Library.formatNum(o.upgrade.cost.water),
+                    up_energy_cost      : $.Lacuna.Library.formatNum(o.upgrade.cost.energy),
+                    up_waste_cost       : $.Lacuna.Library.formatNum(o.upgrade.cost.waste),
+                    up_time_cost        : $.Lacuna.Library.formatNum(o.upgrade.cost.time) || 15,
+                    up_food_bad         : parseInt(o.upgrade.cost.food) > parseInt($.Lacuna.GameData.Status.body.food_storage),
+                    up_ore_bad          : parseInt(o.upgrade.cost.ore) > parseInt($.Lacuna.GameData.Status.body.ore_storage),
+                    up_water_bad        : parseInt(o.upgrade.cost.water) > parseInt($.Lacuna.GameData.Status.body.water_storage),
+                    up_energy_bad       : parseInt(o.upgrade.cost.energy) > parseInt($.Lacuna.GameData.Status.body.energy_storage),
+                    up_waste_bad        : parseInt(o.upgrade.cost.waste) > parseInt($.Lacuna.GameData.Status.body.waste_storage),
+                    building_id         : o.id,
+                    to_level            : parseInt(o.level) + 1,
+                    upgrade_reason      : o.upgrade.reason[1],
+                    can_upgrade         : o.upgrade.can
+                });
 
                 return [
                     currentProduction,
-                    // Upgrade Production
-                    '<div id="upgradeProduction">',
-                    '    <ul class="noDot">',
-                    '        <li>Upgrade Production</li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/food.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.production.food_hour) > parseInt($.Lacuna.GameData.Status.body.food_hour) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.production.food_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/ore.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.production.ore_hour) > parseInt($.Lacuna.GameData.Status.body.ore_hour) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.production.ore_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/water.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.production.water_hour) > parseInt($.Lacuna.GameData.Status.body.water_hour) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.production.water_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/energy.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.production.energy_hour) > parseInt($.Lacuna.GameData.Status.body.energy_hour) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.production.energy_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/waste.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatNum(o.upgrade.production.waste_hour), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/happiness.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.production.happiness_hour) > parseInt($.Lacuna.GameData.Status.body.happiness_hour) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.production.happiness_hour), '/hr</span>',
-                    '        </li>',
-                    o.downgrade.can ?
-                    '        <li>' +
-                    '            <button class="wide" type="button" id="downgradeButton_' + o.id + '">Downgrade to level ' + 
-                                (parseInt(o.level) - 1) + '</button>' +
-                    '        </li>' :
-                    '        <li>' +
-                    '            <div class="ui-state-highlight centerText wide">' + 
-                    '                <span class="bold wide">Unable to downgrade:</span><br />' + o.upgrade.reason[1] +
-                    '            </div>' +
-                    '        </li>',
-                    '    </ul>',
-                    '</div>',
-
-                    // Upgrade Cost
-                    '<div id="upgradeCost">',
-                    '    <ul class="noDot">',
-                    '        <li>Upgrade Cost</li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/food.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.cost.food) > parseInt($.Lacuna.GameData.Status.body.food_storage) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.cost.food || 0), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/ore.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.cost.ore) > parseInt($.Lacuna.GameData.Status.body.ore_storage) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.cost.ore || 0), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/water.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.cost.water) > parseInt($.Lacuna.GameData.Status.body.water_storage) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.cost.water || 0), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/energy.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.cost.energy) > parseInt($.Lacuna.GameData.Status.body.energy_storage) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.cost.energy || 0), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/waste.png" /></span>',
-                    '            <span class="building-details-num',
-                                    parseInt(o.upgrade.cost.waste) > parseInt($.Lacuna.GameData.Status.body.waste_capacity) - parseInt($.Lacuna.GameData.Status.body.waste_storage) ? ' low-resource">' : '">',
-                                    $.Lacuna.Library.formatNum(o.upgrade.cost.waste || 0), '/hr</span>',
-                    '        </li>',
-                    '        <li>',
-                    '            <span class="small-img"><img src="', window.assetsUrl, '/ui/s/time.png" /></span>',
-                    '            <span class="building-details-num">', $.Lacuna.Library.formatTime(o.upgrade.cost.time || 15), '</span>',
-                    '        </li>',
-                    o.upgrade.can ?
-                    '        <li>' +
-                    '            <button type="button" class="wide" id="upgradeButton_' + o.id + '">Upgrade to level ' + 
-                                (parseInt(o.level) + 1) + '</button>' +
-                    '        </li>' :
-                    '        <li>' +
-                    '            <div class="ui-state-highlight centerText wide">' + 
-                    '                <span class="bold wide">Unable to upgrade:</span><br />' + o.upgrade.reason[1] +
-                    '            </div>' +
-                    '        </li>',
-                    '    </ul>',
-                    '</div>'
+                    upgradeProduction,
+                    upgradeCost
                 ].join('');
             },
 
