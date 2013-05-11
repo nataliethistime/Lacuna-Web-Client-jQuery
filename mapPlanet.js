@@ -141,9 +141,15 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                         setTimeout(function() { // Wait for the DOM to update.
                             $('#buildingsParent').fadeIn(500);
                         }, 20);
-                    }
+                    });
                 });
-            });
+            },
+            // Bottom menu
+            $('#planets').html($.Lacuna.templates.tmpl_game_menu_planet({
+                assetsUrl       : window.assetsUrl,
+                planet_image    : 'p13',
+                planet_name     : 'planet'
+            }));
         };
 
         // Cache for the buildings rendered on the planet.

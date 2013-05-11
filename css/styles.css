@@ -1,159 +1,208 @@
 #pulser {
-	position: absolute;
-	z-index: 10000; /* Keep at the top of the element "stack". */
-	top: 50%;
-	left: 50%;
-	width: 84px;  /* Actual width*/
-	height: 64px; /* and height of the pulsar.*/
-	margin-top: -42px; /*set to a negative number 1/2 of your height*/
-	margin-left: -32px; /*set to a negative number 1/2 of your width*/
-	visibility: hidden;
+    position: absolute;
+    z-index: 10000; /* Keep at the top of the element "stack". */
+    top: 50%;
+    left: 50%;
+    width: 84px;  /* Actual width*/
+    height: 64px; /* and height of the pulsar.*/
+    margin-top: -42px; /*set to a negative number 1/2 of your height*/
+    margin-left: -32px; /*set to a negative number 1/2 of your width*/
+    visibility: hidden;
 }
 
 html, body {
-	background-image: url('../assets/ui/field.png');
+    background-image: url('../assets/ui/field.png');
 
-	/* Remove scroll bar - doesn't work on Firefox */
-	overflow: hidden;
+    /* Remove scroll bar - doesn't work on Firefox */
+    overflow: hidden;
 }
 
 #nojs {
-	background-color: white;
-	text-align: center;
+    background-color: white;
+    text-align: center;
 }
 
 #loadingScreen {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	margin-top: 15%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-top: 15%;
 }
 
 #loadingProgressBar {
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 5%;
-	text-align: center;
-	width: 65%;
-	line-height: 15px;
-	color: black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    text-align: center;
+    width: 65%;
+    line-height: 15px;
+    color: black;
 }
 
 /* Div that covers the entire screen. */
 #lacuna, #mainScreen, #page {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	overflow: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden;
 }
 
 label {
-	width: 150px;
+    width: 150px;
 }
 
 /* Remove the point from <li>'s. */
 .noDot {
-	list-style: none outside none;
+    list-style: none outside none;
 }
 
 .textbox, input[type="text"], input[type="password"] {
-	width: 250px;
+    width: 250px;
 }
 
 .centerEverything {
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .centerText {
-	text-align: center;
+    text-align: center;
 }
 
 .centerTable {
-	margin-left: auto;
-	margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .bold {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .wide {
-	width: 100%;
+    width: 100%;
 }
 
-	/*
-		+================+
-		|Game UI Elements|
-		+================+
-	*/
+    /*
+        +================+
+        |Game UI Elements|
+        +================+
+    */
 
 #gameHeader {
-	top: 0px;
-	height: 55px;
-	width: 100%;
-	position: fixed;
-	background-color: rgb(82, 172, 255); /* Displays if the image doesn't load. */
-	z-index: 1000;
+    top: 0px;
+    height: 55px;
+    width: 100%;
+    position: fixed;
+    background-color: rgb(82, 172, 255); /* Displays if the image doesn't load. */
+    z-index: 1000;
 }
 
 #gameFooter {
-	bottom: 0px;
-	height: 55px;
-	width: 100%;
-	position: fixed;
-	background-color: rgb(82, 172, 255); /* Displays if the image doesn't load. */
-	z-index: 1000;
+    bottom: 0px;
+    height: 55px;
+    width: 100%;
+    position: fixed;
+    background-color: rgb(82, 172, 255); /* Displays if the image doesn't load. */
+    z-index: 1000;
+    color: #fff;
+    font-family: impact,sans-serif;
+}
+
+#planetsCenter {
+    height:74px;
+    left:50%;
+    margin-left:-167px;
+    position:absolute;
+    text-align:center;
+    width:334px;
+}
+#planetsCenter {
+    background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_bottom.png");
+    bottom:0;
+    z-index:1003;
+}
+
+#planets {
+    font-size:180%;
+    text-decoration:none;
+}
+#planets {
+    display:block;
+    height:74px;
+    padding-left:20px;
+    padding-top:25px;
+    text-align:left;
+    overflow: hidden;
+    width: 300px;
+    white-space: nowrap;
+}
+#planets img {
+    vertical-align: top;
+    margin-right:10px;
+}
+
+#planetsArrow {
+    width: 100%;
+    height: 100%;
+    background: url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/up.png") no-repeat scroll center 10px transparent;
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+.menuPlanetThumb {
+    width:35px;
+    height:35px;
 }
 
 .buildings-build-timer {
-	font-family: impact;
-	color: white;
-	text-align: right;
-	font-size: 120%;
+    font-family: impact;
+    color: white;
+    text-align: right;
+    font-size: 120%;
 }
 
 .buildings-level-center {
-	position: absolute;
-	width: 45px;
-	height: 45px;
-	top: 27.5%;
-	left: 27.5%;
-	color: white;
-	font-size: 40px;
-	font-weight: bold;
-	font-family: impact;
-	text-align: center;
-	line-height: 1;
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    top: 27.5%;
+    left: 27.5%;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: impact;
+    text-align: center;
+    line-height: 1;
 }
 
 .building-details-num {
-	display: inline-block;
-	width: 120px;
-	text-align: right;
+    display: inline-block;
+    width: 120px;
+    text-align: right;
 }
 
 .low-resource {
-	color: rgb(255, 0, 0);;
+    color: rgb(255, 0, 0);;
 }
 
 .small-img {
-	display: inline-block;
-	width: 25px;
-	vertical-align: middle;
-	text-align: center;
+    display: inline-block;
+    width: 25px;
+    vertical-align: middle;
+    text-align: center;
 }
 
 #currentProduction {
-	float: left;
-	width: 32%;
+    float: left;
+    width: 32%;
 }
 
 #upgradeProduction, #upgradeCost {
-	margin-left: 1.99%;
-	float: left;
-	width: 32%;
+    margin-left: 1.99%;
+    float: left;
+    width: 32%;
 }
