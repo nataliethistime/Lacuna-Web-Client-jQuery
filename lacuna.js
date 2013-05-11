@@ -1,7 +1,9 @@
 define(['jquery', 'jqueryUI'], function($) {
     function Lacuna() {
+ 
         // Heper for jQuery's weird scope management.
         var scope = this;
+ 
         // Helper function for the below confirm() and alert().
         this.dialog = function(args) {
             $(document.createElement('div')).dialog({
@@ -30,12 +32,14 @@ define(['jquery', 'jqueryUI'], function($) {
                 resizable: false
             });
         };
+ 
         this.alert = function(text, title) {
             this.dialog({
                 text: text,
                 title: title
             });
         };
+ 
         this.confirm = function(text, title, callback) {
             this.dialog({
                 text: text,
@@ -55,6 +59,7 @@ define(['jquery', 'jqueryUI'], function($) {
                 }]
             });
         };
+ 
         // Posts a debug message if debug mode is switched on,
         // either via the URL parameter or window.debug
         // decalred in index.html.
@@ -64,11 +69,13 @@ define(['jquery', 'jqueryUI'], function($) {
                 // I work on Firefox with Firebug, it's the best! XD
                 if (window.console && (window.console.firebug || window.console.exception)) {
                     console.info(message);
-                } else {
+                }
+                else {
                     console.log('DEBUG: ' + message);
                 }
             }
         };
+ 
         // Function for sending data to the server. An
         // object is passed in which looks like the
         // following:
@@ -91,12 +98,15 @@ define(['jquery', 'jqueryUI'], function($) {
                 'method': args.method,
                 'params': args.params
             });
+
             this.debug('Sending to server: ' + data);
+
             $.ajax({
                 data: data,
                 dataType: 'json',
                 type: 'POST',
                 url: window.url + args.module,
+
                 // Callbacks
                 success: function(data, status, xhr) {
                     // Cache the status block for later use.
@@ -105,20 +115,23 @@ define(['jquery', 'jqueryUI'], function($) {
                         // Then delete it from data to avoid duplication of data.
                         delete data.result.status;
                     }
-                    // 'this' isn't the Lacuna object.
+
                     scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
                     if (data.result) {
                         // ONWARD!
                         args.success.call(args.scope || scope || this, data);
                     }
+
                     // And finally, hide the "loading" animation.
                     scope.hidePulser();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     // Hide the "loading" animation.
                     scope.hidePulser();
+
                     // Log the returned data for debugging.
                     scope.debug(jqXHR.responseText);
+
                     // Get the error block the server returned.
                     var response = $.parseJSON(jqXHR.responseText || ''),
                         error = response.error || {
@@ -131,18 +144,20 @@ define(['jquery', 'jqueryUI'], function($) {
                             Login.build();
                             scope.alert('Session expired. :(');
                         });
-                    } else {
+                    }
+                    else {
                         // Call the failure function, or alert the human readable error message.
                         if (typeof(args.failure) === 'function') {
                             args.failure(error);
-                        } else {
-                            // Same deal as above.
+                        }
+                        else {
                             scope.alert(error.message);
                         }
                     }
                 }
             });
         };
+
         // Utility functions/helpers.
         this.getSession = function() {
             return this.GameData.ClientData.SessionId || '';
@@ -150,29 +165,35 @@ define(['jquery', 'jqueryUI'], function($) {
         this.getCurrentPlanet = function() {
             return this.GameData.Status.body.id || '';
         };
+
         this.showPulser = function() {
             $('#pulser').css('visibility', 'visible');
         };
         this.hidePulser = function() {
             $('#pulser').css('visibility', 'hidden');
         };
+
         // Resources
         this.getBuildingDesc = function(url) {
             return [
-            this.Resources.buildings[url].description || '',
+                this.Resources.buildings[url].description || '',
                 '<br />',
                 '<a href="', this.Resources.buildings[url].wiki, '" target="_blank">',
                 ' More information on the Wiki.',
-                '</a>'].join('');
+                '</a>'
+            ].join('');
         };
+
         // This is the game cache. For storing things like the: Session Id, Status, etc etc...
         this.GameData = {
             ClientData: {},
             Empire: {},
             Status: {}
         };
+
         // HTML templates to simplify the code.
         this.Templates = {};
+
         // All the fun stuff with Panels.
         this.Panel = {
             newTabbedPanel: function(panel) {
@@ -185,29 +206,36 @@ define(['jquery', 'jqueryUI'], function($) {
                     tabContent = [],
                     finalContent = [],
                     DOMName = panel.name.replace(/ |\(|\)/g, '_'); // So the DOM doesn't get confused.
+
                 for (var i = 0; i < panel.tabs.length; i++) {
                     var tab = panel.tabs[i];
                     tabHeaders[tabHeaders.length] = '<li><a href="#' + DOMName + '_Tab-' + (i + 1) + '">' + tab.name + '</a></li>';
                     tabContent[tabContent.length] = '<div id="' + DOMName + '_Tab-' + (i + 1) + '">' + tab.content + '</div>';
                 }
+
                 // Finish it all off.
                 tabHeaders[tabHeaders.length] = '</ul>';
                 finalContent = [
                     '<div id="', DOMName, '_Panel" title="', panel.name, '" style="z-index:1001;">',
-                // Place stuff above the tabs.
-                panel.preTabContent ? panel.preTabContent : '',
-                // Then the Tabs themselves.
-                '<div id="', DOMName, '_Tab">',
-                tabHeaders.join(''),
-                tabContent.join(''),
-                    '</div>',
-                    '</div>'];
+                        // Place stuff above the tabs.
+                        panel.preTabContent ? panel.preTabContent : '',
+                        // Then the Tabs themselves.
+                        '<div id="', DOMName, '_Tab">',
+                            tabHeaders.join(''),
+                            tabContent.join(''),
+                        '</div>',
+                    '</div>'
+                ];
+
                 $('#page').append(finalContent.join(''));
+
                 // Do this here to get a current version of the DOM Object.
                 var dialogEl = $('#' + DOMName + '_Panel'),
                     tabEl = $('#' + DOMName + '_Tab');
+
                 // Do some fancy Buttons!
                 $('#' + DOMName + '_Panel' + ' :button').button();
+
                 // .. and then the Dialog that everything sits in.
                 dialogEl.dialog({
                     resizable: false,
@@ -247,6 +275,7 @@ define(['jquery', 'jqueryUI'], function($) {
                         $(this).dialog('destroy').remove();
                     }
                 });
+ 
                 // Return a fancy Panel object.
                 return {
                     dialogEl: $('#' + DOMName + '_Panel'), // Get newest version of the jQuery object.
@@ -265,5 +294,6 @@ define(['jquery', 'jqueryUI'], function($) {
             }
         };
     }
+    
     return new Lacuna();
 });

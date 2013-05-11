@@ -1,11 +1,13 @@
 define([
 // Modules
 'jquery', 'lacuna', 'mapPlanet', 'library',
+
 // Buildings
 'buildings/planetaryCommand'], function(
 $, Lacuna, MapPlanet, Library,
 PlanetaryCommand) {
     function Building() {
+
         this.view = function(building) {
             Lacuna.send({
                 module: building.url,
@@ -14,24 +16,29 @@ PlanetaryCommand) {
                 Lacuna.getSession(), // Session Id
                 building.id // Building Id
                 ],
+
                 success: function(o) {
                     var tabs = [{
                         name: 'View',
                         content: this.getViewTab(o.result.building)
                     }];
+
                     // Remove the leading slash.
                     building.type = building.url.replace('/', '');
                     var extraTabs = this.buildings[building.type] ? this.buildings[building.type].getTabs() : [];
+
                     // Put 'em together.
                     if (extraTabs) {
                         tabs = tabs.concat(extraTabs);
                     }
+
                     this.panel = Lacuna.Panel.newTabbedPanel({
                         draggable: true,
                         name: building.name + ' ' + building.level,
                         preTabContent: this.getBuildingHeader(building),
                         tabs: tabs
                     });
+
                     // Now that everything is on the screen, add in all the events.
                     if (o.result.building.downgrade.can) {
                         $('#downgradeButton_' + building.id).on(
@@ -42,6 +49,7 @@ PlanetaryCommand) {
                         },
                         this.downgrade);
                     }
+
                     if (o.result.building.upgrade.can) {
                         $('#upgradeButton_' + building.id).on(
                             'click', {
@@ -51,6 +59,7 @@ PlanetaryCommand) {
                         },
                         this.upgrade);
                     }
+
                     $('#demolishButton_' + building.id).on(
                         'click', {
                         building: o.result.building,
@@ -62,6 +71,7 @@ PlanetaryCommand) {
                 scope: this
             });
         };
+
         this.getBuildingHeader = function(building) {
             return Lacuna.Templates.tmpl_building_header({
                 background_image: $('#lacuna').css('background-image'),
@@ -70,6 +80,7 @@ PlanetaryCommand) {
                 building_desc: Lacuna.getBuildingDesc(building.url)
             });
         };
+
         this.getViewTab = function(o) {
             var currentProduction = Lacuna.Templates.tmpl_building_current_production({
                 assets_url: window.assetsUrl,
@@ -117,24 +128,32 @@ PlanetaryCommand) {
                 upgrade_reason: o.upgrade.reason[1],
                 can_upgrade: o.upgrade.can
             });
+
             return [
-            currentProduction,
-            upgradeProduction,
-            upgradeCost].join('');
+                currentProduction,
+                upgradeProduction,
+                upgradeCost
+            ].join('');
         };
+
         this.upgrade = function(e) {
+
             // TODO: As per the current Web Client there is a popup
             // which warns users about accidentally upgrading a
             // building and using Halls. I do not like this
             // aproach to the situation. Need to find a better way
             // to show the warning but not bother the more experienced
             // players with extra clicking.
+
             Lacuna.send({
                 module: e.data.url,
                 method: 'upgrade',
+
                 params: [
-                Lacuna.getSession(), // Session Id
-                e.data.building.id],
+                    Lacuna.getSession(), // Session Id
+                    e.data.building.id
+                ],
+                
                 success: function(o) {
                     // Close the panel.
                     e.data.panel.close(function() {
@@ -155,9 +174,10 @@ PlanetaryCommand) {
                         module: e.data.url,
                         method: 'downgrade',
                         params: [
-                        Lacuna.getSession(), // Session Id
-                        e.data.building.id // Building Id
+                            Lacuna.getSession(), // Session Id
+                            e.data.building.id // Building Id
                         ],
+                        
                         success: function(o) {
                             // Close the panel.
                             e.data.panel.close(function() {
@@ -177,10 +197,12 @@ PlanetaryCommand) {
                     Lacuna.send({
                         module: e.data.url,
                         method: 'demolish',
+                        
                         params: [
-                        Lacuna.getSession(), // Session Id
-                        e.data.building.id // Building Id
+                            Lacuna.getSession(), // Session Id
+                            e.data.building.id // Building Id
                         ],
+                        
                         success: function(o) {
                             // Close the panel.
                             e.data.panel.close(function() {
@@ -192,9 +214,11 @@ PlanetaryCommand) {
                 }
             });
         };
+        
         this.buildings = {
             'planetarycommand': PlanetaryCommand
         };
     }
+    
     return new Building();
 });

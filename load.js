@@ -11,6 +11,7 @@ if (window.location.hash != '') {
     window.location.href = newUrl; // Automatically refreshes.
     window.location.hash = ''; // Remove the hash to prevent infate looping.
 }
+
 require.config({
     paths: {
         jquery: 'http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
@@ -26,6 +27,7 @@ require.config({
         zebra_cookie: ['jquery'] // Attach zebra_cookie to jQuery.
     }
 });
+
 var javascriptFiles = [
     'jquery',
     'underscore',
@@ -35,12 +37,15 @@ var javascriptFiles = [
     'mapPlanet',
     'login',
     'buildings/planetaryCommand',
-    'building'];
+    'building'
+];
 var templateFiles = [
     'building',
     'game',
     'login',
-    'mapPlanet'];
+    'mapPlanet'
+];
+
 requirejs(javascriptFiles, function($, _, Lacuna, Game) {
     // NOTE: this method affects **ALL** Ajax calls!
     // We *must* make all AJAX calls asyncronous otherwise it will affect the user experience.
@@ -48,12 +53,14 @@ requirejs(javascriptFiles, function($, _, Lacuna, Game) {
         async: false, // Need to do this or loading gets messed up sometimes.
     });
     $.support.cors = true; // For the template loading.
+
     // Create the URL for use within the client.
     if (typeof(window.serverUrl) != 'undefined') {
         window.url = window.serverUrl;
     } else {
         window.url = window.location.protocol + '//' + window.server + '.lacunaexpanse.com';
     }
+
     // Now load the HTML templates.
     _.each(templateFiles, function(file) {
         var url = 'templates/' + file + '.tmpl';
@@ -67,6 +74,8 @@ requirejs(javascriptFiles, function($, _, Lacuna, Game) {
             });
         });
     });
+
+
     // Now that everything is loaded, start the game! :D
     Game.start();
 });
