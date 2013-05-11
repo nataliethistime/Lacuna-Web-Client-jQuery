@@ -2,9 +2,25 @@ define(['jquery', 'lacuna', 'mapPlanet', 'login'], function($, Lacuna, MapPlanet
     function Game() {
 
         this.buildMainScreen = function() {
-            $('#lacuna').html($.Lacuna.templates.tmpl_game_main_screen({
-                assetsUrl       : window.assetsUrl
-            }));
+
+            // I am adding this back because I presume there is a problem loading Lacuna before Game?
+            $('#lacuna').html([
+                '<div id="mainScreen">',
+                ' <div id="gameHeader" style="background-image: url(\'', window.assetsUrl, '/ui/web/bar_top_back.png\')">',
+                ' ', //TODO
+            ' </div>',
+                ' <div id="buildingsParent" style="',
+                'cursor: url(\'' + window.assetsUrl + '/ui/web/openhand.cur\'), default;',
+                '">',
+                ' </div>',
+                ' <div id="gameFooter" style="background-image: url(\'', window.assetsUrl, '/ui/web/bar_bottom_back.png\')">',
+                ' ', //TODO
+            ' </div>',
+                '</div>'].join(''));
+
+//            $('#lacuna').html($.Lacuna.templates.tmpl_game_main_screen({
+//                assetsUrl       : window.assetsUrl
+//            }));
 
             // Now for the fun stuff.
             MapPlanet.renderPlanet(Lacuna.GameData.Status.empire.home_planet_id);
