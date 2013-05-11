@@ -2,47 +2,26 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
     function MapPlanet() {
         // Heper for jQuery's weird scope management.
         var scope = this;
-
         this.renderPlanet = function(id) {
             var buildingsTemplate = [];
-
             // So that this method can be treated as an 'update planet view'.
             id = id || Lacuna.GameData.Status.body.id;
-
             // Clean everything up.
             this.clearBuildTimers(); // Remove Build timers.
             $('#buildingsParent').off('click mouseenter mouseleave'); // Remove event listeners.
             $('#buildingsParent').fadeOut(500, function() { // Fade out planet surface.
-                
                 for (var x = -5; x < 6; x++) {
                     for (var y = -5; y < 6; y++) {
-                        var idStr       = 'plot_' + x + '_' + y,
+                        var idStr = 'plot_' + x + '_' + y,
                             idStrCenter = idStr + '_center';
-                        
-                        buildingsTemplate[buildingsTemplate.length] = [
-                            '<div id="', idStr, '" title="Ground" style="',
-                                'width: 100px;',
-                                'height: 100px;',
-                                'left: ', (parseInt(x) + 5) * 100, 'px;',
-                                'top: ', (parseInt(y) - 5) * 100 * -1, 'px;',
-                                'position: absolute;',
-                                'margin: 2px',
-                            '">',
-                            // Give it the build icon by defualt.
-                            '   <div id="', idStrCenter, '" style="display:none;">',
-                            '       <img id="build_icon" src="', window.assetsUrl, '/ui/l/build.png" style="',
-                                        'position: absolute;',
-                                        'width: 58px;',
-                                        'height: 45px;',
-                                        'top: 50%;',
-                                        'left: 50%;',
-                                        'margin-top: -22.5px;',
-                                        'margin-left: -29px;',
-                            '       " />',
-                            '   </div>',
-                            '</div>'
-                        ].join('');
-
+                        buildingsTemplate[buildingsTemplate.length] = Lacuna.Templates.tmpl_game_mapPlanet_plot({
+                            assetsUrl: window.assetsUrl,
+                            idStr: idStr,
+                            idStrCenter: idStrCenter,
+                            x: x,
+                            y: y,
+                            size: 100
+                        });
                         $('#buildingsParent').on({
                             mouseenter: function(e) {
                                 // Display the pretty border.
@@ -50,21 +29,19 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                                     'border-style': 'dashed',
                                     'border-color': 'white',
                                     'border-width': '2px',
-                                    'margin'      : '0px' // Stop the images jumping around.
+                                    'margin': '0px' // Stop the images jumping around.
                                 });
-
                                 // Then the level/build number/image.
                                 $('#' + e.data.centerEl).css('display', '');
                             },
                             mouseleave: function(e) {
-                                 // Hide the border.
+                                // Hide the border.
                                 $('#' + e.data.borderEl).css({
-                                     'border-style': '',
+                                    'border-style': '',
                                     'border-color': '',
                                     'border-width': '',
-                                    'margin'      : '2px' // Stop the images jumping around.
+                                    'margin': '2px' // Stop the images jumping around.
                                 });
-
                                 // Then the level/build number/image.
                                 $('#' + e.data.centerEl).css('display', 'none');
                             },
@@ -75,90 +52,74 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                                 // panel will be opened. Otherwise, the plot
                                 // will be assumed empty, and the build panel
                                 // will be opened.
-                                
-                                 if (scope.buildings[e.data.borderEl]) {
+                                if (scope.buildings[e.data.borderEl]) {
                                     // Open view panel.
                                     Building.view(scope.buildings[e.data.borderEl]);
-                                }
-                                else {
-                                     // Open build panel.
-                                     // TODO
+                                } else {
+                                    // Open build panel.
+                                    // TODO
                                 }
                             }
-                        }, '#' + idStr, {borderEl: idStr, centerEl: idStrCenter});
+                        }, '#' + idStr, {
+                            borderEl: idStr,
+                            centerEl: idStrCenter
+                        });
                     }
                 }
-                
                 // Send it to the DOM.
                 $('#buildingsParent').html([
-                     '<div id="buildingsDraggableChild">',
-                    buildingsTemplate.join(''),
-                    '</div>'
-                ].join(''));
-                
+                    '<div id="buildingsDraggableChild">',
+                buildingsTemplate.join(''),
+                    '</div>'].join(''));
                 // Right, now that that's out of the way, onward we must go...
                 Lacuna.send({
                     module: '/body',
                     method: 'get_buildings',
                     params: [
-                        Lacuna.getSession(), // Session Id
-                        id // Body Id
+                    Lacuna.getSession(), // Session Id
+                    id // Body Id
                     ],
-                    
                     success: function(o) {
                         var buildings = o.result.buildings,
-                            body      = o.result.body;
-                            keys      = Object.keys(buildings);
-                            
+                            body = o.result.body;
+                        keys = Object.keys(buildings);
                         for (var i = 0; i < keys.length; i++) {
-                            var buildingId   = keys[i],
-                                building     = buildings[buildingId],
-                                idStr        = 'plot_' + building.x + '_' + building.y,
-                                idStrCenter  = idStr + '_center',
+                            var buildingId = keys[i],
+                                building = buildings[buildingId],
+                                idStr = 'plot_' + building.x + '_' + building.y,
+                                idStrCenter = idStr + '_center',
                                 idStrCounter = idStr + '_counter',
-                                el           = $('#' + idStr);
-
+                                el = $('#' + idStr);
                             // Add the Id into the building data.
                             building.id = buildingId;
-                                
                             // Woopsie! Long line alert!!
                             el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
                             el.attr('title', building.name);
-
-                            el.html([
-                                // Only position the element if there's a build time to put in it.
-                                building.pending_build ? 
-                                '<div id="' + idStrCounter + '" class="buildings-build-timer"></div>' : '',
-                                '<div id="', idStrCenter, '" class="buildings-level-center" style="display:none;">',
-                                     building.level,
-                                '</div>'
-                            ].join(''));
-
-                             // Set up the build timer.
+                            el.html(Lacuna.Templates.tmpl_game_mapPlanet_building_level({
+                                pending_build: building.pending_build,
+                                idStrCounter: idStrCounter,
+                                idStrCenter: idStrCenter,
+                                building_level: building.level
+                            }));
+                            // Set up the build timer.
                             if (building.pending_build) {
                                 scope.createBuildTimer(building.pending_build.seconds_remaining, idStrCounter);
                             }
-
                             // Check out the click handling of each tile above.
                             scope.buildings[idStr] = building;
                         }
-                        
                         // I'd like this to be some sort of fade, one day..
                         $('#lacuna').css('background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')');
-                            
                         // Center the view.
                         var parent = $('#lacuna'), // Basically, the height of the screen.
                             height = parent.height(),
-                            width  = parent.width();
-
+                            width = parent.width();
                         $('#buildingsDraggableChild').css({
                             top: (height / 2) - 550,
                             left: (width / 2) - 550
                         });
-
                         // Start the Draggable.
                         $('#buildingsDraggableChild').draggable();
-
                         // Now that everything is ready, fade it all in!
                         setTimeout(function() { // Wait for the DOM to update.
                             $('#buildingsParent').fadeIn(500);
@@ -167,53 +128,40 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                 });
             });
         };
-
         // Cache for the buildings rendered on the planet.
         this.buildings = {};
-            
         // Cache for all the build timers that are set.
         this.intervals = {};
-
         // Then a few helper functions to make things work.
         // All of the build timer stuff needs to get moved to library.js, sometime.
         this.createBuildTimer = function(seconds, targetEl) {
             var formattedTime = Library.formatTime(seconds);
-                
             // This is faster than jQuery.
             document.getElementById(targetEl).innerHTML = formattedTime;
-
             var interval = setInterval(function() {
                 seconds--;
-
                 if (seconds === 0) {
                     // Remove the timer.
                     clearInterval(interval);
-
                     // Remove the interval from the log.
                     delete scope.intervals[interval];
-                        
                     // Refresh the planet.
                     scope.renderPlanet();
-                }
-                else {
+                } else {
                     formattedTime = Library.formatTime(seconds);
-
                     // This is faster than jQuery.
                     document.getElementById(targetEl).innerHTML = formattedTime;
                 }
             }, 1000);
-
             // Log the interval. For later destruction.
             this.intervals[interval] = 1;
         };
         this.clearBuildTimers = function() {
             var keys = Object.keys(this.intervals);
-
             for (var i = 0; i < keys.length; i++) {
                 clearInterval(keys[i]);
             }
         };
     }
-
     return new MapPlanet();
 });
