@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'jqueryUI'], function($) {
 	function Lacuna() {
 		// Heper for jQuery's weird scope management.
 		var scope = this;
@@ -200,6 +200,9 @@ define(['jquery'], function($) {
 			Empire: {},
 			Status: {}
 		};
+
+		// HTML templates to simplify the code.
+		this.Templates = {};
 
 		// All the fun stuff with Panels.
 		this.Panel = {

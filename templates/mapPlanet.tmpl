@@ -1,0 +1,36 @@
+<script id="tmpl_game_mapPlanet_plot">
+<![CDATA[
+  <div id="<%= idStr %>" title="Ground" style="
+    width    : <%= size %>px;
+    height   : <%= size %>px;
+    left     : <% print((parseInt(x) + 5) * size); %>px;
+    top      : <% print((parseInt(y) - 5) * size * -1); %>px;
+    position : absolute;
+    margin   : 2px;
+  ">
+    <div id="<%= idStrCenter %>" style="display:none;">
+      <img id="build_icon" src="<%= assetsUrl %>/ui/l/build.png" style="
+        position    : absolute;
+        width       : 58px;
+        height      : 45px;
+        top         : 50%;
+        left        : 50%;
+        margin-top  : -22.5px;
+        margin-left : -29px;
+      "/>
+    </div>
+  </div>
+]]>
+</script>
+
+<script id="tmpl_game_mapPlanet_building_level">
+<![CDATA[
+<% if (pending_build) { %>
+  <div id="<%= idStrCounter %>" class="buildings-build-timer"></div>
+<% } %>
+  <div id="<%= idStrCenter %>" class="buildings-level-center" style="display:none;">
+    <%= building_level %>
+  </div>
+]]>
+</script>
+

@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna'], function($, Lacuna) {
+define(['jquery', 'lacuna', 'zebra_cookie'], function($, Lacuna) {
 	function Login() {
 		// Heper for jQuery's weird scope management.
 		var scope = this;
