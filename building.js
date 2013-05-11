@@ -2,7 +2,7 @@ define([
 // Modules
 'jquery', 'lacuna', 'mapPlanet', 'library',
 // Buildings
-'buildings/planetarycommand'], function(
+'buildings/planetaryCommand'], function(
 $, Lacuna, MapPlanet, Library,
 PlanetaryCommand) {
     function Building() {
@@ -101,12 +101,12 @@ PlanetaryCommand) {
             });
             var upgradeCost = Lacuna.Templates.tmpl_building_upgrade_cost({
                 assets_url: window.assetsUrl,
-                up_food_cost: Library.formatNum(o.upgrade.cost.food),
-                up_ore_cost: Library.formatNum(o.upgrade.cost.ore),
-                up_water_cost: Library.formatNum(o.upgrade.cost.water),
-                up_energy_cost: Library.formatNum(o.upgrade.cost.energy),
-                up_waste_cost: Library.formatNum(o.upgrade.cost.waste),
-                up_time_cost: Library.formatNum(o.upgrade.cost.time) || 15,
+                up_food_cost: Library.formatNum(o.upgrade.cost.food || 0),
+                up_ore_cost: Library.formatNum(o.upgrade.cost.ore || 0),
+                up_water_cost: Library.formatNum(o.upgrade.cost.water || 0),
+                up_energy_cost: Library.formatNum(o.upgrade.cost.energy || 0),
+                up_waste_cost: Library.formatNum(o.upgrade.cost.waste || 0),
+                up_time_cost: Library.formatNum(o.upgrade.cost.time || 15),
                 up_food_bad: parseInt(o.upgrade.cost.food) > parseInt(Lacuna.GameData.Status.body.food_storage),
                 up_ore_bad: parseInt(o.upgrade.cost.ore) > parseInt(Lacuna.GameData.Status.body.ore_storage),
                 up_water_bad: parseInt(o.upgrade.cost.water) > parseInt(Lacuna.GameData.Status.body.water_storage),
