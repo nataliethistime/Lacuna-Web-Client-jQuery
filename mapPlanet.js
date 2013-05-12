@@ -3,7 +3,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'template'], function($, Lacu
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        Template.load("mapPlanet");
+        Template.load(['mapPlanet']);
 
         this.renderPlanet = function(id) {
             var buildingsTemplate = [];
@@ -54,7 +54,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'template'], function($, Lacu
                             },
                             click: function(e) {
                                 // This bit is rather fun. If there's an item
-                                // in the this.buildings object thet matches
+                                // in the this.buildings object that matches
                                 // the selected plot, then the building view
                                 // panel will be opened. Otherwise, the plot
                                 // will be assumed empty, and the build panel
@@ -145,6 +145,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'template'], function($, Lacu
                         }, 20);
                     }
                 });
+
                 // Bottom menu
                 $('#planets').html(Template.read.game_menu_planet({
                     assetsUrl       : window.assetsUrl,
@@ -181,6 +182,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'template'], function($, Lacu
                     document.getElementById(targetEl).innerHTML = formattedTime;
                 }
             }, 1000);
+            
             // Log the interval. For later destruction.
             this.intervals[interval] = 1;
         };

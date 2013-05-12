@@ -1,11 +1,13 @@
 define([
-// Modules
-'jquery', 'lacuna', 'mapPlanet', 'library', 'template',
+    // Modules
+    'jquery', 'lacuna', 'mapPlanet', 'library', 'template',
 
-// Buildings
-'building/planetaryCommand'], function(
-$, Lacuna, MapPlanet, Library, Template,
-PlanetaryCommand) {
+    // Buildings
+    'building/planetaryCommand'
+], function(
+    $, Lacuna, MapPlanet, Library, Template,
+    PlanetaryCommand
+) {
 
     Template.load('building');
 
@@ -16,8 +18,8 @@ PlanetaryCommand) {
                 module: building.url,
                 method: 'view',
                 params: [
-                Lacuna.getSession(), // Session Id
-                building.id // Building Id
+                    Lacuna.getSession(), // Session Id
+                    building.id // Building Id
                 ],
 
                 success: function(o) {

@@ -1,7 +1,7 @@
 define(['jquery', 'jqueryUI'], function($) {
     function Lacuna() {
  
-        // Heper for jQuery's weird scope management.
+        // Helper for jQuery's weird scope management.
         var scope = this;
  
         // Helper function for the below confirm() and alert().
@@ -62,7 +62,7 @@ define(['jquery', 'jqueryUI'], function($) {
  
         // Posts a debug message if debug mode is switched on,
         // either via the URL parameter or window.debug
-        // decalred in index.html.
+        // declared in index.html.
         this.debug = function(message) {
             // Check if debug mode is on.
             if (window.debug || window.location.toString().search('debug') > 0) {

@@ -1,38 +1,16 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template'], function($, Lacuna, MapPlanet, Login, Template) {
+define(['jquery', 'lacuna', 'mapPlanet', 'template'], function($, Lacuna, MapPlanet, Template) {
     function Game() {
 
         Template.load(['game']);
 
         this.buildMainScreen = function() {
 
-            // I am adding this back because I presume there is a problem loading Lacuna before Game?
-            $('#lacuna').html([
-                '<div id="mainScreen">',
-                ' <div id="gameHeader" style="background-image: url(\'', window.assetsUrl, '/ui/web/bar_top_back.png\')">',
-                ' ', //TODO
-            ' </div>',
-                ' <div id="buildingsParent" style="',
-                'cursor: url(\'' + window.assetsUrl + '/ui/web/openhand.cur\'), default;',
-                '">',
-                ' </div>',
-                ' <div id="gameFooter" style="background-image: url(\'', window.assetsUrl, '/ui/web/bar_bottom_back.png\')">',
-                ' ', //TODO
-            ' </div>',
-                '</div>'].join(''));
-
-//            $('#Lacuna').html(Template.read.game_main_screen({
-//                assetsUrl       : window.assetsUrl
-//            }));
+            $('#lacuna').html(Template.read.game_main_screen({
+                assetsUrl       : window.assetsUrl
+            }));
 
             // Now for the fun stuff.
             MapPlanet.renderPlanet(Lacuna.GameData.Status.empire.home_planet_id);
-
-//            // Bottom menu
-//            $('#planets').html(Template.read.game_menu_planet({
-//                assetsUrl       : window.assetsUrl,
-//                planet_image    : Lacuna.GameData.Body.image,
-//                planet_name     : Lacuna.GameData.Body.id,
-//            }));
          };
 
         this.start = function() {
@@ -48,7 +26,9 @@ define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template'], function($, Lacun
             });
             
             // Open the login screen.
-            Login.build();
+            require(['login'], function(Login) {
+                Login.build();
+            });
         };
     }
     

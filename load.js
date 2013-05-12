@@ -1,4 +1,3 @@
-// TODO: loading screen!
 // This snippet prevents the user from navigating to
 // one of the tabs that was on the screen when they
 // would've hit "F5" on their keyboard.
@@ -30,17 +29,12 @@ require.config({
 
 
 requirejs(['jquery', 'game'], function($, Game) {
-    // NOTE: this method affects **ALL** Ajax calls!
-    // We *must* make all AJAX calls asyncronous otherwise it will affect the user experience.
-//    $.ajaxSetup({
-//        async: false, // Need to do this or loading gets messed up sometimes.
-//    });
-//    $.support.cors = true; // For the template loading.
 
     // Create the URL for use within the client.
     if (typeof(window.serverUrl) != 'undefined') {
         window.url = window.serverUrl;
-    } else {
+    }
+    else {
         window.url = window.location.protocol + '//' + window.server + '.lacunaexpanse.com';
     }
 

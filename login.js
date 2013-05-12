@@ -10,9 +10,9 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
             // Grab the name of the Empire that was last logged into.
             Lacuna.GameData.Empire.Name = $.cookie.read('lacuna-expanse-empire-name') || '';
 
-            // Buld the Login Panel.
+            // Build the Login Panel.
             this.panel = Lacuna.Panel.newTabbedPanel({
-                name: 'Welcome', // Could somone please come up with something more creative?
+                name: 'Welcome', // Could someone please come up with something more creative?
                 tabs: [
                     {
                         name: 'Login',
@@ -80,7 +80,7 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
 
                     // Over here goes the building of the main game UI.
                     this.destroy(function() {
-                        // Do this to avoid curcular a dependencey -
+                        // Do this to avoid circular a dependency -
                         // that is Game needs Login, Login needs Game.
                         require(['game'], function(Game) {
                             Game.buildMainScreen();
