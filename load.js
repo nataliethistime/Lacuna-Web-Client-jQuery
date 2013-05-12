@@ -29,7 +29,7 @@ require.config({
 });
 
 
-requirejs(['jquery', 'Game'], function($, Game) {
+requirejs(['jquery', 'game'], function($, Game) {
     // NOTE: this method affects **ALL** Ajax calls!
     // We *must* make all AJAX calls asyncronous otherwise it will affect the user experience.
     $.ajaxSetup({
