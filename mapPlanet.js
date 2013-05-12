@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'library', 'building', 'template'], function($, Lacuna, Library, Building, Template) {
+define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], function($, Lacuna, Library, Building, Buildings, Template) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
