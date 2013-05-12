@@ -1,11 +1,14 @@
 define([
 // Modules
-'jquery', 'lacuna', 'mapPlanet', 'library',
+'jquery', 'lacuna', 'mapPlanet', 'library', 'template',
 
 // Buildings
-'buildings/planetaryCommand'], function(
-$, Lacuna, MapPlanet, Library,
+'building/planetaryCommand'], function(
+$, Lacuna, MapPlanet, Library, Template,
 PlanetaryCommand) {
+
+    Template.load('building');
+
     function Building() {
 
         this.view = function(building) {
@@ -73,7 +76,7 @@ PlanetaryCommand) {
         };
 
         this.getBuildingHeader = function(building) {
-            return Lacuna.Templates.tmpl_building_header({
+            return Template.read.building_header({
                 background_image: $('#lacuna').css('background-image'),
                 assets_url: window.assetsUrl,
                 building_image: building.image,
@@ -82,7 +85,7 @@ PlanetaryCommand) {
         };
 
         this.getViewTab = function(o) {
-            var currentProduction = Lacuna.Templates.tmpl_building_current_production({
+            var currentProduction = Template.read.building_current_production({
                 assets_url: window.assetsUrl,
                 food_hour: Library.formatNum(o.food_hour),
                 ore_hour: Library.formatNum(o.ore_hour),
@@ -92,7 +95,7 @@ PlanetaryCommand) {
                 happiness_hour: Library.formatNum(o.happiness_hour),
                 building_id: o.id
             });
-            var upgradeProduction = Lacuna.Templates.tmpl_building_upgrade_production({
+            var upgradeProduction = Template.read.building_upgrade_production({
                 assets_url: window.assetsUrl,
                 up_food_hour: Library.formatNum(o.upgrade.production.food_hour),
                 up_ore_hour: Library.formatNum(o.upgrade.production.ore_hour),
@@ -110,7 +113,7 @@ PlanetaryCommand) {
                 downgrade_reason: o.downgrade.reason[1],
                 can_downgrade: o.downgrade.can
             });
-            var upgradeCost = Lacuna.Templates.tmpl_building_upgrade_cost({
+            var upgradeCost = Template.read.building_upgrade_cost({
                 assets_url: window.assetsUrl,
                 up_food_cost: Library.formatNum(o.upgrade.cost.food || 0),
                 up_ore_cost: Library.formatNum(o.upgrade.cost.ore || 0),
