@@ -8,6 +8,11 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
         var buildings = {};
         var callbacks = {};
 
+        // Get the unique ID for a plot
+        this.get_idStr = function(x,y) {
+            return 'plot_' + x + '_' + y;
+        };
+
         // Create a set of 'buildings' objects. Initially it will be
         // empty, but will be populated on each call to get_buildings
         for (var x = -5; x < 6; x++) {
@@ -17,11 +22,6 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
                  callbacks[idStr] = $.Callbacks();
             }
         }
-
-        // Get the unique ID for a plot
-        this.get_idStr = function(x,y) {
-            return 'plot_' + x + '_' + y;
-        };
 
         // Return a single building based on the x,y co-ordinate
         this.get_building_at_xy = function(x,y) {
@@ -48,16 +48,20 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
                 ],
                 success: function(o) {
                     var loaded_buildings    = o.result.buildings,
-                        keys                = Object.keys(buildings)
+                        keys                = Object.keys(loaded_buildings)
                     ;
                     for (var i = 0; i < keys.length; i++) {
                         var new_building    = loaded_buildings[keys[i]],
-                            idStr           = scope.get_idStr(building.x, building.y)
+                            idStr           = scope.get_idStr(new_building.x, new_building.y)
                         ;
+                        // add a few useful bits to the new building
+                        new_building.id     = keys[i];
+                        new_building.idStr  = idStr;
+
                         // Update the current building only if there is a change
                         if ( ! _.isEqual(buildings[idStr], new_building)) {
-                            callbacks[idStr].fire();
                             buildings[idStr] = new_building;
+                            callbacks[idStr].fire(new_building);
                         }
                     }
                 }
