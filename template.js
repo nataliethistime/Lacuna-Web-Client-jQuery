@@ -2,8 +2,8 @@ define(['jquery', 'underscore'], function($, _) {
     function Template() {
         var scope = this;
 
-        scope.file = new Array();
-        scope.read = new Array();
+        this.file = new Array();
+        this.read = new Array();
         this.load = function(templates) {
             if (! _.isArray(templates)) {
                 templates = [templates];
@@ -14,14 +14,18 @@ define(['jquery', 'underscore'], function($, _) {
                     return;
                 }
                 var url = 'templates/' + file + '.tmpl';
-                $.get(url, function(data) {
-                    var templates = $(data).filter('script');
-                    templates.each(function() {
-                        var textContent = $(this).html();
-                        textContent = textContent.replace('<![CDATA[', '');
-                        textContent = textContent.replace(']]>', '');
-                        scope.read[this.id] = _.template(textContent);
-                    });
+                $.ajax({
+                    url     : url,
+                    async   : false,
+                    success : function(data) {
+                        var templates = $(data).filter('script');
+                        templates.each(function() {
+                            var textContent = $(this).html();
+                            textContent = textContent.replace('<![CDATA[', '');
+                            textContent = textContent.replace(']]>', '');
+                            scope.read[this.id] = _.template(textContent);
+                        });
+                    }
                 });
                 scope.file[file] = 1;
             });

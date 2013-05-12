@@ -28,25 +28,8 @@ require.config({
     }
 });
 
-var javascriptFiles = [
-    'jquery',
-    'underscore',
-    'lacuna',
-    'game',
-    'library',
-    'mapPlanet',
-    'login',
-    'buildings/planetaryCommand',
-    'building'
-];
-var templateFiles = [
-    'building',
-    'game',
-    'login',
-    'mapPlanet'
-];
 
-requirejs(javascriptFiles, function($, _, Lacuna, Game) {
+requirejs(['jquery', 'Game'], function($, Game) {
     // NOTE: this method affects **ALL** Ajax calls!
     // We *must* make all AJAX calls asyncronous otherwise it will affect the user experience.
     $.ajaxSetup({
@@ -60,21 +43,6 @@ requirejs(javascriptFiles, function($, _, Lacuna, Game) {
     } else {
         window.url = window.location.protocol + '//' + window.server + '.lacunaexpanse.com';
     }
-
-    // Now load the HTML templates.
-    _.each(templateFiles, function(file) {
-        var url = 'templates/' + file + '.tmpl';
-        $.get(url, function(data) {
-            var templates = $(data).filter('script');
-            templates.each(function() {
-                var textContent = $(this).html();
-                textContent = textContent.replace('<![CDATA[', '');
-                textContent = textContent.replace(']]>', '');
-                Lacuna.Templates[this.id] = _.template(textContent);
-            });
-        });
-    });
-
 
     // Now that everything is loaded, start the game! :D
     Game.start();
