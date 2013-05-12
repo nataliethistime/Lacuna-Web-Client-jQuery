@@ -32,10 +32,10 @@ require.config({
 requirejs(['jquery', 'game'], function($, Game) {
     // NOTE: this method affects **ALL** Ajax calls!
     // We *must* make all AJAX calls asyncronous otherwise it will affect the user experience.
-    $.ajaxSetup({
-        async: false, // Need to do this or loading gets messed up sometimes.
-    });
-    $.support.cors = true; // For the template loading.
+//    $.ajaxSetup({
+//        async: false, // Need to do this or loading gets messed up sometimes.
+//    });
+//    $.support.cors = true; // For the template loading.
 
     // Create the URL for use within the client.
     if (typeof(window.serverUrl) != 'undefined') {
