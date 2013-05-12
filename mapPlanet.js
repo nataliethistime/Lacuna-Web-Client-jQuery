@@ -9,7 +9,6 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
         // Cache for all the build timers that are set.
         this.intervals = {};
 
-
         Template.load(['mapPlanet']);
 
         this.renderPlanet = function(id) {
@@ -19,8 +18,6 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
             id = id || Lacuna.GameData.Status.body.id;
             var body = Lacuna.GameData.Status.body;
 
-            // Clean everything up.
-            this.clearBuildTimers(); // Remove Build timers.
             $('#buildingsParent').off('click mouseenter mouseleave'); // Remove event listeners.
             $('#buildingsParent').fadeOut(500, function() { // Fade out planet surface.
 
@@ -97,12 +94,13 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
                                 idStrCenter     : idStrCenter,
                                 building_level  : building.level
                             }));
-                            // Cache for the buildings rendered on the planet.
-                            scope.buildings = {};
 
-                            // Cache for all the build timers that are set.
-                            scope.intervals = {};
-
+                            scope.buildings[idStr] = building;
+                            // Clearing a build timer, only to reset it, is not ideal, but it's pragmatic.
+                            scope.clearBuildTimer(idStrCounter);
+                            if (building.pending_build) {
+                                scope.createBuildTimer(idStrCounter, building.pending_build.seconds_remaining);
+                            }
                         });
 
                     }
@@ -152,7 +150,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
 
         // Then a few helper functions to make things work.
         // All of the build timer stuff needs to get moved to library.js, sometime.
-        this.createBuildTimer = function(seconds, targetEl) {
+        this.createBuildTimer = function(targetEl, seconds) {
             var formattedTime = Library.formatTime(seconds);
             // This is faster than jQuery.
             document.getElementById(targetEl).innerHTML = formattedTime;
@@ -163,8 +161,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
                     clearInterval(interval);
                     // Remove the interval from the log.
                     delete scope.intervals[interval];
-                    // Refresh the planet.
-                    scope.renderPlanet();
+                    document.getElementById(targetEl).innerHTML = '';
                 } else {
                     formattedTime = Library.formatTime(seconds);
                     // This is faster than jQuery.
@@ -173,13 +170,21 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
             }, 1000);
             
             // Log the interval. For later destruction.
-            this.intervals[interval] = 1;
+            scope.intervals[targetEl] = interval;
         };
 
-        this.clearBuildTimers = function() {
-            var keys = Object.keys(this.intervals);
-            for (var i = 0; i < keys.length; i++) {
-                clearInterval(keys[i]);
+        this.clearBuildTimer = function(targetEl) {
+            var interval = scope.intervals[targetEl];
+            if (null != interval) {
+                clearInterval(interval);
+                delete scope.intervals[targetEl];
+            }
+        };
+
+        this.clearAllBuildTimers = function() {
+            var targetEls = Object.keys(scope.intervals);
+            for (var i = 0; i < targetEls.length; i++) {
+                scope.clearBuildTimer(targetEls[i]);
             }
         };
     }
