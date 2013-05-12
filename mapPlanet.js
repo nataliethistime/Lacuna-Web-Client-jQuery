@@ -1,7 +1,9 @@
-define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library, Building) {
+define(['jquery', 'lacuna', 'library', 'building', 'template'], function($, Lacuna, Library, Building, Template) {
     function MapPlanet() {
-        // Heper for jQuery's weird scope management.
+        // Helper for jQuery's weird scope management.
         var scope = this;
+
+        Template.load("mapPlanet");
 
         this.renderPlanet = function(id) {
             var buildingsTemplate = [];
@@ -18,7 +20,7 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                     for (var y = -5; y < 6; y++) {
                         var idStr = 'plot_' + x + '_' + y,
                             idStrCenter = idStr + '_center';
-                        buildingsTemplate[buildingsTemplate.length] = Lacuna.Templates.tmpl_game_mapPlanet_plot({
+                        buildingsTemplate[buildingsTemplate.length] = Template.read.game_mapPlanet_plot({
                             assetsUrl: window.assetsUrl,
                             idStr: idStr,
                             idStrCenter: idStrCenter,
@@ -106,7 +108,7 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                             // Woopsie! Long line alert!!
                             el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
                             el.attr('title', building.name);
-                            el.html(Lacuna.Templates.tmpl_game_mapPlanet_building_level({
+                            el.html(Template.read.game_mapPlanet_building_level({
                                 pending_build: building.pending_build,
                                 idStrCounter: idStrCounter,
                                 idStrCenter: idStrCenter,
@@ -144,11 +146,11 @@ define(['jquery', 'lacuna', 'library', 'building'], function($, Lacuna, Library,
                     }
                 });
                 // Bottom menu
-//                $('#planets').html($.Lacuna.templates.tmpl_game_menu_planet({
-//                    assetsUrl       : window.assetsUrl,
-//                    planet_image    : 'p13',
-//                    planet_name     : 'planet'
-//                }));
+                $('#planets').html(Template.read.game_menu_planet({
+                    assetsUrl       : window.assetsUrl,
+                    planet_image    : 'p13',
+                    planet_name     : 'planet'
+                }));
             });
         };
 

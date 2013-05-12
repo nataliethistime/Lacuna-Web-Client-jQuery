@@ -1,5 +1,7 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'login'], function($, Lacuna, MapPlanet, Login) {
+define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template'], function($, Lacuna, MapPlanet, Login, Template) {
     function Game() {
+
+        Template.load(['game']);
 
         this.buildMainScreen = function() {
 
@@ -18,19 +20,19 @@ define(['jquery', 'lacuna', 'mapPlanet', 'login'], function($, Lacuna, MapPlanet
             ' </div>',
                 '</div>'].join(''));
 
-//            $('#lacuna').html($.Lacuna.templates.tmpl_game_main_screen({
+//            $('#Lacuna').html(Template.read.game_main_screen({
 //                assetsUrl       : window.assetsUrl
 //            }));
 
             // Now for the fun stuff.
             MapPlanet.renderPlanet(Lacuna.GameData.Status.empire.home_planet_id);
 
-            // Bottom menu
-            $('#planets').html($.Lacuna.templates.tmpl_game_menu_planet({
-                assetsUrl       : window.assetsUrl,
-                planet_image    : $.Lacuna.GameData.Body.image,
-                planet_name     : $.Lacuna.GameData.Body.id,
-            }));
+//            // Bottom menu
+//            $('#planets').html(Template.read.game_menu_planet({
+//                assetsUrl       : window.assetsUrl,
+//                planet_image    : Lacuna.GameData.Body.image,
+//                planet_name     : Lacuna.GameData.Body.id,
+//            }));
          };
 
         this.start = function() {

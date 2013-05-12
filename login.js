@@ -1,8 +1,11 @@
-define(['jquery', 'lacuna', 'zebra_cookie'], function($, Lacuna) {
+define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Template) {
+
+    Template.load('login');
     function Login() {
-        // Heper for jQuery's weird scope management.
+        // Helper for jQuery's weird scope management.
         var scope = this;
 
+        
         this.build = function() {
             // Grab the name of the Empire that was last logged into.
             Lacuna.GameData.Empire.Name = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -13,17 +16,17 @@ define(['jquery', 'lacuna', 'zebra_cookie'], function($, Lacuna) {
                 tabs: [
                     {
                         name: 'Login',
-                        content: Lacuna.Templates.tmpl_login_main_tab({
+                        content: Template.read.login_main_tab({
                             empire_name: Lacuna.GameData.Empire.Name
                         })
                     },
                     {
                         name: 'Create Empire',
-                        content: Lacuna.Templates.tmpl_login_create_empire_tab({})
+                        content: Template.read.login_create_empire_tab({})
                     },
                     {
                         name: 'Forgot Password?',
-                        content: Lacuna.Templates.tmpl_login_forgot_password_tab({})
+                        content: Template.read.login_forgot_password_tab({})
                     }
                 ]
             });
@@ -65,8 +68,8 @@ define(['jquery', 'lacuna', 'zebra_cookie'], function($, Lacuna) {
 
                     Lacuna.GameData.ClientData.SessionId = o.result.session_id;
 
-                    // Pop the sesion and empire name into a cookie.
-                    // Unused as yet, any volunteers for implementing loging in from Cookie?
+                    // Pop the session and empire name into a cookie.
+                    // Unused as yet, any volunteers for implementing logging in from Cookie?
                     //$.cookie.write('lacuna-expanse-session-id', $.Lacuna.GameData.ClientData.SessionId, 2 * 60 * 60); // 2 hour session.
                     if ($('#rememberEmpire').prop('checked')) {
                         $.cookie.write('lacuna-expanse-empire-name', Lacuna.GameData.Empire.Name, 365 * 24 * 60 * 60); // 1 year.
