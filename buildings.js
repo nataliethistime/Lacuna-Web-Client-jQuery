@@ -1,6 +1,6 @@
 // This is a module containing all the building data returned by
 // the call to 'get_buildings'
-// It is not a collection of 'building.js' modules
+// It is not a collection of 'building.js' modules.
 //
 define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
     function Buildings() {
