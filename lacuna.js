@@ -252,7 +252,7 @@ define(['jquery', 'jqueryUI'], function($) {
                     open: function() {
                         // Initialize Tabs when the Dialog opens.
                         tabEl.tabs({
-                            active: 0, // Set the defualt tab open to the first one.
+                            active: 0, // Set the default tab open to the first one.
                             heightStyle: 'auto',
                             activate: function(event, ui) {
                                 var tab = panel.tabs[ui.newTab.index()];
