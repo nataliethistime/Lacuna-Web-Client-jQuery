@@ -23,7 +23,10 @@ require.config({
         underscore: {
             exports: '_'
         },
-        zebra_cookie: ['jquery'] // Attach zebra_cookie to jQuery.
+        zebra_cookie: ['jquery'], // Attach zebra_cookie to jQuery.
+
+        // Bust caching of the JS files.
+        urlArgs : 'bust=' + new Date().getTime()
     }
 });
 

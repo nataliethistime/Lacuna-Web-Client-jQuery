@@ -1,11 +1,11 @@
 define([
     // Modules
-    'jquery', 'lacuna', 'mapPlanet', 'library', 'template',
+    'jquery', 'lacuna', 'library', 'template',
 
     // Buildings
     'building/planetaryCommand'
 ], function(
-    $, Lacuna, MapPlanet, Library, Template,
+    $, Lacuna, Library, Template,
     PlanetaryCommand
 ) {
 
@@ -146,7 +146,7 @@ define([
             // TODO: As per the current Web Client there is a popup
             // which warns users about accidentally upgrading a
             // building and using Halls. I do not like this
-            // aproach to the situation. Need to find a better way
+            // approach to the situation. Need to find a better way
             // to show the warning but not bother the more experienced
             // players with extra clicking.
 
@@ -156,7 +156,7 @@ define([
 
                 params: [
                     Lacuna.getSession(), // Session Id
-                    e.data.building.id
+                    e.data.building.id // Building Id
                 ],
                 
                 success: function(o) {
@@ -164,11 +164,14 @@ define([
                     e.data.panel.close(function() {
                         
                         // Refresh planet.
-                        Lacuna.MapPlanet.renderPlanet();
+                        require(['mapPlanet'], function(MapPlanet) {
+                            MapPlanet.renderPlanet();
+                        });
                     });
                 }
             });
         };
+
         this.downgrade = function(e) {
             Lacuna.confirm('Are you sure you want to downgrade your ' + e.data.building.name +
                 ' to level ' + (parseInt(e.data.building.level) - 1) + '?',
@@ -187,14 +190,18 @@ define([
                         success: function(o) {
                             // Close the panel.
                             e.data.panel.close(function() {
+                                
                                 // Refresh planet.
-                                MapPlanet.renderPlanet();
+                                require(['mapPlanet'], function(MapPlanet) {
+                                    MapPlanet.renderPlanet();
+                                });
                             });
                         }
                     });
                 }
             });
         };
+
         this.demolish = function(e) {
             Lacuna.confirm(
                 'Are you sure you want to demolish your ' + e.data.building.name + '?',
@@ -212,8 +219,11 @@ define([
                         success: function(o) {
                             // Close the panel.
                             e.data.panel.close(function() {
+                                
                                 // Refresh planet.
-                                MapPlanet.renderPlanet();
+                                require(['mapPlanet'], function(MapPlanet) {
+                                    MapPlanet.renderPlanet();
+                                });
                             });
                         }
                     });
