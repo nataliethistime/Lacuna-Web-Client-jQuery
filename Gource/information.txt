@@ -2,9 +2,11 @@ Gource is a cool little utility that lets you visualize a Version Control repo. 
 
 To generate a Gource video, run the following commands: 
 
-inside the main directory of the repo:
-gource -1024x768 --stop-position 1.0 --highlight-all-users --background-colour 000000 --elasticity 2 --bloom-intensity 2 --key --title "Lacuna Expanse jQuery Client" --seconds-per-day 5 --user-image-dir "Gource/avatars" --output-framerate 60 --output-ppm-stream Gource/output.ppm
+Inside the main directory of the repo:
+gource -1024x768 --stop-position 1.0 --highlight-all-users --background-colour 000000 --bloom-intensity 2 --key --title "Lacuna Expanse jQuery Client" --seconds-per-day 5 --user-image-dir "Gource/avatars" --output-framerate 60 --output-ppm-stream Gource/output.ppm
 
+Inside the "Gource" directory:
 ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm  -vcodec wmv1 -r 60 -qscale 0 gource_video.wmv
+
 
 Note to self: use 1920, 1080 resolution for beautiful looking Gources.
