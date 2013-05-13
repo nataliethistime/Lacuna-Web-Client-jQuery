@@ -22,11 +22,15 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                     },
                     {
                         name: 'Create Empire',
-                        content: Template.read.login_create_empire_tab({})
+                        content: Template.read.login_create_empire_tab({
+
+                        })
                     },
                     {
                         name: 'Forgot Password?',
-                        content: Template.read.login_forgot_password_tab({})
+                        content: Template.read.login_forgot_password_tab({
+                            
+                        })
                     }
                 ]
             });

@@ -121,7 +121,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
                 }
  
                 // Center the view.
-                var parent  = $('#lacuna'),                 // Basically, the height of the screen.
+                var parent  = $('#lacuna'), // Basically, the height of the screen.
                     height  = parent.height(),
                     width   = parent.width()
                 ;
@@ -135,7 +135,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
                 $('#buildingsDraggableChild').draggable();
 
                 // Now that everything is ready, fade it all in!
-                setTimeout(function() {                     // Wait for the DOM to update.
+                setTimeout(function() { // Wait for the DOM to update.
                     $('#buildingsParent').fadeIn(500);
                 }, 20);
 
@@ -152,6 +152,7 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
         // All of the build timer stuff needs to get moved to library.js, sometime.
         this.createBuildTimer = function(targetEl, seconds) {
             var formattedTime = Library.formatTime(seconds);
+            
             // This is faster than jQuery.
             document.getElementById(targetEl).innerHTML = formattedTime;
             var interval = setInterval(function() {

@@ -8,7 +8,7 @@ if (window.location.hash != '') {
     var newUrl = window.location.protocol +
         '//' + window.location.hostname + (window.location.pathname || '') + (window.location.search || '');
     window.location.href = newUrl; // Automatically refreshes.
-    window.location.hash = ''; // Remove the hash to prevent infate looping.
+    window.location.hash = ''; // Remove the hash to prevent infinite looping.
 }
 
 require.config({

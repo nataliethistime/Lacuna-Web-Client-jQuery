@@ -162,6 +162,7 @@ define([
                 success: function(o) {
                     // Close the panel.
                     e.data.panel.close(function() {
+                        
                         // Refresh planet.
                         Lacuna.MapPlanet.renderPlanet();
                     });
