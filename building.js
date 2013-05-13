@@ -1,11 +1,11 @@
 define([
     // Modules
-    'jquery', 'lacuna', 'library', 'template',
+    'jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body',
 
     // Buildings
     'building/planetaryCommand'
 ], function(
-    $, Lacuna, Library, Template,
+    $, Lacuna, MapPlanet, Library, Template, Body,
     PlanetaryCommand
 ) {
 
@@ -18,8 +18,8 @@ define([
                 module: building.url,
                 method: 'view',
                 params: [
-                    Lacuna.getSession(), // Session Id
-                    building.id // Building Id
+                    Lacuna.getSession(),
+                    building.id
                 ],
 
                 success: function(o) {
@@ -105,11 +105,11 @@ define([
                 up_energy_hour: Library.formatNum(o.upgrade.production.energy_hour),
                 up_waste_hour: Library.formatNum(o.upgrade.production.waste_hour),
                 up_happy_hour: Library.formatNum(o.upgrade.production.happiness_hour),
-                up_food_bad: parseInt(o.upgrade.production.food_hour) > parseInt(Lacuna.GameData.Status.body.food_hour),
-                up_ore_bad: parseInt(o.upgrade.production.ore_hour) > parseInt(Lacuna.GameData.Status.body.ore_hour),
-                up_water_bad: parseInt(o.upgrade.production.water_hour) > parseInt(Lacuna.GameData.Status.body.water_hour),
-                up_energy_bad: parseInt(o.upgrade.production.energy_hour) > parseInt(Lacuna.GameData.Status.body.energy_hour),
-                up_happy_bad: parseInt(o.upgrade.production.happiness_hour) > parseInt(Lacuna.GameData.Status.body.happiness_hour),
+                up_food_bad: parseInt(o.upgrade.production.food_hour) > parseInt(Body.get.food_hour),
+                up_ore_bad: parseInt(o.upgrade.production.ore_hour) > parseInt(Body.get.ore_hour),
+                up_water_bad: parseInt(o.upgrade.production.water_hour) > parseInt(Body.get.water_hour),
+                up_energy_bad: parseInt(o.upgrade.production.energy_hour) > parseInt(Body.get.energy_hour),
+                up_happy_bad: parseInt(o.upgrade.production.happiness_hour) > parseInt(Body.get.happiness_hour),
                 building_id: o.id,
                 to_level: parseInt(o.level) - 1,
                 downgrade_reason: o.downgrade.reason[1],
@@ -123,11 +123,11 @@ define([
                 up_energy_cost: Library.formatNum(o.upgrade.cost.energy || 0),
                 up_waste_cost: Library.formatNum(o.upgrade.cost.waste || 0),
                 up_time_cost: Library.formatNum(o.upgrade.cost.time || 15),
-                up_food_bad: parseInt(o.upgrade.cost.food) > parseInt(Lacuna.GameData.Status.body.food_storage),
-                up_ore_bad: parseInt(o.upgrade.cost.ore) > parseInt(Lacuna.GameData.Status.body.ore_storage),
-                up_water_bad: parseInt(o.upgrade.cost.water) > parseInt(Lacuna.GameData.Status.body.water_storage),
-                up_energy_bad: parseInt(o.upgrade.cost.energy) > parseInt(Lacuna.GameData.Status.body.energy_storage),
-                up_waste_bad: parseInt(o.upgrade.cost.waste) > parseInt(Lacuna.GameData.Status.body.waste_storage),
+                up_food_bad: parseInt(o.upgrade.cost.food) > parseInt(Body.get.food_storage),
+                up_ore_bad: parseInt(o.upgrade.cost.ore) > parseInt(Body.get.ore_storage),
+                up_water_bad: parseInt(o.upgrade.cost.water) > parseInt(Body.get.water_storage),
+                up_energy_bad: parseInt(o.upgrade.cost.energy) > parseInt(Body.get.energy_storage),
+                up_waste_bad: parseInt(o.upgrade.cost.waste) > parseInt(Body.get.waste_storage),
                 building_id: o.id,
                 to_level: parseInt(o.level) + 1,
                 upgrade_reason: o.upgrade.reason[1],
@@ -155,8 +155,8 @@ define([
                 method: 'upgrade',
 
                 params: [
-                    Lacuna.getSession(), // Session Id
-                    e.data.building.id // Building Id
+                    Lacuna.getSession(),
+                    e.data.building.id
                 ],
                 
                 success: function(o) {
@@ -183,8 +183,8 @@ define([
                         module: e.data.url,
                         method: 'downgrade',
                         params: [
-                            Lacuna.getSession(), // Session Id
-                            e.data.building.id // Building Id
+                            Lacuna.getSession(),
+                            e.data.building.id
                         ],
                         
                         success: function(o) {
@@ -212,8 +212,8 @@ define([
                         method: 'demolish',
                         
                         params: [
-                            Lacuna.getSession(), // Session Id
-                            e.data.building.id // Building Id
+                            Lacuna.getSession(),
+                            e.data.building.id
                         ],
                         
                         success: function(o) {

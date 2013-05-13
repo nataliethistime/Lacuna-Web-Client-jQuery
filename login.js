@@ -1,23 +1,23 @@
 define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Template) {
 
     Template.load('login');
+    var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
+    var empirePassword;
+
     function Login() {
         // Helper for jQuery's weird scope management.
         var scope = this;
-
         
         this.build = function() {
-            // Grab the name of the Empire that was last logged into.
-            Lacuna.GameData.Empire.Name = $.cookie.read('lacuna-expanse-empire-name') || '';
 
             // Build the Login Panel.
             this.panel = Lacuna.Panel.newTabbedPanel({
                 name: 'Welcome', // Could someone please come up with something more creative?
                 tabs: [
                     {
-                        name: 'Login',
-                        content: Template.read.login_main_tab({
-                            empire_name: Lacuna.GameData.Empire.Name
+                        name        : 'Login',
+                        content     : Template.read.login_main_tab({
+                            empire_name : empireName
                         })
                     },
                     {
@@ -52,8 +52,8 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
         };
 
         this.login = function() {
-            Lacuna.GameData.Empire.Name = $('#empire').val();
-            Lacuna.GameData.Password = $('#password').val();
+            empireName = $('#empire').val();
+            var empirePassword = $('#password').val();
 
             Lacuna.showPulser();
 
@@ -62,28 +62,28 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                 method: 'login',
 
                 params: [
-                    Lacuna.GameData.Empire.Name, // Empire Name
-                    Lacuna.GameData.Password, // Password
-                    'anonymous' // API Key
+                    empireName,
+                    empirePassword,
+                    'anonymous'                     // API Key
                 ],
 
                 success: function(o) {
                     Lacuna.hidePulser();
 
-                    Lacuna.GameData.ClientData.SessionId = o.result.session_id;
+                    Lacuna.setSession(o.result.session_id);
 
                     // Pop the session and empire name into a cookie.
                     // Unused as yet, any volunteers for implementing logging in from Cookie?
-                    //$.cookie.write('lacuna-expanse-session-id', $.Lacuna.GameData.ClientData.SessionId, 2 * 60 * 60); // 2 hour session.
+                    //$.cookie.write('lacuna-expanse-session-id', Lacuna.getSession(), 2 * 60 * 60); // 2 hour session.
                     if ($('#rememberEmpire').prop('checked')) {
-                        $.cookie.write('lacuna-expanse-empire-name', Lacuna.GameData.Empire.Name, 365 * 24 * 60 * 60); // 1 year.
+                        $.cookie.write('lacuna-expanse-empire-name', empireName, 365 * 24 * 60 * 60); // 1 year.
                     }
                     else {
                         $.cookie.destroy('lacuna-expanse-empire-name');
                     }
 
                     // Over here goes the building of the main game UI.
-                    this.destroy(function() {
+                    scope.destroy(function() {
                         // Do this to avoid circular a dependency -
                         // that is Game needs Login, Login needs Game.
                         require(['game'], function(Game) {

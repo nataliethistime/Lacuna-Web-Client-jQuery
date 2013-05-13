@@ -1,9 +1,11 @@
-define(['jquery', 'jqueryUI'], function($) {
+define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
     function Lacuna() {
  
         // Helper for jQuery's weird scope management.
         var scope = this;
- 
+        var status;
+        var sessionId = 0;
+
         // Helper function for the below confirm() and alert().
         this.dialog = function(args) {
             $(document.createElement('div')).dialog({
@@ -93,29 +95,33 @@ define(['jquery', 'jqueryUI'], function($) {
             // Show the Blue "loading" animation.
             this.showPulser();
             var data = JSON.stringify({
-                'jsonrpc': '2.0',
-                'id': 1,
-                'method': args.method,
-                'params': args.params
+                'jsonrpc'   : '2.0',
+                'id'        : 1,
+                'method'    : args.method,
+                'params'    : args.params
             });
 
             this.debug('Sending to server: ' + data);
 
             $.ajax({
-                data: data,
-                dataType: 'json',
-                type: 'POST',
-                url: window.url + args.module,
+                data        : data,
+                dataType    : 'json',
+                type        : 'POST',
+                url         : window.url + args.module,
 
                 // Callbacks
                 success: function(data, status, xhr) {
-                    // Cache the status block for later use.
+                    // Cache the status block and empire for later use
                     if (data.result.status) {
-                        scope.GameData.Status = data.result.status;
-                        // Then delete it from data to avoid duplication of data.
-                        delete data.result.status;
+                        status = _.clone(data.result.status);
+                        // Another circular dependency
+                        require(['empire'], function(Empire) {
+                            Empire.update(status.empire);
+                        });
+                        if (status.body) {
+                            Body.update(status.body);
+                        }
                     }
-
                     scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
                     if (data.result) {
                         // ONWARD!
@@ -160,10 +166,13 @@ define(['jquery', 'jqueryUI'], function($) {
 
         // Utility functions/helpers.
         this.getSession = function() {
-            return this.GameData.ClientData.SessionId || '';
+            return sessionId || '';
+        };
+        this.setSession = function(session) {
+            sessionId = session;
         };
         this.getCurrentPlanet = function() {
-            return this.GameData.Status.body.id || '';
+            return Body.get.id || '';
         };
 
         this.showPulser = function() {
@@ -182,13 +191,6 @@ define(['jquery', 'jqueryUI'], function($) {
                 ' More information on the Wiki.',
                 '</a>'
             ].join('');
-        };
-
-        // This is the game cache. For storing things like the: Session Id, Status, etc etc...
-        this.GameData = {
-            ClientData: {},
-            Empire: {},
-            Status: {}
         };
 
         // HTML templates to simplify the code.

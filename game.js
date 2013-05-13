@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'template'], function($, Lacuna, MapPlanet, Template) {
+define(['jquery', 'lacuna', 'mapPlanet', 'template', 'empire'], function($, Lacuna, MapPlanet, Template, Empire) {
     function Game() {
 
         Template.load(['game']);
@@ -10,7 +10,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'template'], function($, Lacuna, MapPla
             }));
 
             // Now for the fun stuff.
-            MapPlanet.renderPlanet(Lacuna.GameData.Status.empire.home_planet_id);
+            MapPlanet.renderPlanet(Empire.get.home_planet_id);
          };
 
         this.start = function() {
@@ -34,3 +34,4 @@ define(['jquery', 'lacuna', 'mapPlanet', 'template'], function($, Lacuna, MapPla
     
     return new Game();
 });
+

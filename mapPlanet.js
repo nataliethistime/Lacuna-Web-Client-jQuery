@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], function($, Lacuna, Library, Building, Buildings, Template) {
+define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template', 'body'], function($, Lacuna, Library, Building, Buildings, Template, Body) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -11,12 +11,11 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
 
         Template.load(['mapPlanet']);
 
-        this.renderPlanet = function(id) {
+        this.renderPlanet = function(bodyId) {
             var buildingsTemplate = [];
 
             // So that this method can be treated as an 'update planet view'.
-            id = id || Lacuna.GameData.Status.body.id;
-            var body = Lacuna.GameData.Status.body;
+            bodyId = bodyId || Body.get.id;
 
             $('#buildingsParent').off('click mouseenter mouseleave'); // Remove event listeners.
             $('#buildingsParent').fadeOut(500, function() { // Fade out planet surface.
@@ -113,11 +112,11 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
                     '</div>'].join('')
                 );
  
-                Buildings.get_buildings(id);
+                Body.get_buildings(bodyId);
 
                 // I'd like this to be some sort of fade, one day..
-                if (body) {
-                    $('#lacuna').css('background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + body.surface_image + '.jpg\')');
+                if (Body.get) {
+                    $('#lacuna').css('background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + Body.get.surface_image + '.jpg\')');
                 }
  
                 // Center the view.
@@ -182,12 +181,13 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template'], fun
             }
         };
 
-        this.clearAllBuildTimers = function() {
-            var targetEls = Object.keys(scope.intervals);
-            for (var i = 0; i < targetEls.length; i++) {
-                scope.clearBuildTimer(targetEls[i]);
-            }
-        };
+// Not sure if this is needed, keep for now.
+//        this.clearAllBuildTimers = function() {
+//            var targetEls = Object.keys(scope.intervals);
+//            for (var i = 0; i < targetEls.length; i++) {
+//                scope.clearBuildTimer(targetEls[i]);
+//            }
+//        };
     }
 
     return new MapPlanet();
