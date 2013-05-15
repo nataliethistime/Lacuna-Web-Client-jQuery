@@ -11,140 +11,138 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template', 'bod
 
         Template.load(['mapPlanet']);
 
-        this.renderPlanet = function(bodyId) {
+        // this only creates the html 'framework' into which the planet details are put
+        // it relies on callbacks to update the content whenever the bodychanges
+        // In this way we only need to generate the framework once, not every time the body 
+        // changes.
+        this.renderPlanet = function() {
             var buildingsTemplate = [];
 
-            // So that this method can be treated as an 'update planet view'.
-            bodyId = bodyId || Body.get.id;
-
             $('#buildingsParent').off('click mouseenter mouseleave'); // Remove event listeners.
-            $('#buildingsParent').fadeOut(500, function() { // Fade out planet surface.
 
-                for (var x = -5; x < 6; x++) {
-                    for (var y = -5; y < 6; y++) {
-                        var idStr       = Buildings.get_idStr(x,y),
-                            idStrCenter = idStr + '_center'
-                        ;
-                        buildingsTemplate[buildingsTemplate.length] = Template.read.game_mapPlanet_plot({
-                            assetsUrl       : window.assetsUrl,
-                            idStr           : idStr,
-                            idStrCenter     : idStrCenter,
-                            x               : x,
-                            y               : y,
-                            size            : 100
-                        });
+            for (var x = -5; x < 6; x++) {
+                for (var y = -5; y < 6; y++) {
+                    var idStr       = Buildings.get_idStr(x,y),
+                        idStrCenter = idStr + '_center'
+                    ;
+                    buildingsTemplate[buildingsTemplate.length] = Template.read.game_mapPlanet_plot({
+                        assetsUrl       : window.assetsUrl,
+                        idStr           : idStr,
+                        idStrCenter     : idStrCenter,
+                        x               : x,
+                        y               : y,
+                        size            : 100
+                    });
 
-                        // Mouse over effects.
-                        $('#buildingsParent').on({
-                            mouseenter: function(e) {
-                                // Display the pretty border.
-                                $('#' + e.data.borderEl).css({
-                                    'border-style': 'dashed',
-                                    'border-color': 'white',
-                                    'border-width': '2px',
-                                    'margin': '0px' // Stop the images jumping around.
-                                });
-                                // Then the level/build number/image.
-                                $('#' + e.data.centerEl).css('display', '');
-                            },
-                            mouseleave: function(e) {
-                                // Hide the border.
-                                $('#' + e.data.borderEl).css({
-                                    'border-style': '',
-                                    'border-color': '',
-                                    'border-width': '',
-                                    'margin': '2px' // Stop the images jumping around.
-                                });
-                                // Then the level/build number/image.
-                                $('#' + e.data.centerEl).css('display', 'none');
-                            },
-                            click: function(e) {
-                                // This bit is rather fun. If there's an item
-                                // in the this.buildings object that matches
-                                // the selected plot, then the building view
-                                // panel will be opened. Otherwise, the plot
-                                // will be assumed empty, and the build panel
-                                // will be opened.
-                                if (scope.buildings[e.data.borderEl]) {
-                                    // Open view panel.
-                                    Building.view(scope.buildings[e.data.borderEl]);
-                                } else {
-                                    // Open build panel.
-                                    // TODO
-                                }
+                    // Mouse over effects.
+                    $('#buildingsParent').on({
+                        mouseenter: function(e) {
+                            // Display the pretty border.
+                            $('#' + e.data.borderEl).css({
+                                'border-style': 'dashed',
+                                'border-color': 'white',
+                                'border-width': '2px',
+                                'margin': '0px' // Stop the images jumping around.
+                            });
+                            // Then the level/build number/image.
+                            $('#' + e.data.centerEl).css('display', '');
+                        },
+                        mouseleave: function(e) {
+                            // Hide the border.
+                            $('#' + e.data.borderEl).css({
+                                'border-style': '',
+                                'border-color': '',
+                                'border-width': '',
+                                'margin': '2px' // Stop the images jumping around.
+                            });
+                            // Then the level/build number/image.
+                            $('#' + e.data.centerEl).css('display', 'none');
+                        },
+                        click: function(e) {
+                            // This bit is rather fun. If there's an item
+                            // in the this.buildings object that matches
+                            // the selected plot, then the building view
+                            // panel will be opened. Otherwise, the plot
+                            // will be assumed empty, and the build panel
+                            // will be opened.
+                            if (scope.buildings[e.data.borderEl]) {
+                                // Open view panel.
+                                Building.view(scope.buildings[e.data.borderEl]);
+                            } else {
+                                // Open build panel.
+                                // TODO
                             }
-                        }, '#' + idStr, {
-                            borderEl: idStr,
-                            centerEl: idStrCenter
-                        });
+                        }
+                    }, '#' + idStr, {
+                        borderEl: idStr,
+                        centerEl: idStrCenter
+                    });
 
-                        // What to do if the building changes
-                        Buildings.callback_add(x, y, function(building) {
-                            var idStr           = building.idStr,
-                                el              = $('#' + idStr),
-                                idStrCenter     = idStr + '_center',
-                                idStrCounter    = idStr + '_counter'
-                            ;
-
-                            el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
-                            el.html(Template.read.game_mapPlanet_building_level({
-                                pending_build   : building.pending_build,
-                                idStrCounter    : idStrCounter,
-                                idStrCenter     : idStrCenter,
-                                building_level  : building.level
-                            }));
-
-                            scope.buildings[idStr] = building;
-                            // Clearing a build timer, only to reset it, is not ideal, but it's pragmatic.
-                            scope.clearBuildTimer(idStrCounter);
-                            if (building.pending_build) {
-                                scope.createBuildTimer(idStrCounter, building.pending_build.seconds_remaining);
-                            }
-                        });
-
-                    }
+                    // Update the building specific data when it changes
+                    Buildings.callback_add(x, y, scope.update_building);
                 }
+            }
  
-                // Send it to the DOM.
-                $('#buildingsParent').html([
-                    '<div id="buildingsDraggableChild">',
-                    buildingsTemplate.join(''),
-                    '</div>'].join('')
-                );
+            // Send it to the DOM.
+            $('#buildingsParent').html([
+                '<div id="buildingsDraggableChild">',
+                buildingsTemplate.join(''),
+                '</div>'].join('')
+            );
  
-                Body.get_buildings(bodyId);
+            // Update the body specific data when it changes
+            Body.callback_add(scope.update_body);
 
-                // I'd like this to be some sort of fade, one day..
-                if (Body.get) {
-                    $('#lacuna').css('background-image', 'url(\'' + window.assetsUrl + '/planet_side/' + Body.get.surface_image + '.jpg\')');
-                }
- 
-                // Center the view.
-                var parent  = $('#lacuna'), // Basically, the height of the screen.
-                    height  = parent.height(),
-                    width   = parent.width()
-                ;
+            // Final bits
+            scope.resize();
+            $('#buildingsDraggableChild').draggable();
+        };
 
-                $('#buildingsDraggableChild').css({
-                    top     : (height / 2) - 550,
-                    left    : (width / 2) - 550
-                });
+        // What to do when the 'body' details change
+        // Note, we can also do this if the screen is resized
+        this.update_body = function() {
+            $('#planets').html(Template.read.game_menu_planet({
+                assetsUrl       : window.assetsUrl,
+                planet_image    : Body.get.image,
+                planet_name     : Body.get.name
+            }));
+            $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/planet_side/" + Body.get.surface_image + ".jpg')");
+        };
 
-                // Start the Draggable.
-                $('#buildingsDraggableChild').draggable();
+        // To call if the screen is resized
+        this.resize = function() {
+            // Center the view.
+            var parent  = $('#lacuna'), // Basically, the height of the screen.
+                height  = parent.height(),
+                width   = parent.width()
+            ;
 
-                // Now that everything is ready, fade it all in!
-                setTimeout(function() { // Wait for the DOM to update.
-                    $('#buildingsParent').fadeIn(500);
-                }, 20);
-
-                // Bottom menu
-                $('#planets').html(Template.read.game_menu_planet({
-                    assetsUrl       : window.assetsUrl,
-                    planet_image    : 'p13',
-                    planet_name     : 'planet'
-                }));
+            $('#buildingsDraggableChild').css({
+                top     : (height / 2) - 550,
+                left    : (width / 2) - 550
             });
+        };
+
+        // What to do if the building changes
+        this.update_building = function(building) {
+            var idStr           = building.idStr,
+                el              = $('#' + idStr),
+                idStrCenter     = idStr + '_center',
+                idStrCounter    = idStr + '_counter'
+            ;
+
+            el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
+            el.html(Template.read.game_mapPlanet_building_level({
+                pending_build   : building.pending_build,
+                idStrCounter    : idStrCounter,
+                idStrCenter     : idStrCenter,
+                building_level  : building.level
+            }));
+
+            scope.buildings[idStr] = building;
+            if (building.pending_build) {
+                scope.createBuildTimer(idStrCounter, building.pending_build.seconds_remaining);
+            }
         };
 
         // Then a few helper functions to make things work.
@@ -180,14 +178,6 @@ define(['jquery', 'lacuna', 'library', 'building', 'buildings', 'template', 'bod
                 delete scope.intervals[targetEl];
             }
         };
-
-// Not sure if this is needed, keep for now.
-//        this.clearAllBuildTimers = function() {
-//            var targetEls = Object.keys(scope.intervals);
-//            for (var i = 0; i < targetEls.length; i++) {
-//                scope.clearBuildTimer(targetEls[i]);
-//            }
-//        };
     }
 
     return new MapPlanet();

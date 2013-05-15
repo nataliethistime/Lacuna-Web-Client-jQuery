@@ -4,8 +4,8 @@
     <div id="gameHeader" style="background-image: url('<%= assetsUrl %>/ui/web/bar_top_back.png')">
       <!-- TODO -->
     </div>
-    <div id="buildingsParent" style="cursor: url('<%= assetsUrl %>/ui/web/openhand.cur'), default;'">
-    </div>
+    <div id="buildingsParent" style="cursor: url('<%= assetsUrl %>/ui/web/openhand.cur'), default;'"></div>
+    <div id="starsParent" style="cursor: url('<%= assetsUrl %>/ui/web/openhand.cur'), default;'"></div>
     <div id="gameFooter" style="background-image: url('<%= assetsUrl %>/ui/web/bar_bottom_back.png')">
       <div id="planetsCenter">
         <div id="planetsArrow">
@@ -20,7 +20,7 @@
 
 <script id="game_menu_planet">
 <![CDATA[
-  <% if (planet_image) { %><img src="<%= assetsUrl %>/star_system/<%= planet_image %>-5.png" class="menuPlanetThumb"><% } %><%= planet_name %>
+  <% if (planet_image) { %><img src="<%= assetsUrl %>/star_system/<%= planet_image %>.png" class="menuPlanetThumb"><% } %><%= planet_name %>
 ]]>
 </script>
 

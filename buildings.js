@@ -46,7 +46,7 @@ define(['jquery', 'underscore'], function($, _) {
                     idStr           = scope.get_idStr(new_building.x, new_building.y)
                 ;
                 // add a few useful bits to the new building
-                new_building.id     = keys[i];
+                //new_building.id     = keys[i];
                 new_building.idStr  = idStr;
 
                 // Update the current building only if there is a change

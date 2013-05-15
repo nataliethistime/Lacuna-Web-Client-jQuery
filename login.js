@@ -7,11 +7,12 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
     function Login() {
         // Helper for jQuery's weird scope management.
         var scope = this;
-        
+        var panel;
+
         this.build = function() {
 
             // Build the Login Panel.
-            this.panel = Lacuna.Panel.newTabbedPanel({
+            panel = Lacuna.Panel.newTabbedPanel({
                 name: 'Welcome', // Could someone please come up with something more creative?
                 tabs: [
                     {
@@ -46,11 +47,6 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
             $('#loginButton').click(this.login);
         };
 
-        this.destroy = function(callback) {
-            this.panel.close(callback);
-            delete this.panel;
-        };
-
         this.login = function() {
             empireName = $('#empire').val();
             var empirePassword = $('#password').val();
@@ -81,14 +77,18 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                     else {
                         $.cookie.destroy('lacuna-expanse-empire-name');
                     }
-
-                    // Over here goes the building of the main game UI.
-                    scope.destroy(function() {
-                        // Do this to avoid circular a dependency -
-                        // that is Game needs Login, Login needs Game.
-                        require(['game'], function(Game) {
-                            Game.buildMainScreen();
-                        });
+                    // This kicks things off for the first time. The response is monitored in lacuna.js
+                    // and callbacks are made to update the planet view and menus
+                    Lacuna.send({
+                        module  : '/body',
+                        method  : 'get_status',
+                        params  : [
+                            o.result.session_id,
+                            o.result.status.empire.home_planet_id,
+                        ],
+                        success: function() {
+                            panel.close();
+                        }
                     });
                 },
                 scope: this

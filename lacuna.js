@@ -113,7 +113,7 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                 success: function(data, status, xhr) {
                     // Cache the status block and empire for later use
                     if (data.result.status) {
-                        status = _.clone(data.result.status);
+                        status = data.result.status;
                         // Another circular dependency
                         require(['empire'], function(Empire) {
                             Empire.update(status.empire);
@@ -121,6 +121,15 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                         if (status.body) {
                             Body.update(status.body);
                         }
+                    }
+                    // the following can come from a direct call to get a body status
+                    if (data.result.body) {
+                        Body.update(data.result.body);
+                    }
+                    if (data.result.empire) {
+                        require(['empire'], function(Empire) {
+                            Empire.update(data.result.empire);
+                        });
                     }
                     scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
                     if (data.result) {

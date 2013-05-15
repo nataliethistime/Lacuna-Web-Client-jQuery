@@ -1,19 +1,14 @@
-define([
-    // Modules
-    'jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body',
-
-    // Buildings
-    'building/planetaryCommand'
-], function(
-    $, Lacuna, MapPlanet, Library, Template, Body,
-    PlanetaryCommand
-) {
+define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], function($, Lacuna, MapPlanet, Library, Template, Body) {
 
     Template.load('building');
 
     function Building() {
+        var scope = this;
+        var buildings = new Array();
 
+        // View the building Dialog
         this.view = function(building) {
+
             Lacuna.send({
                 module: building.url,
                 method: 'view',
@@ -30,72 +25,91 @@ define([
 
                     // Remove the leading slash.
                     building.type = building.url.replace('/', '');
-                    var extraTabs = this.buildings[building.type] ? this.buildings[building.type].getTabs() : [];
-
-                    // Put 'em together.
-                    if (extraTabs) {
-                        tabs = tabs.concat(extraTabs);
+                    if (buildings[building.type]) {
+                        // Use the cached value
+                        scope.createTabs(tabs, o.result.building, buildings[building.type]);
                     }
+                    else {
+                         // NOTE: If a Building of this type is not present, then use a 'Default' building
 
-                    this.panel = Lacuna.Panel.newTabbedPanel({
-                        draggable: true,
-                        name: building.name + ' ' + building.level,
-                        preTabContent: this.getBuildingHeader(building),
-                        tabs: tabs
-                    });
-
-                    // Now that everything is on the screen, add in all the events.
-                    if (o.result.building.downgrade.can) {
-                        $('#downgradeButton_' + building.id).on(
-                            'click', {
-                            building: o.result.building,
-                            url: building.url,
-                            panel: this.panel
-                        },
-                        this.downgrade);
+                         require([building.type], function(Building) {
+                            // We only have to load it once, then we can use the cached value
+                            buildings[building.type] = Building;
+                            scope.createTabs(tabs, o.result.building, Building);
+                        });
                     }
-
-                    if (o.result.building.upgrade.can) {
-                        $('#upgradeButton_' + building.id).on(
-                            'click', {
-                            building: o.result.building,
-                            url: building.url,
-                            panel: this.panel
-                        },
-                        this.upgrade);
-                    }
-
-                    $('#demolishButton_' + building.id).on(
-                        'click', {
-                        building: o.result.building,
-                        url: building.url,
-                        panel: this.panel
-                    },
-                    this.demolish);
-                },
-                scope: this
+                }
             });
+        };
+
+        // Add any building specific tabs, output the building Dialog box
+        //
+        this.createTabs = function(tabs, building, Building) {
+            var extraTabs = Building.getTabs();
+
+            // Put 'em together.
+            if (extraTabs) {
+                tabs = tabs.concat(extraTabs);
+            }
+
+            var panel = Lacuna.Panel.newTabbedPanel({
+                draggable       : true,
+                name            : building.name + ' ' + building.level,
+                preTabContent   : scope.getBuildingHeader(building),
+                tabs            : tabs
+            });
+
+            // Now that everything is on the screen, add in all the events.
+            if (building.downgrade.can) {
+                $('#downgradeButton_' + building.id).on(
+                    'click', {
+                        building    : building,
+                        url         : building.url,
+                        panel       : panel
+                    },
+                this.downgrade
+                );
+            }
+            if (building.upgrade.can) {
+                $('#upgradeButton_' + building.id).on(
+                    'click', {
+                        building    : building,
+                        url         : building.url,
+                        panel       : panel
+                    },
+                    this.upgrade
+                );
+            }
+
+            $('#demolishButton_' + building.id).on(
+                'click', {
+                    building    : building,
+                    url         : building.url,
+                    panel       : panel
+                },
+                this.demolish
+            );
         };
 
         this.getBuildingHeader = function(building) {
             return Template.read.building_header({
-                background_image: $('#lacuna').css('background-image'),
-                assets_url: window.assetsUrl,
-                building_image: building.image,
-                building_desc: Lacuna.getBuildingDesc(building.url)
+                background_image    : $('#lacuna').css('background-image'),
+                assets_url          : window.assetsUrl,
+                building_image      : building.image,
+                building_desc       : Lacuna.getBuildingDesc(building.url)
             });
         };
 
         this.getViewTab = function(o) {
             var currentProduction = Template.read.building_current_production({
-                assets_url: window.assetsUrl,
-                food_hour: Library.formatNum(o.food_hour),
-                ore_hour: Library.formatNum(o.ore_hour),
-                water_hour: Library.formatNum(o.water_hour),
-                energy_hour: Library.formatNum(o.energy_hour),
-                waste_hour: Library.formatNum(o.waste_hour),
-                happiness_hour: Library.formatNum(o.happiness_hour),
-                building_id: o.id
+                assets_url      : window.assetsUrl,
+                food_hour       : Library.formatNum(o.food_hour),
+                ore_hour        : Library.formatNum(o.ore_hour),
+                water_hour      : Library.formatNum(o.water_hour),
+                energy_hour     : Library.formatNum(o.energy_hour),
+                waste_hour      : Library.formatNum(o.waste_hour),
+                happiness_hour  : Library.formatNum(o.happiness_hour),
+                building_id     : o.id
             });
             var upgradeProduction = Template.read.building_upgrade_production({
                 assets_url: window.assetsUrl,
@@ -162,11 +176,7 @@ define([
                 success: function(o) {
                     // Close the panel.
                     e.data.panel.close(function() {
-                        
-                        // Refresh planet.
-                        require(['mapPlanet'], function(MapPlanet) {
-                            MapPlanet.renderPlanet();
-                        });
+                        // nothing to do, building updates take care of themselves now    
                     });
                 }
             });
@@ -190,11 +200,7 @@ define([
                         success: function(o) {
                             // Close the panel.
                             e.data.panel.close(function() {
-                                
-                                // Refresh planet.
-                                require(['mapPlanet'], function(MapPlanet) {
-                                    MapPlanet.renderPlanet();
-                                });
+                                // nothing to do, building updates take care of themselves now
                             });
                         }
                     });
@@ -219,20 +225,12 @@ define([
                         success: function(o) {
                             // Close the panel.
                             e.data.panel.close(function() {
-                                
-                                // Refresh planet.
-                                require(['mapPlanet'], function(MapPlanet) {
-                                    MapPlanet.renderPlanet();
-                                });
+                                // nothing to do, building updates take care of themselves now
                             });
                         }
                     });
                 }
             });
-        };
-        
-        this.buildings = {
-            'planetarycommand': PlanetaryCommand
         };
     }
     
