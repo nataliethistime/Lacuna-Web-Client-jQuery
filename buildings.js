@@ -48,6 +48,7 @@ define(['jquery', 'underscore'], function($, _) {
                 // add a few useful bits to the new building
                 //new_building.id     = keys[i];
                 new_building.idStr  = idStr;
+                new_building.id     = keys[i];
 
                 // Update the current building only if there is a change
                 if ( ! _.isEqual(buildings[idStr], new_building)) {

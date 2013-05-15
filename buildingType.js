@@ -1,10 +1,23 @@
+// This defines a 'building type', e.g. SpacePort but in the generic sense
+// i.e. it does not describe a specific instance of a building (e.g. the building at location x,y on planet q)
+// It defines methods to display information about a type of building
+//
 define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], function($, Lacuna, MapPlanet, Library, Template, Body) {
 
     Template.load('building');
 
-    function Building() {
+    // I don't like this, I prefer to detect if the file exists and if so load it
+    // if not load the default. But I have not found a neat way to do this (yet)
+    // an alternative is to put this info into resources.json?
+    var moduleTypes = {
+        planetaryCommand    :   'planetaryCommand',
+        shipyard            :   'defaultBuilding',
+        spaceport           :   'defaultBuilding'
+    };
+
+    function BuildingType() {
         var scope = this;
-        var buildings = new Array();
+        var modules = new Array();
 
         // View the building Dialog
         this.view = function(building) {
@@ -19,23 +32,26 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
 
                 success: function(o) {
                     var tabs = [{
-                        name: 'View',
-                        content: this.getViewTab(o.result.building)
+                        name    : 'View',
+                        content : scope.getViewTab(o.result.building)
                     }];
 
                     // Remove the leading slash.
                     building.type = building.url.replace('/', '');
-                    if (buildings[building.type]) {
+                    if (modules[building.type]) {
                         // Use the cached value
-                        scope.createTabs(tabs, o.result.building, buildings[building.type]);
+                        scope.createTabs(tabs, o.result.building, modules[building.type]);
                     }
                     else {
-                         // NOTE: If a Building of this type is not present, then use a 'Default' building
-
-                         require([building.type], function(Building) {
+                        var loadBuildingType = moduleTypes[building.type];
+                        if ( ! loadBuildingType ) {
+                            loadBuildingType = 'defaultBuilding';
+                        }
+                        require(['building/'+loadBuildingType], function(LoadedBuildingType) {
                             // We only have to load it once, then we can use the cached value
-                            buildings[building.type] = Building;
-                            scope.createTabs(tabs, o.result.building, Building);
+                            LoadedBuildingType.url = building.url;
+                            modules[building.type] = LoadedBuildingType;
+                            scope.createTabs(tabs, o.result.building, LoadedBuildingType);
                         });
                     }
                 }
@@ -44,8 +60,8 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
 
         // Add any building specific tabs, output the building Dialog box
         //
-        this.createTabs = function(tabs, building, Building) {
-            var extraTabs = Building.getTabs();
+        this.createTabs = function(tabs, building, LoadedBuildingType) {
+            var extraTabs = LoadedBuildingType.getTabs();
 
             // Put 'em together.
             if (extraTabs) {
@@ -55,7 +71,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
             var panel = Lacuna.Panel.newTabbedPanel({
                 draggable       : true,
                 name            : building.name + ' ' + building.level,
-                preTabContent   : scope.getBuildingHeader(building),
+                preTabContent   : scope.getBuildingHeader(building, LoadedBuildingType),
                 tabs            : tabs
             });
 
@@ -64,7 +80,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
                 $('#downgradeButton_' + building.id).on(
                     'click', {
                         building    : building,
-                        url         : building.url,
+                        url         : LoadedBuildingType.url,
                         panel       : panel
                     },
                 this.downgrade
@@ -74,7 +90,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
                 $('#upgradeButton_' + building.id).on(
                     'click', {
                         building    : building,
-                        url         : building.url,
+                        url         : LoadedBuildingType.url,
                         panel       : panel
                     },
                     this.upgrade
@@ -84,19 +100,19 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
             $('#demolishButton_' + building.id).on(
                 'click', {
                     building    : building,
-                    url         : building.url,
+                    url         : LoadedBuildingType.url,
                     panel       : panel
                 },
                 this.demolish
             );
         };
 
-        this.getBuildingHeader = function(building) {
+        this.getBuildingHeader = function(building, BuildingType) {
             return Template.read.building_header({
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
                 building_image      : building.image,
-                building_desc       : Lacuna.getBuildingDesc(building.url)
+                building_desc       : Lacuna.getBuildingDesc(BuildingType.url)
             });
         };
 
@@ -234,5 +250,5 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
         };
     }
     
-    return new Building();
+    return new BuildingType();
 });
