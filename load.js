@@ -31,7 +31,7 @@ require.config({
 });
 
 
-requirejs(['jquery', 'game'], function($, game) {
+requirejs(['jquery', 'game'], function($, Game) {
 
     // Create the URL for use within the client.
     if (typeof(window.serverUrl) != 'undefined') {
@@ -42,5 +42,5 @@ requirejs(['jquery', 'game'], function($, game) {
     }
 
     // Now that everything is loaded, start the game! :D
-    game.start();
+    Game.start();
 });

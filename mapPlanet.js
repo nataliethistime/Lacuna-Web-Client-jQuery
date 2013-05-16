@@ -1,6 +1,6 @@
 // This defines the HTML structure to contain the buildings to be displayed in the planet image.
 
-define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], function($, library, buildingType, buildings, template, body) {
+define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], function($, Library, BuildingType, Buildings, Template, Body) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -11,7 +11,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
         // Cache for all the build timers that are set.
         this.intervals = {};
 
-        template.load(['mapPlanet']);
+        Template.load(['mapPlanet']);
 
         // this only creates the html 'framework' into which the planet details are put
         // it relies on callbacks to update the content whenever the bodychanges
@@ -24,10 +24,10 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
 
             for (var x = -5; x < 6; x++) {
                 for (var y = -5; y < 6; y++) {
-                    var idStr       = buildings.get_idStr(x,y),
+                    var idStr       = Buildings.get_idStr(x,y),
                         idStrCenter = idStr + '_center'
                     ;
-                    buildingsTemplate[buildingsTemplate.length] = template.read.game_mapPlanet_plot({
+                    buildingsTemplate[buildingsTemplate.length] = Template.read.game_mapPlanet_plot({
                         assetsUrl       : window.assetsUrl,
                         idStr           : idStr,
                         idStrCenter     : idStrCenter,
@@ -69,7 +69,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
                             // will be opened.
                             if (scope.buildings[e.data.borderEl]) {
                                 // Open view panel.
-                                buildingType.view(scope.buildings[e.data.borderEl]);
+                                BuildingType.view(scope.buildings[e.data.borderEl]);
                             } else {
                                 // Open build panel.
                                 // TODO
@@ -81,7 +81,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
                     });
 
                     // Update the building specific data when it changes
-                    buildings.callback_add(x, y, scope.update_building);
+                    Buildings.callback_add(x, y, scope.update_building);
                 }
             }
  
@@ -93,7 +93,8 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
             );
  
             // Update the body specific data when it changes
-            body.callback_add(scope.update_body);
+            Body.callback_add(scope.update_body);
+            Body.backgroundCallbackAdd(scope.update_background);
 
             // Final bits
             scope.resize();
@@ -102,13 +103,16 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
 
         // What to do when the 'body' details change
         // Note, we can also do this if the screen is resized
-        this.update_body = function() {
-            $('#planets').html(template.read.game_menu_planet({
+        this.update_body = function(loadedBody) {
+            $('#planets').html(Template.read.game_menu_planet({
                 assetsUrl       : window.assetsUrl,
-                planet_image    : body.get.image,
-                planet_name     : body.get.name
+                planet_image    : loadedBody.image,
+                planet_name     : loadedBody.name
             }));
-            $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/planet_side/" + body.get.surface_image + ".jpg')");
+        };
+        // What to do if the surface_image changes
+        this.update_background = function(surface_image) {
+            $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/planet_side/" + surface_image + ".jpg')");
         };
 
         // To call if the screen is resized
@@ -134,7 +138,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
             ;
 
             el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
-            el.html(template.read.game_mapPlanet_building_level({
+            el.html(Template.read.game_mapPlanet_building_level({
                 pending_build   : building.pending_build,
                 idStrCounter    : idStrCounter,
                 idStrCenter     : idStrCenter,
@@ -150,7 +154,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
         // Then a few helper functions to make things work.
         // All of the build timer stuff needs to get moved to library.js, sometime.
         this.createBuildTimer = function(targetEl, seconds) {
-            var formattedTime = library.formatTime(seconds);
+            var formattedTime = Library.formatTime(seconds);
             
             // This is faster than jQuery.
             document.getElementById(targetEl).innerHTML = formattedTime;
@@ -163,7 +167,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
                     delete scope.intervals[interval];
                     document.getElementById(targetEl).innerHTML = '';
                 } else {
-                    formattedTime = library.formatTime(seconds);
+                    formattedTime = Library.formatTime(seconds);
                     // This is faster than jQuery.
                     document.getElementById(targetEl).innerHTML = formattedTime;
                 }

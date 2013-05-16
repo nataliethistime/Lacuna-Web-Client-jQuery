@@ -2,13 +2,14 @@
 // i.e. it does not describe a specific instance of a building (e.g. the building at location x,y on planet q)
 // It defines methods to display information about a type of building
 //
-define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/defaultBuilding'], function($, lacuna, library, template, body, defaultBuildingType) {
+define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildingType/defaultBuilding']
+, function($, _, Lacuna, Library, Template, Body, DefaultBuildingType) {
 
-    template.load('building');
+    Template.load('building');
 
-    // I don't like this, I prefer to detect if the file exists and if so load it
-    // if not load the default. But I have not found a neat way to do this (yet)
-    // an alternative is to put this info into resources.json?
+    // Only define moduleTypes here that have extra tab types, otherwise
+    // the default takes care of it.
+    // Might move this into resources.json at some point
     var moduleTypes = {
         planetarycommand    :   'planetaryCommand'
     };
@@ -20,11 +21,11 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
         // View the building Dialog
         this.view = function(building) {
 
-            lacuna.send({
+            Lacuna.send({
                 module: building.url,
                 method: 'view',
                 params: [
-                    lacuna.getSession(),
+                    Lacuna.getSession(),
                     building.id
                 ],
 
@@ -41,8 +42,8 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
                         scope.createTabs(tabs, o.result.building, modules[building.type]);
                     }
                     else {
-                        if (moduleTypes[buildingType]) {
-                            require(['buildingType/'+loadBuildingType], function(loadedBuildingType) {
+                        if (moduleTypes[building.type]) {
+                            require(['buildingType/'+building.type], function(loadedBuildingType) {
                                 // We only have to load it once, then we can use the cached value
                                 loadedBuildingType.url = building.url;
                                 modules[building.type] = loadedBuildingType;
@@ -50,7 +51,10 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
                             });
                         }
                         else {
-                            modules[building.type] = defaultBuildingType;
+                            var cloneBuildingType = _.clone(DefaultBuildingType);
+                            cloneBuildingType.url = building.url;
+                            modules[building.type] = cloneBuildingType;
+                            scope.createTabs(tabs, o.result.building, cloneBuildingType);
                         }
                     }
                 }
@@ -63,11 +67,11 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
             var extraTabs = loadedBuildingType.getTabs();
 
             // Put 'em together.
-            if (extraTabs) {
+            if (extraTabs.length) {
                 tabs = tabs.concat(extraTabs);
             }
 
-            var panel = lacuna.Panel.newTabbedPanel({
+            var panel = Lacuna.Panel.newTabbedPanel({
                 draggable       : true,
                 name            : building.type + ' ' + building.level,
                 preTabContent   : scope.getBuildingHeader(building, loadedBuildingType),
@@ -107,56 +111,56 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
         };
 
         this.getBuildingHeader = function(building, buildingType) {
-            return template.read.building_header({
+            return Template.read.building_header({
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
                 building_image      : building.image,
-                building_desc       : lacuna.getBuildingDesc(buildingType.url)
+                building_desc       : Lacuna.getBuildingDesc(buildingType.url)
             });
         };
 
         this.getViewTab = function(o) {
-            var currentProduction = template.read.building_current_production({
+            var currentProduction = Template.read.building_current_production({
                 assets_url      : window.assetsUrl,
-                food_hour       : library.formatNum(o.food_hour),
-                ore_hour        : library.formatNum(o.ore_hour),
-                water_hour      : library.formatNum(o.water_hour),
-                energy_hour     : library.formatNum(o.energy_hour),
-                waste_hour      : library.formatNum(o.waste_hour),
-                happiness_hour  : library.formatNum(o.happiness_hour),
+                food_hour       : Library.formatNum(o.food_hour),
+                ore_hour        : Library.formatNum(o.ore_hour),
+                water_hour      : Library.formatNum(o.water_hour),
+                energy_hour     : Library.formatNum(o.energy_hour),
+                waste_hour      : Library.formatNum(o.waste_hour),
+                happiness_hour  : Library.formatNum(o.happiness_hour),
                 building_id     : o.id
             });
-            var upgradeProduction = template.read.building_upgrade_production({
+            var upgradeProduction = Template.read.building_upgrade_production({
                 assets_url: window.assetsUrl,
-                up_food_hour: library.formatNum(o.upgrade.production.food_hour),
-                up_ore_hour: library.formatNum(o.upgrade.production.ore_hour),
-                up_water_hour: library.formatNum(o.upgrade.production.water_hour),
-                up_energy_hour: library.formatNum(o.upgrade.production.energy_hour),
-                up_waste_hour: library.formatNum(o.upgrade.production.waste_hour),
-                up_happy_hour: library.formatNum(o.upgrade.production.happiness_hour),
-                up_food_bad: parseInt(o.upgrade.production.food_hour) > parseInt(body.get.food_hour),
-                up_ore_bad: parseInt(o.upgrade.production.ore_hour) > parseInt(body.get.ore_hour),
-                up_water_bad: parseInt(o.upgrade.production.water_hour) > parseInt(body.get.water_hour),
-                up_energy_bad: parseInt(o.upgrade.production.energy_hour) > parseInt(body.get.energy_hour),
-                up_happy_bad: parseInt(o.upgrade.production.happiness_hour) > parseInt(body.get.happiness_hour),
+                up_food_hour: Library.formatNum(o.upgrade.production.food_hour),
+                up_ore_hour: Library.formatNum(o.upgrade.production.ore_hour),
+                up_water_hour: Library.formatNum(o.upgrade.production.water_hour),
+                up_energy_hour: Library.formatNum(o.upgrade.production.energy_hour),
+                up_waste_hour: Library.formatNum(o.upgrade.production.waste_hour),
+                up_happy_hour: Library.formatNum(o.upgrade.production.happiness_hour),
+                up_food_bad: parseInt(o.upgrade.production.food_hour) > parseInt(Body.get.food_hour),
+                up_ore_bad: parseInt(o.upgrade.production.ore_hour) > parseInt(Body.get.ore_hour),
+                up_water_bad: parseInt(o.upgrade.production.water_hour) > parseInt(Body.get.water_hour),
+                up_energy_bad: parseInt(o.upgrade.production.energy_hour) > parseInt(Body.get.energy_hour),
+                up_happy_bad: parseInt(o.upgrade.production.happiness_hour) > parseInt(Body.get.happiness_hour),
                 building_id: o.id,
                 to_level: parseInt(o.level) - 1,
                 downgrade_reason: o.downgrade.reason[1],
                 can_downgrade: o.downgrade.can
             });
-            var upgradeCost = template.read.building_upgrade_cost({
+            var upgradeCost = Template.read.building_upgrade_cost({
                 assets_url: window.assetsUrl,
-                up_food_cost: library.formatNum(o.upgrade.cost.food || 0),
-                up_ore_cost: library.formatNum(o.upgrade.cost.ore || 0),
-                up_water_cost: library.formatNum(o.upgrade.cost.water || 0),
-                up_energy_cost: library.formatNum(o.upgrade.cost.energy || 0),
-                up_waste_cost: library.formatNum(o.upgrade.cost.waste || 0),
-                up_time_cost: library.formatNum(o.upgrade.cost.time || 15),
-                up_food_bad: parseInt(o.upgrade.cost.food) > parseInt(body.get.food_storage),
-                up_ore_bad: parseInt(o.upgrade.cost.ore) > parseInt(body.get.ore_storage),
-                up_water_bad: parseInt(o.upgrade.cost.water) > parseInt(body.get.water_storage),
-                up_energy_bad: parseInt(o.upgrade.cost.energy) > parseInt(body.get.energy_storage),
-                up_waste_bad: parseInt(o.upgrade.cost.waste) > parseInt(body.get.waste_storage),
+                up_food_cost: Library.formatNum(o.upgrade.cost.food || 0),
+                up_ore_cost: Library.formatNum(o.upgrade.cost.ore || 0),
+                up_water_cost: Library.formatNum(o.upgrade.cost.water || 0),
+                up_energy_cost: Library.formatNum(o.upgrade.cost.energy || 0),
+                up_waste_cost: Library.formatNum(o.upgrade.cost.waste || 0),
+                up_time_cost: Library.formatNum(o.upgrade.cost.time || 15),
+                up_food_bad: parseInt(o.upgrade.cost.food) > parseInt(Body.get.food_storage),
+                up_ore_bad: parseInt(o.upgrade.cost.ore) > parseInt(Body.get.ore_storage),
+                up_water_bad: parseInt(o.upgrade.cost.water) > parseInt(Body.get.water_storage),
+                up_energy_bad: parseInt(o.upgrade.cost.energy) > parseInt(Body.get.energy_storage),
+                up_waste_bad: parseInt(o.upgrade.cost.waste) > parseInt(Body.get.waste_storage),
                 building_id: o.id,
                 to_level: parseInt(o.level) + 1,
                 upgrade_reason: o.upgrade.reason[1],
@@ -179,12 +183,12 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
             // to show the warning but not bother the more experienced
             // players with extra clicking.
 
-            lacuna.send({
+            Lacuna.send({
                 module: e.data.url,
                 method: 'upgrade',
 
                 params: [
-                    lacuna.getSession(),
+                    Lacuna.getSession(),
                     e.data.building.id
                 ],
                 
@@ -198,17 +202,17 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
         };
 
         this.downgrade = function(e) {
-            lacuna.confirm('Are you sure you want to downgrade your ' + e.data.building.name +
+            Lacuna.confirm('Are you sure you want to downgrade your ' + e.data.building.name +
                 ' to level ' + (parseInt(e.data.building.level) - 1) + '?',
             undefined, function(response) {
                 // Once the user has confirmed that they actually
                 // want to downgrade the building, do it!
                 if (response) {
-                    lacuna.send({
+                    Lacuna.send({
                         module: e.data.url,
                         method: 'downgrade',
                         params: [
-                            lacuna.getSession(),
+                            Lacuna.getSession(),
                             e.data.building.id
                         ],
                         
@@ -224,16 +228,16 @@ define(['jquery', 'lacuna', 'library', 'template', 'body', 'buildingType/default
         };
 
         this.demolish = function(e) {
-            lacuna.confirm(
+            Lacuna.confirm(
                 'Are you sure you want to demolish your ' + e.data.building.name + '?',
             undefined, function(response) {
                 if (response) {
-                    lacuna.send({
+                    Lacuna.send({
                         module: e.data.url,
                         method: 'demolish',
                         
                         params: [
-                            lacuna.getSession(),
+                            Lacuna.getSession(),
                             e.data.building.id
                         ],
                         

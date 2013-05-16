@@ -37,10 +37,9 @@ define(['jquery', 'underscore'], function($, _) {
             callbacks[scope.get_idStr(x, y)].remove(callback);
         };
 
-        this.update = function(o) {
-            var loaded_buildings    = o.result.buildings,
-                keys                = Object.keys(loaded_buildings)
-            ;
+        this.update = function(loaded_buildings) {
+            var keys = Object.keys(loaded_buildings);
+
             for (var i = 0; i < keys.length; i++) {
                 var new_building    = loaded_buildings[keys[i]],
                     idStr           = scope.get_idStr(new_building.x, new_building.y)

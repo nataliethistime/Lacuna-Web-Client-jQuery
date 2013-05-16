@@ -1,6 +1,6 @@
-define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, lacuna, template) {
+define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Template) {
 
-    template.load('login');
+    Template.load('login');
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
     var empirePassword;
 
@@ -12,24 +12,24 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, lacuna, tem
         this.build = function() {
 
             // Build the Login Panel.
-            panel = lacuna.Panel.newTabbedPanel({
+            panel = Lacuna.Panel.newTabbedPanel({
                 name: 'Welcome', // Could someone please come up with something more creative?
                 tabs: [
                     {
                         name        : 'Login',
-                        content     : template.read.login_main_tab({
+                        content     : Template.read.login_main_tab({
                             empire_name : empireName
                         })
                     },
                     {
                         name: 'Create Empire',
-                        content: template.read.login_create_empire_tab({
+                        content: Template.read.login_create_empire_tab({
 
                         })
                     },
                     {
                         name: 'Forgot Password?',
-                        content: template.read.login_forgot_password_tab({
+                        content: Template.read.login_forgot_password_tab({
                             
                         })
                     }
@@ -51,9 +51,9 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, lacuna, tem
             empireName = $('#empire').val();
             var empirePassword = $('#password').val();
 
-            lacuna.showPulser();
+            Lacuna.showPulser();
 
-            lacuna.send({
+            Lacuna.send({
                 module: '/empire',
                 method: 'login',
 
@@ -64,9 +64,9 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, lacuna, tem
                 ],
 
                 success: function(o) {
-                    lacuna.hidePulser();
+                    Lacuna.hidePulser();
 
-                    lacuna.setSession(o.result.session_id);
+                    Lacuna.setSession(o.result.session_id);
 
                     // Pop the session and empire name into a cookie.
                     // Unused as yet, any volunteers for implementing logging in from Cookie?
@@ -79,7 +79,7 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, lacuna, tem
                     }
                     // This kicks things off for the first time. The response is monitored in lacuna.js
                     // and callbacks are made to update the planet view and menus
-                    lacuna.send({
+                    Lacuna.send({
                         module  : '/body',
                         method  : 'get_status',
                         params  : [

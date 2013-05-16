@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, body) {
+define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
     function Lacuna() {
  
         // Helper for jQuery's weird scope management.
@@ -119,12 +119,12 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, body) {
                             Empire.update(status.empire);
                         });
                         if (status.body) {
-                            body.update(status.body);
+                            Body.update(status.body);
                         }
                     }
                     // the following can come from a direct call to get a body status
                     if (data.result.body) {
-                        body.update(data.result.body);
+                        Body.update(data.result.body);
                     }
                     if (data.result.empire) {
                         require(['empire'], function(Empire) {
@@ -181,7 +181,7 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, body) {
             sessionId = session;
         };
         this.getCurrentPlanet = function() {
-            return body.get.id || '';
+            return Body.get.id || '';
         };
 
         this.showPulser = function() {
