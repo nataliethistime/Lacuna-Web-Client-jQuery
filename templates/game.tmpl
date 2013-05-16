@@ -2,7 +2,21 @@
 <![CDATA[
   <div id="mainScreen">
     <div id="gameHeader" style="background-image: url('<%= assetsUrl %>/ui/web/bar_top_back.png')">
-      <!-- TODO -->
+      <div id="usersCenter">
+        <div id="usersArrow"></div>
+        <div id="users">Empire Name</div>
+        <div id="userMenu" style="position: absolute; visibility: hidden; z-index: 1006;">
+          <div class="bd">
+            <ul>
+              <li><a class="userMenuLabel" href="/starmap/" target="_blank">Alliance Map</a></li>
+              <li><a class="userMenuLabel" href="/changes.txt" target="_blank">Changes Log</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="profile menuItem"><img alt="profile" src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/profile.png"></img></div>
+      <div class="change menuItem"><img alt="Change" src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/star_map.png"></img></div>
+      <div class="logout menuItem"><img alt="Logout" title="Logout" src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/logout.png"></img></div>
     </div>
     <div id="buildingsParent" style="cursor: url('<%= assetsUrl %>/ui/web/openhand.cur'), default;'"></div>
     <div id="starsParent" style="cursor: url('<%= assetsUrl %>/ui/web/openhand.cur'), default;'"></div>

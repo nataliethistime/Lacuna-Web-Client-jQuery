@@ -111,13 +111,18 @@ label {
     font-family: impact,sans-serif;
 }
 
-#planetsCenter {
+#planetsCenter, #usersCenter {
     height:74px;
     left:50%;
     margin-left:-167px;
     position:absolute;
     text-align:center;
     width:334px;
+}
+#usersCenter {
+    background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_top.png");
+    bottom:0;
+    z-index:1003;
 }
 #planetsCenter {
     background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_bottom.png");
@@ -151,6 +156,39 @@ label {
     position:absolute;
     top:0;
     left:0;
+}
+
+.change {
+    left: 0px;
+}
+.profile {
+    left: 120px;
+}
+.logout {
+    right: 0px;
+}
+.logout img {
+    width: 46px;
+    height: 45px;
+}
+#header .menuItem, #footer .plots .stored {
+    font-size: 200%;
+}
+
+#header .menuItem {
+    text-align: center;
+}
+
+.menuItem {
+    display:    inline-block;
+    height:     54px;
+    color:      rgb(255,255,255);
+    min_width:  55px;
+    width:      60px;
+    position:   absolute;
+    padding-top:    5px;
+    text-align: left;
+    overflow:   hidden;
 }
 
 .menuPlanetThumb {
