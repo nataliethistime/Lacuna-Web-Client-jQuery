@@ -10,9 +10,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
     // if not load the default. But I have not found a neat way to do this (yet)
     // an alternative is to put this info into resources.json?
     var moduleTypes = {
-        planetaryCommand    :   'planetaryCommand',
-        shipyard            :   'defaultBuilding',
-        spaceport           :   'defaultBuilding'
+        planetarycommand    :   'planetaryCommand',
     };
 
     function BuildingType() {
@@ -70,7 +68,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'library', 'template', 'body'], functio
 
             var panel = Lacuna.Panel.newTabbedPanel({
                 draggable       : true,
-                name            : building.name + ' ' + building.level,
+                name            : building.type + ' ' + building.level,
                 preTabContent   : scope.getBuildingHeader(building, LoadedBuildingType),
                 tabs            : tabs
             });
