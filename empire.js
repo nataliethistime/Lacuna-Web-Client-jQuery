@@ -3,7 +3,7 @@
 define(['jquery', 'underscore'], function($, _) {
     function Empire() {
         var scope = this;
-        var callbacks = $.Callbacks();;
+        var callbacks = $.Callbacks();
 
         this.get;
 
