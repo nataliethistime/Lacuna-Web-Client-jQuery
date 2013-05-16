@@ -70,10 +70,11 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
             if (extraTabs.length) {
                 tabs = tabs.concat(extraTabs);
             }
+            var panelName = building.name.replace("'","") + ' ' + building.level;
 
             var panel = Lacuna.Panel.newTabbedPanel({
                 draggable       : true,
-                name            : building.type + ' ' + building.level,
+                name            : panelName,
                 preTabContent   : scope.getBuildingHeader(building, loadedBuildingType),
                 tabs            : tabs
             });
