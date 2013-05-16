@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
+define(['jquery', 'lacuna', 'template'], function($, lacuna, template) {
 	
 	function DefaultBuilding() {
 		this.getTabs = function() {

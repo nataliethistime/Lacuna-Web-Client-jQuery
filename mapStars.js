@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, Library, Template, Body) {
+define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, lacuna, library, template, body) {
     function MapStars() {
         // Helper for jQuery's weird scope management.
         var scope = this;

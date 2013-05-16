@@ -1,6 +1,6 @@
 // This contains the current Body data, typically updated from any 'Status' return
 //
-define(['require', 'jquery', 'underscore','buildings'], function(require, $, _, Buildings) {
+define(['require', 'jquery', 'underscore','buildings'], function(require, $, _, buildings) {
     function Body() {
         var scope = this;
         var callbacks = $.Callbacks();
@@ -26,16 +26,16 @@ define(['require', 'jquery', 'underscore','buildings'], function(require, $, _, 
 
         this.get_buildings = function(body_id) {
             // We may want to revisit this, otherwise there is a circular dependency.
-            require(['lacuna'], function(Lacuna) {
-                Lacuna.send({
+            require(['lacuna'], function(lacuna) {
+                lacuna.send({
                     module: '/body',
                     method: 'get_buildings',
                     params: [
-                        Lacuna.getSession(),
+                        lacuna.getSession(),
                         body_id
                     ],
                     success: function(o) {
-                        Buildings.update(o);
+                        buildings.update(o);
                     }
                 });
             });

@@ -1,10 +1,10 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'template', 'empire'], function($, Lacuna, MapPlanet, MapStars, Template, Empire) {
+define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'template'], function($, lacuna, mapPlanet, mapStars, template) {
     function Game() {
 
-        Template.load(['game']);
+        template.load(['game']);
 
         this.start = function() {
-            Lacuna.Panel.panelWidth = 800 /*px*/;
+            lacuna.Panel.panelWidth = 800 /*px*/;
 
             // A Panel's height can be decided manually or left up to jQuery.
             var url = window.location.protocol +
@@ -12,17 +12,17 @@ define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'template', 'empire'], func
                 'resources.json';
             
             $.getJSON(url, function(json) {
-                Lacuna.Resources = json;
+                lacuna.Resources = json;
             });
             
-            $('#lacuna').html(Template.read.game_main_screen({
+            $('#lacuna').html(template.read.game_main_screen({
                 assetsUrl       : window.assetsUrl
             }));
 
             // This creates the planet map and stars view divisions
             // but they are initially hidden and are populated by callbacks
-            MapPlanet.renderPlanet();
-            MapStars.renderStars();
+            mapPlanet.renderPlanet();
+            mapStars.renderStars();
 
             // Open the login screen.
             require(['login'], function(Login) {

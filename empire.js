@@ -1,6 +1,6 @@
 // This contains the current Empire data, typically updated from any 'Status' return
 //
-define(['jquery', 'underscore'], function($, _) {
+define(['jquery', 'underscore','lacuna'], function($, _, lacuna) {
     function Empire() {
         var scope = this;
         var callbacks = $.Callbacks();
@@ -17,11 +17,11 @@ define(['jquery', 'underscore'], function($, _) {
         };
 
         this.get_status = function() {
-            Lacuna.send({
+            lacuna.send({
                 module: '/empire',
                 method: 'get_status',
                 params: [
-                    Lacuna.getSession()
+                    lacuna.getSession()
                 ],
                 success: Empire.update
             });
