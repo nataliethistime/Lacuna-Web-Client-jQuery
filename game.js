@@ -18,6 +18,10 @@ define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'template'], function($, La
             $('#lacuna').html(Template.read.game_main_screen({
                 assetsUrl       : window.assetsUrl
             }));
+            $('#gameHeader').css('visibility', 'hidden');
+            $('#gameFooter').css('visibility', 'hidden');
+            $('#buildingsParent').css('visibility', 'hidden');
+            $('#starsParent').css('visibility', 'hidden');
 
             // This creates the planet map and stars view divisions
             // but they are initially hidden and are populated by callbacks

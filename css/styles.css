@@ -161,8 +161,35 @@ label {
 .change {
     left: 0px;
 }
+.inbox {
+    left: 60px;
+}
 .profile {
     left: 120px;
+}
+.essentia {
+    left: 180px;
+    line-height: 45px;
+}
+.destruct {
+    left: 280px;
+}
+
+.invite {
+    right: 300px;
+}
+.tutorial {
+    right: 240px;
+}
+.support {
+    right: 180px;
+}
+.stats {
+    right: 120px;
+}
+.about {
+    right: 60px;
+    overflow: visible;
 }
 .logout {
     right: 0px;
@@ -178,7 +205,9 @@ label {
 #header .menuItem {
     text-align: center;
 }
-
+#header .essentia {
+    text-align: left;
+}
 .menuItem {
     display:    inline-block;
     height:     54px;

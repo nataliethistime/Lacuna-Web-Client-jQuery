@@ -88,6 +88,10 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                         ],
                         success: function() {
                             panel.close();
+                    $('#gameHeader').css('visibility', 'visible');
+                    $('#gameFooter').css('visibility', 'visible');
+                    $('#buildingsParent').css('visibility', 'visible');
+                    $('#starsParent').css('visibility', 'hidden');
                         }
                     });
                 },
