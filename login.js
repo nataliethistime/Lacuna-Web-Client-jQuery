@@ -1,18 +1,17 @@
 define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Template) {
 
-    Template.load('login');
+    Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
     var empirePassword;
 
     function Login() {
         // Helper for jQuery's weird scope management.
         var scope = this;
-        var panel;
 
         this.build = function() {
 
             // Build the Login Panel.
-            panel = Lacuna.Panel.newTabbedPanel({
+            scope.panel = Lacuna.Panel.newTabbedPanel({
                 name: 'Welcome', // Could someone please come up with something more creative?
                 tabs: [
                     {
@@ -60,7 +59,7 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                 params: [
                     empireName,
                     empirePassword,
-                    'anonymous'                     // API Key
+                    'anonymous' // API Key
                 ],
 
                 success: function(o) {
@@ -87,11 +86,9 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                             o.result.status.empire.home_planet_id,
                         ],
                         success: function() {
-                            panel.close();
-                    $('#gameHeader').css('visibility', 'visible');
-                    $('#gameFooter').css('visibility', 'visible');
-                    $('#buildingsParent').css('visibility', 'visible');
-                    $('#starsParent').css('visibility', 'hidden');
+                            scope.panel.close();
+                            $('#gameHeader, #gameFooter, #buildingsParent, #starsParent')
+                                .css('visibility', 'visible');
                         }
                     });
                 },
