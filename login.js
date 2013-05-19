@@ -76,6 +76,7 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                     else {
                         $.cookie.destroy('lacuna-expanse-empire-name');
                     }
+                    
                     // This kicks things off for the first time. The response is monitored in lacuna.js
                     // and callbacks are made to update the planet view and menus
                     Lacuna.send({

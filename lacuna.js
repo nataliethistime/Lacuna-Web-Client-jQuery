@@ -82,15 +82,15 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
         // object is passed in which looks like the
         // following:
         //
-        //{
-        // method: 'login',
-        // module: '/empire',
-        // params: [
-        // '$stuff'
-        // ],
-        // success: function(receivedData){},
-        // failure: function(receivedError){}
-        //}
+        // {
+        //     method: 'login',
+        //     module: '/empire',
+        //     params: [
+        //         '$stuff'
+        //     ],
+        //     success: function(receivedData){},
+        //     failure: function(receivedError){}
+        // }
         this.send = function(args) {
             // Show the Blue "loading" animation.
             this.showPulser();
@@ -122,16 +122,20 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                             Body.update(status.body);
                         }
                     }
+                    
                     // the following can come from a direct call to get a body status
                     if (data.result.body) {
                         Body.update(data.result.body);
                     }
+                    
                     if (data.result.empire) {
                         require(['empire'], function(Empire) {
                             Empire.update(data.result.empire);
                         });
                     }
+                    
                     scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
+                    
                     if (data.result) {
                         // ONWARD!
                         args.success.call(args.scope || scope || this, data);
@@ -216,7 +220,10 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                 var tabHeaders = ['<ul>'],
                     tabContent = [],
                     finalContent = [],
-                    DOMName = panel.name.replace(/ |\(|\)/g, '_'); // So the DOM doesn't get confused.
+
+                    // So the DOM doesn't get confused.
+                    DOMName = panel.name.replace(/ |\(|\)/g, '_')
+                ;
 
                 for (var i = 0; i < panel.tabs.length; i++) {
                     var tab = panel.tabs[i];

@@ -1,10 +1,10 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'template'], function($, Lacuna, MapPlanet, MapStars, Template) {
+define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'login', 'template'], function($, Lacuna, MapPlanet, MapStars, Login, Template) {
     function Game() {
 
         Template.load(['game']);
 
         this.start = function() {
-            Lacuna.Panel.panelWidth = 800 /*px*/;
+            Lacuna.Panel.panelWidth = 800; // pixels 
 
             // A Panel's height can be decided manually or left up to jQuery.
             var url = window.location.protocol +
@@ -27,9 +27,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'template'], function($, La
             MapStars.renderStars();
 
             // Open the login screen.
-            require(['login'], function(Login) {
-                Login.build();
-            });
+            Login.build();
         };
     }
     
