@@ -7,9 +7,14 @@ define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'login', 'template'], funct
             Lacuna.Panel.panelWidth = 800; // pixels 
 
             // A Panel's height can be decided manually or left up to jQuery.
-            var url = window.location.protocol +
-                '//' + window.location.hostname + window.location.pathname +
-                'resources.json';
+            var url = window.location.protocol 
+                + '//' 
+                + window.location.hostname
+                + window.location.pathname;
+
+            // Remove any tailing 'index.html' or similar
+            var n = url.lastIndexOf('/') + 1;
+            url = url.substring(0,n) + 'resources.json';
             
             $.getJSON(url, function(json) {
                 Lacuna.Resources = json;
@@ -21,10 +26,14 @@ define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'login', 'template'], funct
             $('#gameHeader, #gameFooter, #buildingsParent, #starsParent')
                 .css('visibility', 'hidden');
 
+            require(['menu'], function(Menu) {
+                Menu.renderMenu();
+            });
+
             // This creates the planet map and stars view divisions
             // but they are initially hidden and are populated by callbacks
             MapPlanet.renderPlanet();
-            MapStars.renderStars();
+//            MapStars.renderStars();
 
             // Open the login screen.
             Login.build();

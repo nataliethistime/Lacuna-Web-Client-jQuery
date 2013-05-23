@@ -65,11 +65,9 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                 success: function(o) {
                     Lacuna.hidePulser();
 
+                    // Pop the empire name into a cookie.
                     Lacuna.setSession(o.result.session_id);
 
-                    // Pop the session and empire name into a cookie.
-                    // Unused as yet, any volunteers for implementing logging in from Cookie?
-                    //$.cookie.write('lacuna-expanse-session-id', lacuna.getSession(), 2 * 60 * 60); // 2 hour session.
                     if ($('#rememberEmpire').prop('checked')) {
                         $.cookie.write('lacuna-expanse-empire-name', empireName, 365 * 24 * 60 * 60); // 1 year.
                     }
@@ -88,8 +86,9 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                         ],
                         success: function() {
                             scope.panel.close();
-                            $('#gameHeader, #gameFooter, #buildingsParent, #starsParent')
-                                .css('visibility', 'visible');
+                            // Log in to the planet view
+                            $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
+                            $('#starsParent').css('visibility', 'hidden');
                         }
                     });
                 },
