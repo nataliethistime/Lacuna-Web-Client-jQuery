@@ -18,6 +18,34 @@
 ]]>
 </script>
 
+
+<script id="building_repair">
+<![CDATA[
+  <div id="repairContainer">
+    <span id="repairText">Building is currently running at <%= efficiency %>% efficiency. Costs to repair the building are:</span>
+    <ul class="noDot">
+      <li>
+        <span class="smallImg"><img class="smallFood" title="Food" src="<%= assets_url %>/ui/s/food.png"></img></span>
+        <span class="buildingDetailsNum"><%= food %></span>
+      </li>
+      <li>
+        <span class="smallImg"><img class="smallOre" title="Ore" src="<%= assets_url %>/ui/s/ore.png"></img></span>
+        <span class="buildingDetailsNum"><%= ore %></span>
+      </li>
+      <li>
+        <span class="smallImg"><img class="smallWater" title="Water" src="<%= assets_url %>/ui/s/water.png"></img></span>
+        <span class="buildingDetailsNum"><%= water %></span>
+      </li>
+      <li>
+        <span class="smallImg"><img class="smallEnergy" title="Energy" src="<%= assets_url %>/ui/s/energy.png"></img></span>
+        <span class="buildingDetailsNum"><%= energy %></span>
+      </li>
+    </ul>
+    <button type="button" id="repairButton_<%= building_id %>">Repair</button>
+  </div>
+]]>
+</script>
+
 <script id="building_current_production">
 <![CDATA[
   <div id="currentProduction">

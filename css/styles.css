@@ -17,6 +17,10 @@ html, body {
     overflow: hidden;
 }
 
+li {
+    list-style: none outside none;
+}
+
 #nojs {
     background-color: white;
     text-align: center;
@@ -198,6 +202,40 @@ label {
     width: 46px;
     height: 45px;
 }
+
+.smallImg {
+    display         : inline-block;
+    width           : 25px;
+    vertical-align  : middle;
+    text-align      : center;
+}
+.buildingDetailsNum {
+    display         : inline-block;
+    text-align      : right;
+    width           : 120px;
+}
+
+.planetMapEfficiencyBarContainer {
+    z-index         : 2;
+    text-align      : center;
+    font-size       : 100%;
+    font-family     : impact, sans-serif;
+    line-height     : 15px;
+    height          : 15px;
+    position        : absolute;
+    left            : 0px;
+    bottom          : 5px;
+    border          : 1px solid rgb(153,153,153);
+    background-color    : rgb(68,68,68);
+}
+
+.planetMapEfficiencyBar {
+    z-index         : 2;
+    height:         : 100%;
+    margin-right    : auto;
+    white-space     : nowrap;
+}
+
 #header .menuItem, #footer .plots .stored {
     font-size: 200%;
 }

@@ -142,7 +142,10 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
                 pending_build   : building.pending_build,
                 idStrCounter    : idStrCounter,
                 idStrCenter     : idStrCenter,
-                building_level  : building.level
+                building_level  : building.level,
+                efficiency_width : 10,
+                efficiency      : building.efficiency,
+                needs_repair    : building.efficiency < 100 ? 1 : 0
             }));
 
             scope.buildings[idStr] = building;

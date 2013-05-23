@@ -1,17 +1,17 @@
 define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
     
-    template.load('building/planetaryCommand');
+    Template.load('building/planetaryCommand');
 
     function PlanetaryCommand() {
         this.getTabs = function() {
             return [
                 {
                     name: 'Test 1',
-                    content: template.read.building_planetary_command_test1()
+                    content: Template.read.building_planetary_command_test1()
                 },
                 {
                     name: 'Test 2',
-                    content: template.read.building_planetary_command_test2()
+                    content: Template.read.building_planetary_command_test2()
                 }
             ];
         };

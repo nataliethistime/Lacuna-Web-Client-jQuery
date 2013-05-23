@@ -31,6 +31,14 @@
   <div id="<%= idStrCenter %>" class="buildings-level-center" style="display:none;">
     <%= building_level %>
   </div>
+<% if (needs_repair) { %>
+  <div class="planetMapEfficiencyBarContainer" style="width: 50px; border-color: red;">
+    <div class="planetMapEfficiencyBar" 
+      style="width: <%= efficiency_width %>px; background-color: red; color: white;">
+      <%= efficiency %>%
+    </div>
+  </div>
+<% } %>
 ]]>
 </script>
 

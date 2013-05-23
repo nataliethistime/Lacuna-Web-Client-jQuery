@@ -11,7 +11,8 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
     // the default takes care of it.
     // Might move this into resources.json at some point
     var moduleTypes = {
-        planetarycommand    :   'planetaryCommand'
+        planetarycommand    :   'planetaryCommand',
+        shipyard            :   'shipyard'
     };
 
     function BuildingType() {
@@ -64,11 +65,35 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
         // Add any building specific tabs, output the building Dialog box
         //
         this.createTabs = function(tabs, building, loadedBuildingType) {
-            var extraTabs = loadedBuildingType.getTabs();
 
-            // Put 'em together.
-            if (extraTabs.length) {
-                tabs = tabs.concat(extraTabs);
+            if (building.efficiency < 100) {
+                var repairTab = {
+                    name    : 'Repair',
+                    content : Template.read.building_repair({
+                        assets_url  : window.assetsUrl,
+                        building_id : building.id,
+                        efficiency  : building.efficiency,
+                        food        : building.repair_costs.food,
+                        ore         : building.repair_costs.ore,
+                        water       : building.repair_costs.water,
+                        energy      : building.repair_costs.energy
+                    })
+                };
+                tabs = tabs.concat([repairTab]);
+                $('#repairButton_' + building.id).on(
+                    'click', {
+                        building    : building,
+                        url         : loadedBuildingType.url,
+                        panel       : panel
+                    },
+                    this.repair
+                );
+            }
+            else {
+                var extraTabs = loadedBuildingType.getTabs();
+                if (extraTabs.length) {
+                    tabs = tabs.concat(extraTabs);
+                }
             }
             var panelName = building.name.replace("'","") + ' ' + building.level;
 
@@ -87,7 +112,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                         url         : loadedBuildingType.url,
                         panel       : panel
                     },
-                this.downgrade
+                    this.downgrade
                 );
             }
             if (building.upgrade.can) {
@@ -175,6 +200,20 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
             ].join('');
         };
 
+        this.repair = function(e) {
+            Lacuna.send({
+                module  : e.data.url,
+                method  : 'repair',
+                params  : [
+                    Lacuna.getSession(),
+                    e.data.building.id
+                ],
+                success: function(o) {
+                    e.data.panel.close();
+                }
+            });
+        };
+
         this.upgrade = function(e) {
 
             // TODO: As per the current Web Client there is a popup
@@ -194,10 +233,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                 ],
                 
                 success: function(o) {
-                    // Close the panel.
-                    e.data.panel.close(function() {
-                        // nothing to do, building updates take care of themselves now    
-                    });
+                    e.data.panel.close();
                 }
             });
         };
