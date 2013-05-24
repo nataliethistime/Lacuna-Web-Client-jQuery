@@ -33,6 +33,13 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 
                 success: function(o) {
                     tab.add(JSON.stringify(o.result));
+
+                    if (o.result.ships_building.length > 0) {
+                        // Add ships to queue and post to DOM.
+                    }
+                    else { // No ships are currently building.
+                        tab.add('<span class="center">No ships are currently building at this Shipyard.</span>');
+                    }
                 }
             });
         }
