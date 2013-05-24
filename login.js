@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Template) {
+define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie'], function($, Lacuna, Empire, Template) {
 
     Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -82,7 +82,7 @@ define(['jquery', 'lacuna', 'template', 'zebra_cookie'], function($, Lacuna, Tem
                         method  : 'get_status',
                         params  : [
                             o.result.session_id,
-                            o.result.status.empire.home_planet_id,
+                            Lacuna.status.empire.home_planet_id,
                         ],
                         success: function() {
                             scope.panel.close();

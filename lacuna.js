@@ -3,7 +3,7 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
  
         // Helper for jQuery's weird scope management.
         var scope = this;
-        var status;
+        this.status;
         var sessionId = 0;
 
         // Helper function for the below confirm() and alert().
@@ -113,14 +113,20 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                 success: function(data, status, xhr) {
                     // Cache the status block and empire for later use
                     if (data.result.status) {
-                        status = data.result.status;
+                        scope.status = data.result.status;
+                        
                         // Another circular dependency
                         require(['empire'], function(Empire) {
-                            Empire.update(status.empire);
+                            Empire.update(scope.status.empire);
                         });
-                        if (status.body) {
-                            Body.update(status.body);
+
+                        if (scope.status.body) {
+                            Body.update(scope.status.body);
                         }
+
+                        // Now that all the data from the status is safely put away
+                        // delete it from the server response.
+                        delete data.result.status;
                     }
                     
                     // the following can come from a direct call to get a body status
