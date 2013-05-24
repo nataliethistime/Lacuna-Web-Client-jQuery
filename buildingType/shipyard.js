@@ -4,7 +4,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 
     function Shipyard() {
         var scope = this;
-        console.log(this);
+        console.log(this);//debug
 
         this.getTabs = function() {
             return [
@@ -21,7 +21,20 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         };
 
         this.getQueueTab = function(tab) {
-            
+            Lacuna.send({
+                module: scope.building.url,
+                method: 'view_build_queue',
+
+                params: [
+                    Lacuna.getSession(), // Session Id
+                    scope.building.id, // Building Id
+                    1 // Page number
+                ],
+
+                success: function(o) {
+                    tab.add(JSON.stringify(o.result));
+                }
+            });
         }
     }
 
