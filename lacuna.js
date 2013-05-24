@@ -249,7 +249,7 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
 
                 // Do this here to get a current version of the DOM Object.
                 var dialogEl = $('#' + DOMName + '_Panel'),
-                    tabEl = $('#' + DOMName + '_Tab');
+                    tabEl    = $('#' + DOMName + '_Tab');
 
                 // Do some fancy Buttons!
                 $('#' + DOMName + '_Panel' + ' :button').button();

@@ -13,7 +13,7 @@
 html, body {
     background-image: url('../assets/ui/field.png');
 
-    /* Remove scroll bar - doesn't work on Firefox */
+    /* Remove scroll bar - maybe, doesn't seem to work... */
     overflow: hidden;
 }
 
@@ -197,6 +197,7 @@ label {
 }
 .logout {
     right: 0px;
+    cursor: pointer;
 }
 .logout img {
     width: 46px;

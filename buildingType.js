@@ -46,7 +46,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                         if (moduleTypes[building.type]) {
                             require(['buildingType/'+building.type], function(loadedBuildingType) {
                                 // We only have to load it once, then we can use the cached value
-                                loadedBuildingType.url = building.url;
+                                loadedBuildingType.building = building;
                                 modules[building.type] = loadedBuildingType;
                                 scope.createTabs(tabs, o.result.building, loadedBuildingType);
                             });
@@ -141,7 +141,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
                 building_image      : building.image,
-                building_desc       : Lacuna.getBuildingDesc(buildingType.url)
+                building_desc       : Lacuna.getBuildingDesc(buildingType.building.url)
             });
         };
 
