@@ -13,8 +13,8 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
 
         Template.load(['mapPlanet']);
 
-        // this only creates the html 'framework' into which the planet details are put
-        // it relies on callbacks to update the content whenever the bodychanges
+        // This only creates the HTML 'framework' into which the planet details are put
+        // it relies on callbacks to update the content whenever the body changes
         // In this way we only need to generate the framework once, not every time the body 
         // changes.
         this.renderPlanet = function() {

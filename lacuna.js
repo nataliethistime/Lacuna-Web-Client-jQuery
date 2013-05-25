@@ -203,6 +203,7 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
 
         // Resources
         this.getBuildingDesc = function(url) {
+            console.log(url);//debug
             return [
                 this.Resources.buildings[url].description || '',
                 '<br />',

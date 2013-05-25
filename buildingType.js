@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
 
     // Only define moduleTypes here that have extra tab types, otherwise
     // the default takes care of it.
-    // Might move this into resources.json at some point
+    // Might move this into resources.json at some point.
     var moduleTypes = {
         planetarycommand    :   'planetaryCommand',
         shipyard            :   'shipyard'
@@ -38,6 +38,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
 
                     // Remove the leading slash.
                     building.type = building.url.replace('/', '');
+
                     if (modules[building.type]) {
                         // Use the cached value
                         scope.createTabs(tabs, o.result.building, modules[building.type]);
@@ -53,7 +54,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                         }
                         else {
                             var cloneBuildingType = _.clone(DefaultBuildingType);
-                            cloneBuildingType.url = building.url;
+                            cloneBuildingType.building = building;
                             modules[building.type] = cloneBuildingType;
                             scope.createTabs(tabs, o.result.building, cloneBuildingType);
                         }
@@ -95,12 +96,14 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                     tabs = tabs.concat(extraTabs);
                 }
             }
+
+            // Replace out the ' in "Gratch's Gauntlet"
             var panelName = building.name.replace("'","") + ' ' + building.level;
 
             var panel = Lacuna.Panel.newTabbedPanel({
                 draggable       : true,
                 name            : panelName,
-                preTabContent   : scope.getBuildingHeader(building, loadedBuildingType),
+                preTabContent   : scope.getBuildingHeader(building, loadedBuildingType.building),
                 tabs            : tabs
             });
 
@@ -141,7 +144,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
                 building_image      : building.image,
-                building_desc       : Lacuna.getBuildingDesc(buildingType.building.url)
+                building_desc       : Lacuna.getBuildingDesc(buildingType.url)
             });
         };
 

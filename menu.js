@@ -18,6 +18,9 @@ define(['jquery', 'lacuna', 'template', 'game', 'login'], function($, Lacuna, Te
                             Lacuna.hidePulser();
                             $('#gameHeader, #gameFooter, #buildingsParent, #starsParent')
                                 .css('visibility', 'hidden');
+
+                            // TODO: Clear the buildings data.
+
                             Login.build();
                         }
                     });
