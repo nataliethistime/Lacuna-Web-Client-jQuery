@@ -65,16 +65,11 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
         // Posts a debug message if debug mode is switched on,
         // either via the URL parameter or window.debug
         // declared in index.html.
+        this.debugMode = (window.debug || window.location.toString().search('debug') > 0);
         this.debug = function(message) {
             // Check if debug mode is on.
-            if (window.debug || window.location.toString().search('debug') > 0) {
-                // I work on Firefox with Firebug, it's the best! XD
-                if (window.console && (window.console.firebug || window.console.exception)) {
-                    console.info(message);
-                }
-                else {
-                    console.log('DEBUG: ' + message);
-                }
+            if (this.debugMode) {
+                console.log('DEBUG: ' + message);
             }
         };
  

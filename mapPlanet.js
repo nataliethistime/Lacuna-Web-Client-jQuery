@@ -1,6 +1,6 @@
 // This defines the HTML structure to contain the buildings to be displayed in the planet image.
 
-define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], function($, Library, BuildingType, Buildings, Template, Body) {
+define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 'body'], function($, Lacuna, Library, BuildingType, Buildings, Template, Body) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -73,6 +73,7 @@ define(['jquery', 'library', 'buildingType', 'buildings', 'template', 'body'], f
                             } else {
                                 // Open build panel.
                                 // TODO
+                                Lacuna.alert("This is the building panel.");
                             }
                         }
                     }, '#' + idStr, {
