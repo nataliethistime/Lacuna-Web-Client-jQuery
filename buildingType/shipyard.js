@@ -4,7 +4,6 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 
     function Shipyard() {
         var scope = this;
-        console.log(this);//debug
 
         this.getTabs = function() {
             return [
@@ -36,6 +35,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 
                     if (o.result.ships_building.length > 0) {
                         // Add ships to queue and post to DOM.
+                        tab.add(JSON.stringify(o.result.ships_building)); // Meh...
                     }
                     else {
                         // No ships are currently building.
