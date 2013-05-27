@@ -24,12 +24,12 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                 module: scope.building.url,
                 method: 'view_build_queue',
 
-                params: [
-                    Lacuna.getSession(), // Session Id
-                    scope.building.id, // Building Id
-                    1 // Page number
-                ],
-
+                // Note: this is the 'named argument' call which only works on fleet-action code.
+                params: [{
+                    session_id      : Lacuna.getSession(),
+                    building_id     : scope.building.id,
+                    no_paging       : 1
+                }],
                 success: function(o) {
                     tab.add(JSON.stringify(o.result));
 
