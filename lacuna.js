@@ -159,11 +159,13 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                         };
                     if (error.code == 1006) {
                         // Clear all the panels.
-                        $('#lacuna').fadeOut(500, function() {
+                        //$('#lacuna').fadeOut(500, function() {
                             $('#lacuna').html('');
-                            Login.build();
+                            require(['login'], function(Login) {
+                                Login.build();
+                            });
                             scope.alert('Session expired. :(');
-                        });
+                        //});
                     }
                     else {
                         // Call the failure function, or alert the human readable error message.

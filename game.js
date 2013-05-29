@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'login', 'template'], function($, Lacuna, MapPlanet, MapStars, Login, Template) {
+define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template'], function($, Lacuna, MapPlanet, Login, Template) {
     function Game() {
 
         Template.load(['game']);
@@ -33,7 +33,6 @@ define(['jquery', 'lacuna', 'mapPlanet', 'mapStars', 'login', 'template'], funct
             // This creates the planet map and stars view divisions
             // but they are initially hidden and are populated by callbacks
             MapPlanet.renderPlanet();
-//            MapStars.renderStars();
 
             // Open the login screen.
             Login.build();

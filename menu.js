@@ -20,7 +20,6 @@ define(['jquery', 'lacuna', 'template', 'game', 'login'], function($, Lacuna, Te
                                 .css('visibility', 'hidden');
 
                             // TODO: Clear the buildings data.
-
                             Login.build();
                         }
                     });

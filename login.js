@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie'], function($, Lacuna, Empire, Template) {
+define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie', 'mapStars'], function($, Lacuna, Empire, Template, Z, MapStars) {
 
     Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -43,13 +43,12 @@ define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie'], function($, L
                 }
             });
 
-            $('#loginButton').click(this.login);
+            $('#loginButton').click(scope.login);
         };
 
         this.login = function() {
-            empireName = $('#empire').val();
-            var empirePassword = $('#password').val();
-
+            empireName      = $('#empire').val();
+            empirePassword  = $('#password').val();
             Lacuna.showPulser();
 
             Lacuna.send({
