@@ -11,7 +11,7 @@
 }
 
 html, body {
-    background-image: url('../assets/ui/field.png');
+    background-image: url('//d16cbq0l6kkf21.cloudfront.net/assets/star_system/field.png');
 
     /* Remove scroll bar - maybe, doesn't seem to work... */
     overflow: hidden;
@@ -197,7 +197,6 @@ label {
 }
 .logout {
     right: 0px;
-    cursor: pointer;
 }
 .logout img {
     width: 46px;
@@ -257,6 +256,7 @@ label {
     padding-top:    5px;
     text-align: left;
     overflow:   hidden;
+    cursor:     pointer;
 }
 
 .menuPlanetThumb {

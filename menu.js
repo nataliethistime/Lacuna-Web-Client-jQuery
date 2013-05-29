@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'template', 'game', 'login'], function($, Lacuna, Template, Game, Login) {
+define(['jquery', 'lacuna', 'template', 'login', 'mapStars'], function($, Lacuna, Template, Login, MapStars) {
     function Menu() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -8,6 +8,8 @@ define(['jquery', 'lacuna', 'template', 'game', 'login'], function($, Lacuna, Te
                 click: function(e) {
                     $('#buildingsParent').css('visibility', 'hidden');
                     $('#starsParent').css('visibility', 'visible');
+                    $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/ui/field.png')");
+                    MapStars.renderStars();
                 }
             });
             $('#menu_logout').on({
