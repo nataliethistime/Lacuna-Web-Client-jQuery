@@ -64,6 +64,9 @@ define(['require', 'jquery', 'underscore','buildings'], function(Require, $, _, 
         this.backgroundCallbackRemove = function(callback) {
             backgroundCallbacks.remove(callback);
         };
+        this.backgroundCallbackFire = function() {
+            backgroundCallbacks.fire(scope.surface_image);
+        };
     }
 
     return new Body();

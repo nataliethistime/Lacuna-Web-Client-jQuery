@@ -162,8 +162,11 @@ label {
     left:0;
 }
 
-.change {
+.to_starmap, .to_planetmap {
     left: 0px;
+}
+.to_planetmap {
+    visibility: hidden;
 }
 .inbox {
     left: 60px;
