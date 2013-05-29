@@ -4,7 +4,13 @@ define(['jquery', 'lacuna', 'template', 'game', 'login'], function($, Lacuna, Te
         var scope = this;
 
         this.renderMenu = function() {
-            $('.logout.menuItem').on({
+            $('#menu_change').on({
+                click: function(e) {
+                    $('#buildingsParent').css('visibility', 'hidden');
+                    $('#starsParent').css('visibility', 'visible');
+                }
+            });
+            $('#menu_logout').on({
                 click: function(e) {
                     Lacuna.send({
                         module: '/empire',
