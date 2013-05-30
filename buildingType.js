@@ -45,7 +45,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
                     }
                     else {
                         if (moduleTypes[building.type]) {
-                            require(['buildingType/'+building.type], function(loadedBuildingType) {
+                            require(['buildingType/'+moduleTypes[building.type]], function(loadedBuildingType) {
                                 // We only have to load it once, then we can use the cached value
                                 loadedBuildingType.building = building;
                                 modules[building.type] = loadedBuildingType;
