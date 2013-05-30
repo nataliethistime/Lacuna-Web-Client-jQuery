@@ -1,4 +1,4 @@
-<script id="game_mapStar_plot">
+<script id="mapStar_plot">
 <![CDATA[
   <div id="<%= idStr %>" title="Ground" style="
     width    : <%= size %>px;
@@ -23,7 +23,15 @@
 ]]>
 </script>
 
-<script id="game_mapStar_star">
+<script id="mapStar_tile">
+<![CDATA[
+  <div id="starmap_tile<%= tileId %>" style = "position: absolute; left: <%= absLeft %>px; top: <%= absTop %>px; width: <%= widthPx %>px; height: <%= heightPx %>px;">
+    XXXXXXXXXXXXXXXXXXXXXXX  <%= tileId %>  XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  </div>
+]]>
+</script>
+
+<script id="mapStar_star">
 <![CDATA[
   <div id="tile_"<%= x %>_<%= y %> title="<%= name %> (<%= x %>,<%= y %>)" 
     style = "position: absolute; z-index: -5; width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"

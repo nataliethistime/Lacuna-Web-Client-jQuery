@@ -1,4 +1,7 @@
 define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
+
+    Template.load(['mapStars']);
+
     function MapStars() {
         // Use scope to reduce confusion about this.
         var scope = this;
@@ -11,11 +14,11 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         // the other side will be created (by calls to get_star_map).
         // Since the view-port is generally smaller than a tile (especially at high zoom)
         // then tiles will generally be created outside of the viewport and it will
-        // give the appearance of continuous smooth scroll.
+        // give the appearance of continuous smooth scrolling.
 
         var defaults = {
             parentContainer     : '#starmap',   // The parent div to contain the starmap
-            zoomLevel           : 0,            // Default zoom level
+            zoomLevel           : 1,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
             boundLeft           : -1500,        // Bounds of the starmap
@@ -30,7 +33,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         //  3  4  5
         //  6  7  8
         //
-        var tiles;
+        this.tiles = new Array();
 
         // convert a zoom level into pixels per starmap 'unit'
         var zoomToPixels = {
@@ -42,6 +45,9 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             1   : 20
         };
 
+        // We should only need to 'renderStars' when we first display
+        // the starmap, when we zoom in/out, or make a big change to
+        // our x,y position such that all current tiles go out of range.
         this.renderStars = function(o) {
             if (typeof o == 'object') {
                 options = $.extend(defaults, o);
@@ -49,68 +55,123 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             else {
                 options = defaults;
             }
+
+            // First just position the nine tiles, they will be empty until
+            // they are rendered by calls to 'get_star_map'.
+            $("#starsParent").html('').draggable();
+            for (var x=0; x<9; x++) {
+                var bounds = scope.getTileBounds(x, options.viewX, options.viewY);
+
+                var absLeft = bounds.left * scope.unitWidthPx();
+                var absTop  = bounds.top * scope.unitHeightPx();
+                scope.tiles[x] = Template.read.mapStar_tile({
+                    absLeft     : absLeft,
+                    absTop      : absTop,
+                    tileId      : x,
+                    widthPx     : 100 * scope.unitWidthPx(),
+                    heightPx    : 30 * scope.unitHeightPx(),
+                });
+                $("#starsParent").append(scope.tiles[x]);
+            }
+
             // Render all 9 tiles
             // Render the centre tile first
-            scope.renderTile(0,0, options.viewX, options.viewY);
+            scope.renderTile(4,0, options.viewX, options.viewY);
             for (var x=0; x < 9; x++) {
                 if (x != 4) {
                     scope.renderTile(x, options.viewX, options.viewY);
                 }
             }
-            
-
         };
+
+        // Make another tile the centre tile
+        this.centreTile = function(tileId) {
+            
+        };
+
 
         // The expanse is tiled in fixed size tiles 100 units wide by 30 units high.
         // We can break the starmap into 30 tiles wide (ignoring x=1500 since it
         // does not contain any bodies) and 100 tiles high (again ignoring y=1500)
         // Taking advantage of this makes the code a bit easier.
-
-        this.tileWidthPx = function() {
-            return zoomToPixels[options.zoom] * 100;
+        //
+        // We can position the tile in an area equivalent to the size of the expanse
+        // (in pixels, depending on zoom level) and then position the stars and planets
+        // absolutely within the tile.
+        //
+        this.unitWidthPx = function() {
+            return zoomToPixels[options.zoomLevel];
         };
-        this.tileHeightPx = function() {
-            return zoomToPixels[options.zoom] * 30;
+        this.unitHeightPx = function() {
+            return zoomToPixels[options.zoomLevel];
+        };
+
+        // xUnit,yUnit is the star unit in the centre of the view
+        this.getTileBounds = function(tileId, xUnit, yUnit) {
+            // xDelta and yDelta are the tile offsets to the centre tile
+            var yDelta = Math.floor((8 - tileId)/3) - 1;
+            var xDelta = tileId % 3 - 1;
+            // Calculate the bounds of the centre tile (in starmap units)
+            var boundLeft = Math.floor((xUnit - options.boundLeft) / 100) * 100 + options.boundLeft;
+            var boundBottom = Math.floor((yUnit - options.boundBottom) / 30) * 30 + options.boundBottom;
+            // Convert to bounds for the specified tileId (in starmap units)
+            boundLeft       = boundLeft + xDelta * 100;
+            boundBottom     = boundBottom + yDelta * 30;
+            var boundRight  = boundLeft + 99;
+            var boundTop    = boundBottom + 29;
+
+            return {
+                left    : boundLeft,
+                right   : boundRight,
+                top     : boundTop,
+                bottom  : boundBottom
+            };
         };
 
         // given x,y (current map location in units) and the tile ID
         // then render that tile
         this.renderTile = function(tileId, xUnit, yUnit) {
             // xDelta and yDelta are the offsets from the centre tile (tile 4) to the required tile
-            var yDelta = Math.floor((8 - tileId)/3) - 1;
-            var xDelta = tileId % 3 - 1;
+//            var yDelta = Math.floor((8 - tileId)/3) - 1;
+//            var xDelta = tileId % 3 - 1;
             // calculate the bounds of the centre tile
-            var boundLeft   = Math.floor((xUnit - options.boundLeft) / 100) * 100 + options.boundLeft;
-            var boundBottom = Math.floor((yUnit - options.boundBottom) / 30) * 30 + options.boundBottom;
-//            Lacuna.alert("tileId ["+tileId+"] xUnit ["+xUnit+"] yUnit ["+yUnit+"] yDelta ["+yDelta+"] xDelta ["+xDelta+"] boundLeft ["+boundLeft+"] boundBottom ["+boundBottom+"]");
+//            var boundLeft   = Math.floor((xUnit - options.boundLeft) / 100) * 100 + options.boundLeft;
+//            var boundBottom = Math.floor((yUnit - options.boundBottom) / 30) * 30 + options.boundBottom;
             // Convert to bounds for the specified tile ID
-            boundLeft       = boundLeft + xDelta * 100;
-            boundBottom     = boundBottom + yDelta * 30;
-            var boundRight  = boundLeft + 99;
-            var boundTop    = boundBottom + 29;
+//            boundLeft       = boundLeft + xDelta * 100;
+//            boundBottom     = boundBottom + yDelta * 30;
+//            var boundRight  = boundLeft + 99;
+//            var boundTop    = boundBottom + 29;
+
+            var bounds = scope.getTileBounds(tileId, xUnit, yUnit);
 //            Lacuna.alert("boundLeft = ["+boundLeft+"] boundRight = ["+boundRight+"] boundTop = ["+boundTop+"] boundBottom = ["+boundBottom+"] tileId = ["+tileId+"]");
-            if (    boundLeft   >= options.boundLeft 
-                &&  boundRight  <= options.boundRight
-                &&  boundBottom >= options.boundBottom
-                &&  boundTop    <= options.boundTop) {
+            if (    bounds.left   >= options.boundLeft 
+                &&  bounds.right  <= options.boundRight
+                &&  bounds.bottom >= options.boundBottom
+                &&  bounds.top    <= options.boundTop) {
                 // Then we are within the bounds of the starmap
                 Lacuna.send({
                     module: '/map',
                     method: 'get_star_map',
                     params: [{
                         session_id  : Lacuna.getSession(),
-                        left        : boundLeft,
-                        top         : boundTop,
-                        right       : boundRight,
-                        bottom      : boundBottom
+                        left        : bounds.left,
+                        top         : bounds.top,
+                        right       : bounds.right,
+                        bottom      : bounds.bottom
                     }],
                     success : function(o) {
-                        Lacuna.alert(JSON.stringify(o));
+                     //   Lacuna.alert("add tile "+tileId);
+                        // Now populate the tile with the planets and stars
+
+
+                        // Now populate the tile with the ships
                     }
                 });
             }
             else {
                 // Then we are outside the bounds, just render a starfield
+                // (we may not need to render anything if we have a tiled background image)
                 Lacuna.alert('Outside bounds');
             }
         };
