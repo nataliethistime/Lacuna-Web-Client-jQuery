@@ -1,28 +1,3 @@
-<script id="mapStar_plot">
-<![CDATA[
-  <div id="<%= idStr %>" title="Ground" style="
-    width    : <%= size %>px;
-    height   : <%= size %>px;
-    left     : <% print((parseInt(x) + 5) * size); %>px;
-    top      : <% print((parseInt(y) - 5) * size * -1); %>px;
-    position : absolute;
-    margin   : 2px;
-  ">
-    <div id="<%= idStrCenter %>" style="display:none;">
-      <img id="build_icon" src="<%= assetsUrl %>/ui/l/build.png" style="
-        position    : absolute;
-        width       : 58px;
-        height      : 45px;
-        top         : 50%;
-        left        : 50%;
-        margin-top  : -22.5px;
-        margin-left : -29px;
-      "/>
-    </div>
-  </div>
-]]>
-</script>
-
 <script id="mapStar_tile">
 <![CDATA[
   <div id="starmap_tile<%= tileId %>" style = "position: absolute; left: <%= absLeft %>px; top: <%= absTop %>px; width: <%= widthPx %>px; height: <%= heightPx %>px;">
@@ -33,8 +8,8 @@
 
 <script id="mapStar_star">
 <![CDATA[
-  <div id="tile_"<%= x %>_<%= y %> title="<%= name %> (<%= x %>,<%= y %>)" 
-    style = "position: absolute; z-index: -5; width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"
+  <div id="star_tile_<%= id %>" title="<%= name %> (<%= x %>,<%= y %>)" 
+    style = "position: absolute; z-index: 1; width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"
     class = "tile">
     <div style = "width: <%= tile_width %>px; height: <%= tile_height %>px; position: absolute; top: 0px; left 0px;">
       <img src="<%= assetsUrl %>/star_map/<%= star_color %>.png" class "star"

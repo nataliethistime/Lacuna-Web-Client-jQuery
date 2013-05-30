@@ -131,20 +131,8 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         // given x,y (current map location in units) and the tile ID
         // then render that tile
         this.renderTile = function(tileId, xUnit, yUnit) {
-            // xDelta and yDelta are the offsets from the centre tile (tile 4) to the required tile
-//            var yDelta = Math.floor((8 - tileId)/3) - 1;
-//            var xDelta = tileId % 3 - 1;
-            // calculate the bounds of the centre tile
-//            var boundLeft   = Math.floor((xUnit - options.boundLeft) / 100) * 100 + options.boundLeft;
-//            var boundBottom = Math.floor((yUnit - options.boundBottom) / 30) * 30 + options.boundBottom;
-            // Convert to bounds for the specified tile ID
-//            boundLeft       = boundLeft + xDelta * 100;
-//            boundBottom     = boundBottom + yDelta * 30;
-//            var boundRight  = boundLeft + 99;
-//            var boundTop    = boundBottom + 29;
-
             var bounds = scope.getTileBounds(tileId, xUnit, yUnit);
-//            Lacuna.alert("boundLeft = ["+boundLeft+"] boundRight = ["+boundRight+"] boundTop = ["+boundTop+"] boundBottom = ["+boundBottom+"] tileId = ["+tileId+"]");
+
             if (    bounds.left   >= options.boundLeft 
                 &&  bounds.right  <= options.boundRight
                 &&  bounds.bottom >= options.boundBottom
@@ -161,9 +149,31 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                         bottom      : bounds.bottom
                     }],
                     success : function(o) {
-                     //   Lacuna.alert("add tile "+tileId);
-                        // Now populate the tile with the planets and stars
+                        var stars = o.result.stars;
 
+                        $("#starmap_tile"+tileId).html('');
+
+                        // Map each star onto the tile
+                        for (var i = 0; i < stars.length; i++) {
+                            var star = stars[i];
+                            var star_div = Template.read.mapStar_star({
+                                assetsUrl   : window.assetsUrl,
+                                id          : star.id,
+                                x           : star.x,
+                                y           : star.y,
+                                name        : star.name,
+                                tile_width  : scope.unitWidthPx(),
+                                tile_height : scope.unitHeightPx(),
+                                tile_left   : (bounds.left - star.x) * scope.unitWidthPx(),
+                                tile_top    : (bounds.top - star.y) * scope.unitHeightPx(),
+                                star_color  : star.color,
+                                star_width  : scope.unitWidthPx(),
+                                star_height : scope.unitHeightPx(),
+                                margin_top  : 5,
+                                star_seized : 0
+                            });
+                            $("#starmap_tile"+tileId).append(star_div);
+                        }
 
                         // Now populate the tile with the ships
                     }
