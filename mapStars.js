@@ -33,8 +33,8 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         //  3  4  5
         //  6  7  8
         //
-        this.tiles = new Array();
-        this.centreTile = {     // the starmap location for the centre tile
+        scope.tiles = new Array();
+        scope.centreTile = {     // the starmap location for the centre tile
             top     : 0,
             left    : 0
         };
@@ -52,14 +52,16 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         // We should only need to 'renderStars' when we first display
         // the starmap, when we zoom in/out, or make a big change to
         // our x,y position such that all current tiles go out of range.
-        this.renderStars = function(o) {
+        scope.renderStars = function(o) {
+
+            // TODO change this to cater for options already defined
+            // so we can call it multiple times, but retain old options
             if (typeof o == 'object') {
                 options = $.extend(defaults, o);
             }
             else {
                 options = defaults;
             }
-
             // First determine where the centre tile is positioned in the starmap units
             scope.centreTile.left   = Math.floor((options.viewX - options.boundLeft) / 100) * 100 + options.boundLeft;
             scope.centreTile.top    = Math.floor((options.viewY - options.boundBottom) / 30) * 30 + options.boundBottom + 29;
@@ -73,7 +75,12 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             var expanseWidthPx = scope.unitWidthPx() * (options.boundRight - options.boundLeft);
             var expanseHeightPx = scope.unitHeightPx() * (options.boundTop - options.boundBottom);
             var $starsParent = $("#starsParent");
-            $starsParent.html('').draggable().width(expanseWidthPx).height(expanseHeightPx);
+            $starsParent.draggable({
+                stop : function(event, ui) {
+                    scope.recalculateCentre()
+                }
+            });
+            $starsParent.html('').width(expanseWidthPx).height(expanseHeightPx);
 
             for (var x=0; x<9; x++) {
                 var bounds = scope.getTileBounds(x);
@@ -110,6 +117,40 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             var top = viewHeight / 2 - (options.boundTop - options.viewY) * scope.unitHeightPx();
             $starsParent.css('left', left);
             $starsParent.css('top', top);
+            $starsParent = null; // avoid memory leak
+        };
+
+        // After a drag-drop, we need to recalculate the centre tile
+        scope.recalculateCentre = function() {
+            //alert('get here');
+            var $starsParent    = $("#starsParent");
+            var $starsViewport  = $("#starsViewport");
+
+            var parentLeft      = parseInt($starsParent.css('left'));
+            var parentTop       = parseInt($starsParent.css('top'));
+            var viewWidth       = parseInt($starsViewport.width());
+            var viewHeight      = parseInt($starsViewport.height());
+            var unitX           = Math.round((viewWidth / 2 - parentLeft) / scope.unitWidthPx() + options.boundLeft);
+            var unitY           = Math.round(options.boundTop - (viewHeight / 2 - parentTop) / scope.unitHeightPx());
+//            alert("parentLeft="+parentLeft+", parentTop="+parentTop+", viewWidth="+viewWidth+", viewHeight="+viewHeight+", unitX="+unitX+", unitY="+unitY);
+
+            // Given, the star unit X,Y we need to see if it falls within any of the 9 currently rendered tiles
+            var deltas = scope.getTileDelta(unitX,unitY);
+            if (deltas.xDelta == 0 && deltas.yDelta == 0) {
+                // No change, still in the middle
+            }
+//            else if (Math.abs(deltas.xDelta) > 1 || Math.abs(deltas.yDelta) > 1) {
+                // moved totally outside the current 9 tiles, recalculate everything
+//            }
+            else {
+                // Moved somewhere within the outer tiles, do some juggling
+                scope.renderStars({
+                    viewX : unitX,
+                    viewY : unitY
+                });
+            }
+
+
         };
 
         // The expanse is tiled in fixed size tiles 100 units wide by 30 units high.
@@ -121,17 +162,25 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         // (in pixels, depending on zoom level) and then position the stars and planets
         // absolutely within the tile.
         //
-        this.unitWidthPx = function() {
+        scope.unitWidthPx = function() {
             return zoomToPixels[options.zoomLevel];
         };
-        this.unitHeightPx = function() {
+        scope.unitHeightPx = function() {
             return zoomToPixels[options.zoomLevel];
         };
 
+        // Given a star unit X,Y location, work out the delta change in tiles from
+        // the centre tile. e.g. yDelta = -1 means the new position is one tile to the left of the current centre tile
+        scope.getTileDelta = function(unitX, unitY) {
+            var xDelta  = (Math.floor((unitX - options.boundLeft)/100) * 100 + options.boundLeft - scope.centreTile.left) / 100;
+            var yDelta  = (Math.floor((unitY - options.boundBottom)/30) * 30 + options.boundBottom + 29 - scope.centreTile.top) / 30;
+            return {xDelta : xDelta, yDelta : yDelta};
+        };
+
         // tileId is the tile who's position we want to find
-        // centreTileLeft and centreTileRight are the position of the centre tile
+        // by referring to the central tile
         //
-        this.getTileBounds = function(tileId) {
+        scope.getTileBounds = function(tileId) {
             // xDelta and yDelta are the tile offsets to the centre tile
             var yDelta  = Math.floor((8 - tileId)/3) - 1;
             var xDelta  = tileId % 3 - 1;
@@ -150,7 +199,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         };
 
         // Render a single tile given it's ID (0-9)
-        this.renderTile = function(tileId) {
+        scope.renderTile = function(tileId) {
             var bounds = scope.getTileBounds(tileId);
 
             if (    bounds.left   >= options.boundLeft 
