@@ -1,8 +1,10 @@
 <script id="mapStar_tile">
 <![CDATA[
-  <div id="starmap_tile<%= tileId %>" style = "position: absolute; left: <%= absLeft %>px; top: <%= absTop %>px; width: <%= widthPx %>px; height: <%= heightPx %>px;">
+  <div id="starmap_tile<%= tileId %>" 
+    style = "border:1px dashed white; color: #000000; position: absolute; left: <%= absLeft %>px; top: <%= absTop %>px; width: <%= widthPx %>px; height: <%= heightPx %>px;">
     XXXXXXXXXXXXXXXXXXXXXXX  <%= tileId %>  XXXXXXXXXXXXXXXXXXXXXXXXXXXX
   </div>
+  <div style = "color: #ffffff; position: absolute; left: <%= absLeft %>px; top: <%= absTop %>px;">&nbsp; &nbsp; tile <%= tileId %>, <%= x %>|<%= y %></div>
 ]]>
 </script>
 
