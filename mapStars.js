@@ -63,14 +63,23 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             // First determine where the centre tile is positioned in the starmap units
             scope.centreTile.left   = Math.floor((options.viewX - options.boundLeft) / 100) * 100 + options.boundLeft;
             scope.centreTile.top    = Math.floor((options.viewY - options.boundBottom) / 30) * 30 + options.boundBottom + 29;
+            Lacuna.debug("Centre tile at "+scope.centreTile.left+"|"+scope.centreTile.top);
 
             // First just position the nine tiles, they will be empty until
             // they are rendered by calls to 'get_star_map'.
-            $("#starsParent").html('').draggable();
+
+            // The starsParent is the draggable object, it's children (the tiles) can be dragged 
+            // with it. Let's make it as big as the expanse (in pixels)
+            var expanseWidthPx = scope.unitWidthPx() * (options.boundRight - options.boundLeft);
+            var expanseHeightPx = scope.unitHeightPx() * (options.boundTop - options.boundBottom);
+            var $starsParent = $("#starsParent");
+            $starsParent.html('').draggable().width(expanseWidthPx).height(expanseHeightPx);
+
             for (var x=0; x<9; x++) {
                 var bounds = scope.getTileBounds(x);
-                var absLeft = bounds.left * scope.unitWidthPx();
-                var absTop  = options.boundTop - bounds.top * scope.unitHeightPx();
+                // calculate the pixel offset to position the tile on the background
+                var absLeft = (bounds.left - options.boundLeft) * scope.unitWidthPx();
+                var absTop  = (options.boundTop - bounds.top) * scope.unitHeightPx();
 
                 scope.tiles[x] = Template.read.mapStar_tile({
                     absLeft     : absLeft,
@@ -81,7 +90,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                     widthPx     : 100 * scope.unitWidthPx(),
                     heightPx    : 30 * scope.unitHeightPx(),
                 });
-                $("#starsParent").append(scope.tiles[x]);
+                $starsParent.append(scope.tiles[x]);
             }
 
             // Render all 9 tiles
@@ -93,6 +102,14 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                     scope.renderTile(x);
                 }
             }
+            // Get the size of the viewport so we can position the target in the centre of the screen
+            var $starsViewport = $("#starsViewport");
+            var viewWidth = $starsViewport.width();
+            var viewHeight = $starsViewport.height();
+            var left = viewWidth / 2 - (options.viewX - options.boundLeft) * scope.unitWidthPx();
+            var top = viewHeight / 2 - (options.boundTop - options.viewY) * scope.unitHeightPx();
+            $starsParent.css('left', left);
+            $starsParent.css('top', top);
         };
 
         // The expanse is tiled in fixed size tiles 100 units wide by 30 units high.

@@ -133,7 +133,16 @@ label {
     bottom:0;
     z-index:1003;
 }
-
+#starsViewport {
+    height :    100%;
+}
+#starsParent {
+    height : 20000px;
+    width : 20000px;
+    position : relative;
+    background-image: url('//d16cbq0l6kkf21.cloudfront.net/assets/star_system/field.png');
+    background-repeat: repeat;
+}
 #planets {
     font-size:180%;
     text-decoration:none;
