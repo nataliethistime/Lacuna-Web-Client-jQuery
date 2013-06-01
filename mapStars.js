@@ -29,16 +29,11 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         var options;
         // tiles are an array of 9 tiles arranged by index
         //
-        //  0  1  2
-        //  3  4  5
         //  6  7  8
+        //  3  4  5
+        //  0  1  2
         //
         scope.tiles = new Array();
-        scope.centreTile = {     // the starmap location for the centre tile
-            top     : 0,
-            left    : 0
-        };
-
         // convert a zoom level into pixels per starmap 'unit'
         var zoomToPixels = {
             6   : 150,
@@ -63,12 +58,16 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                 options = defaults;
             }
             // First determine where the centre tile is positioned in the starmap units
-            scope.centreTile.left   = Math.floor((options.viewX - options.boundLeft) / 100) * 100 + options.boundLeft;
-            scope.centreTile.top    = Math.floor((options.viewY - options.boundBottom) / 30) * 30 + options.boundBottom + 29;
-            Lacuna.debug("Centre tile at "+scope.centreTile.left+"|"+scope.centreTile.top);
-
-            // First just position the nine tiles, they will be empty until
-            // they are rendered by calls to 'get_star_map'.
+            var centreLeft      = Math.floor((options.viewX - options.boundLeft) / 100) * 100 + options.boundLeft;
+            var centreBottom    = Math.floor((options.viewY - options.boundBottom) / 30) * 30 + options.boundBottom;
+            scope.tiles[4] = {
+                html    : '',
+                top     : centreBottom + 29,
+                bottom  : centreBottom,
+                left    : centreLeft,
+                right   : centreLeft + 100
+            }
+//            alert("Centre tile at "+scope.tiles[4].left+"|"+scope.tiles[4].top);
 
             // The starsParent is the draggable object, it's children (the tiles) can be dragged 
             // with it. Let's make it as big as the expanse (in pixels)
@@ -82,13 +81,15 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             });
             $starsParent.html('').width(expanseWidthPx).height(expanseHeightPx);
 
+            // First just position the nine tiles, they will be empty until
+            // they are rendered by calls to 'get_star_map'.
             for (var x=0; x<9; x++) {
                 var bounds = scope.getTileBounds(x);
                 // calculate the pixel offset to position the tile on the background
                 var absLeft = (bounds.left - options.boundLeft) * scope.unitWidthPx();
                 var absTop  = (options.boundTop - bounds.top) * scope.unitHeightPx();
 
-                scope.tiles[x] = Template.read.mapStar_tile({
+                var tileHtml = Template.read.mapStar_tile({
                     absLeft     : absLeft,
                     absTop      : absTop,
                     x           : bounds.left,
@@ -97,7 +98,14 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                     widthPx     : 100 * scope.unitWidthPx(),
                     heightPx    : 30 * scope.unitHeightPx(),
                 });
-                $starsParent.append(scope.tiles[x]);
+                $starsParent.append(tileHtml);
+                scope.tiles[x] = {
+                    html        : tileHtml,
+                    left        : bounds.left,
+                    top         : bounds.top,
+                    right       : bounds.left+100,
+                    bottom      : bounds.top-30
+                };
             }
 
             // Render all 9 tiles
@@ -159,16 +167,17 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                 if (moveToTile == 4) {
                 }
                 else if (moveToTile == 7) {
-                    scope.moveTile(5,8);
-                    scope.moveTile(4,7);
-                    scope.moveTile(3,6);
-                    scope.moveTile(2,5);
-                    scope.moveTile(1,4);
-                    scope.moveTile(0,3);
-                    scope.centreTile.top = scope.centreTile.top + 100;
-                    scope.renderTile(0);
-                    scope.renderTile(1);
-                    scope.renderTile(2);
+                    scope.moveTile(3,0);
+                    scope.moveTile(4,1);
+                    scope.moveTile(5,2);
+                    scope.moveTile(6,3);
+                    scope.moveTile(7,4);
+                    scope.moveTile(8,5);
+                    scope.renderTile(6);
+                    scope.renderTile(7);
+                    scope.renderTile(8);
+                    // Need to move the position of the viewport
+                    $("#starsParent").css("top","-=600");
                 }
                 else {
                     scope.renderStars({
@@ -202,8 +211,8 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         // Given a star unit X,Y location, work out which of the existing tiles have we moved to
         // (or return -1 if we are out of range of all existing tiles)
         scope.getTileToMoveTo = function(unitX, unitY) {
-            var xDelta  = (Math.floor((unitX - options.boundLeft)/100) * 100 + options.boundLeft - scope.centreTile.left) / 100;
-            var yDelta  = (Math.floor((unitY - options.boundBottom)/30) * 30 + options.boundBottom + 29 - scope.centreTile.top) / 30;
+            var xDelta  = (Math.floor((unitX - options.boundLeft)/100) * 100 + options.boundLeft - scope.tiles[4].left) / 100;
+            var yDelta  = (Math.floor((unitY - options.boundBottom)/30) * 30 + options.boundBottom + 29 - scope.tiles[4].top) / 30;
             if (Math.abs(xDelta) < 2 && Math.abs(yDelta) < 2) {
                 return 4 + yDelta * 3 + xDelta;
             }
@@ -218,11 +227,10 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             var yDelta  = Math.floor((8 - tileId)/3) - 1;
             var xDelta  = tileId % 3 - 1;
             // Convert to position for the specified tileId (in starmap units)
-            var left    = scope.centreTile.left + xDelta * 100;
-            var top     = scope.centreTile.top - yDelta * 30;
+            var left    = scope.tiles[4].left + xDelta * 100;
+            var top     = scope.tiles[4].top - yDelta * 30;
             var right   = left + 99;
             var bottom  = top - 29;
-
             return {
                 left    : left,
                 right   : right,

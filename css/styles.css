@@ -171,6 +171,14 @@ label {
     left:0;
 }
 
+.starmap_tile {
+    border      : 1px dashed white; 
+    color       : #000000; 
+    position    : absolute;
+    background-image: url('//d16cbq0l6kkf21.cloudfront.net/assets/star_system/field.png');
+    background-repeat: repeat;
+}
+
 .to_starmap, .to_planetmap {
     left: 0px;
 }
