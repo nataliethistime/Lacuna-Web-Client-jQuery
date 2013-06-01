@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
+define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Template) {
 
     Template.load(['mapStars']);
 
@@ -18,7 +18,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 
         var defaults = {
             parentContainer     : '#starmap',   // The parent div to contain the starmap
-            zoomLevel           : 1,            // Default zoom level
+            zoomLevel           : 2,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
             boundLeft           : -1500,        // Bounds of the starmap
@@ -46,9 +46,37 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             1   : 20
         };
 
+        // When we move from the central tile (4) to any other tile
+        // we can avoid reloading some tiles, we just juggle them 
+        // about. These (and their order) are the tiles we can move.
+        // TODO There is an edge case, e.g. moving from tile 7 to
+        // tile 1 (2 tiles jump) which is slightly inefficent (it
+        // calculates all tiles). But it will do for now.
+        //
+        // TODO It is possible to scroll off the edge of the map. We
+        // can probably stop this by putting bounds on the draggable.
+        //
+        // TODO Minor irritation. When dragging, new tile pops up with
+        // what looks like 'old' data which is then overwritten by the
+        // call to get_star_map. Clear it out first.
+        var juggleTiles = {
+            0   : [4,3,1,0],
+            1   : [5,4,3,2,1,0],
+            2   : [5,4,2,1],
+            3   : [7,6,4,3,1,0],
+            4   : [],
+            5   : [1,2,4,5,7,8],
+            6   : [3,4,6,7],
+            7   : [3,4,5,6,7,8],
+            8   : [4,5,7,8]
+        };
+
         // We should only need to 'renderStars' when we first display
         // the starmap, when we zoom in/out, or make a big change to
         // our x,y position such that all current tiles go out of range.
+        //
+        // TODO Create a separate function to initialize the data
+        //
         scope.renderStars = function(o) {
 
             // TODO change this to cater for options already defined
@@ -135,7 +163,6 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             var viewHeight      = parseInt($starsViewport.height());
             var unitX           = Math.round((viewWidth / 2 - parentLeft) / scope.unitWidthPx() + options.boundLeft);
             var unitY           = Math.round(options.boundTop - (viewHeight / 2 - parentTop) / scope.unitHeightPx());
-//            alert("parentLeft="+parentLeft+", parentTop="+parentTop+", viewWidth="+viewWidth+", viewHeight="+viewHeight+", unitX="+unitX+", unitY="+unitY);
 
             // Given, the star unit X,Y we need to see if it falls within any of the 9 currently rendered tiles
             var moveToTile = scope.getTileToMoveTo(unitX,unitY);
@@ -147,45 +174,30 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                     viewY : unitY
                 });
             }
-            else {
-                // Moved somewhere within the outer tiles, do some juggling
-                // We can keep some of the existing tiles (but move them)
-                //  moveToTile  Move tiles      Replace tiles
-                //  0           4,3,1,0
-                //  1           5,4,3,2,1,0     0,1,2
-                //  2           5,4,2,1
-                //  3           7,6,4,3,1,0
-                //  4           no change, see above
-                //  5           1,2,4,5,7,8
-                //  6           3,4,6,7
-                //  7           3,4,5,6,7,8    
-                //  8           4,5,7,8
-                if (moveToTile == 4) {
-                    //alert('no tile move');
+            else if (moveToTile != 4) {
+                // tile 4 means 'no movement', so omit it
+                var delta = 4 - moveToTile;
+                var tiles = _.clone(juggleTiles[moveToTile]);
+                var tilesToDo = [0,1,2,3,4,5,6,7,8];
+                while(tiles.length) {
+                    var tile = tiles.shift();
+                    scope.moveTile(tile,tile+delta);
+                    // remove this tile from tilesToDo (native indexOf not supported in IE 8 or below)
+                    tilesToDo.splice(_.indexOf(tilesToDo, tile+delta), 1);
                 }
-                else if (moveToTile == 7) {
-                    scope.moveTile(3,0);
-                    scope.moveTile(4,1);
-                    scope.moveTile(5,2);
-                    scope.moveTile(6,3);
-                    scope.moveTile(7,4);
-                    scope.moveTile(8,5);
-                    scope.oldCentreTile = _.clone(scope.tiles[4]);
-                    scope.renderTile(6);
-                    scope.renderTile(7);
-                    scope.renderTile(8);
-                    // Need to move the position of the tiles
-                    for (var x=0; x<9; x++) {
-                        $("#starmap_tile"+x).css("top","-=600");
-                        $("#starmap_tile_title"+x).css("top","-=600");
-                    }
-//                    $("#starsParent").css("top","-=600");
+                scope.oldCentreTile = _.clone(scope.tiles[4]);
+                // render the remaining tiles.
+                while(tilesToDo.length) {
+                    var tile = tilesToDo.shift();
+                    scope.renderTile(tile);
                 }
-                else {
-                    scope.renderStars({
-                        viewX : unitX,
-                        viewY : unitY
-                    });
+                // Now adjust the position of all of the tiles
+                for (var x=0; x<9; x++) {
+                    var tile    = scope.tiles[x];
+                    var absLeft = (tile.left - options.boundLeft) * scope.unitWidthPx();
+                    var absTop  = (options.boundTop - tile.top) * scope.unitHeightPx();
+                    $("#starmap_tile"+x).css("top",absTop).css("left",absLeft);
+                    $("#starmap_tile_title"+x).css("top",absTop).css("left",absLeft);
                 }
             }
         };
