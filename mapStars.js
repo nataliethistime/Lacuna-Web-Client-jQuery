@@ -135,22 +135,52 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 //            alert("parentLeft="+parentLeft+", parentTop="+parentTop+", viewWidth="+viewWidth+", viewHeight="+viewHeight+", unitX="+unitX+", unitY="+unitY);
 
             // Given, the star unit X,Y we need to see if it falls within any of the 9 currently rendered tiles
-            var deltas = scope.getTileDelta(unitX,unitY);
-            if (deltas.xDelta == 0 && deltas.yDelta == 0) {
-                // No change, still in the middle
-            }
-//            else if (Math.abs(deltas.xDelta) > 1 || Math.abs(deltas.yDelta) > 1) {
+            var moveToTile = scope.getTileToMoveTo(unitX,unitY);
+            if (moveToTile == -1) {
                 // moved totally outside the current 9 tiles, recalculate everything
-//            }
-            else {
-                // Moved somewhere within the outer tiles, do some juggling
                 scope.renderStars({
                     viewX : unitX,
                     viewY : unitY
                 });
             }
-
-
+            else {
+                // Moved somewhere within the outer tiles, do some juggling
+                // We can keep some of the existing tiles (but move them)
+                //  moveToTile  Move tiles      Replace tiles
+                //  0           4,3,1,0
+                //  1           5,4,3,2,1,0     0,1,2
+                //  2           5,4,2,1
+                //  3           7,6,4,3,1,0
+                //  4           no change, see above
+                //  5           1,2,4,5,7,8
+                //  6           3,4,6,7
+                //  7           3,4,5,6,7,8    
+                //  8           4,5,7,8
+                if (moveToTile == 4) {
+                }
+                else if (moveToTile == 7) {
+                    scope.moveTile(5,8);
+                    scope.moveTile(4,7);
+                    scope.moveTile(3,6);
+                    scope.moveTile(2,5);
+                    scope.moveTile(1,4);
+                    scope.moveTile(0,3);
+                    scope.centreTile.top = scope.centreTile.top + 100;
+                    scope.renderTile(0);
+                    scope.renderTile(1);
+                    scope.renderTile(2);
+                }
+                else {
+                    scope.renderStars({
+                        viewX : unitX,
+                        viewY : unitY
+                    });
+                }
+            }
+        };
+        scope.moveTile = function(from, to) {
+            scope.tiles[to] = scope.tiles[from];
+            $("#starmap_tile"+to).html($("#starmap_tile"+from).html());
         };
 
         // The expanse is tiled in fixed size tiles 100 units wide by 30 units high.
@@ -169,12 +199,15 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
             return zoomToPixels[options.zoomLevel];
         };
 
-        // Given a star unit X,Y location, work out the delta change in tiles from
-        // the centre tile. e.g. yDelta = -1 means the new position is one tile to the left of the current centre tile
-        scope.getTileDelta = function(unitX, unitY) {
+        // Given a star unit X,Y location, work out which of the existing tiles have we moved to
+        // (or return -1 if we are out of range of all existing tiles)
+        scope.getTileToMoveTo = function(unitX, unitY) {
             var xDelta  = (Math.floor((unitX - options.boundLeft)/100) * 100 + options.boundLeft - scope.centreTile.left) / 100;
             var yDelta  = (Math.floor((unitY - options.boundBottom)/30) * 30 + options.boundBottom + 29 - scope.centreTile.top) / 30;
-            return {xDelta : xDelta, yDelta : yDelta};
+            if (Math.abs(xDelta) < 2 && Math.abs(yDelta) < 2) {
+                return 4 + yDelta * 3 + xDelta;
+            }
+            return -1;      // Out of range of all tiles
         };
 
         // tileId is the tile who's position we want to find
