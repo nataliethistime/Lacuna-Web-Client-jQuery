@@ -5,8 +5,9 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
     function MapStars() {
         // Use scope to reduce confusion about this.
         var scope = this;
-
-        // A 'tile' is a block of the starmap 100 units wide by 30 units high
+        
+        // A 'tile' is a rectangular block of starmap units (area under 3001 units)
+        // Ideally the tile should be in proportion to the monitor aspect ratio
         // Each of these tiles can be populated by a single call to get_star_map
         // Nine of these tiles arranged in a 3x3 grid form the starmap
         // the 'view-port' is a window onto this grid
@@ -21,9 +22,11 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             zoomLevel           : 2,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
+            tileWidth           : 30,          // Width of a tile in starmap units
+            tileHeight          : 15,           // Height of a tile in starmap units
             boundLeft           : -1500,        // Bounds of the starmap
-            boundRight          : 1499,         // +1500 has no bodies, so we can ignore it
-            boundTop            : 1499,         // Likewise on the Y axis
+            boundRight          : 1500,         // +1500 has no bodies, so we can ignore it
+            boundTop            : 1500,         // Likewise on the Y axis
             boundBottom         : -1500,        // Lower bound
         };
         var options;
@@ -88,14 +91,14 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                 options = defaults;
             }
             // First determine where the centre tile is positioned in the starmap units
-            var centreLeft      = Math.floor((options.viewX - options.boundLeft) / 100) * 100 + options.boundLeft;
-            var centreBottom    = Math.floor((options.viewY - options.boundBottom) / 30) * 30 + options.boundBottom;
+            var centreLeft      = Math.floor((options.viewX - options.boundLeft) / options.tileWidth) * options.tileWidth + options.boundLeft;
+            var centreBottom    = Math.floor((options.viewY - options.boundBottom) / options.tileHeight) * options.tileHeight + options.boundBottom;
             scope.oldCentreTile = {
                 html    : '',
-                top     : centreBottom + 29,
+                top     : centreBottom + options.tileHeight - 1,
                 bottom  : centreBottom,
                 left    : centreLeft,
-                right   : centreLeft + 100
+                right   : centreLeft + options.tileWidth
             }
 
             // The starsParent is the draggable object, it's children (the tiles) can be dragged 
@@ -122,8 +125,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     x           : tile.left,
                     y           : tile.top,
                     tileId      : x,
-                    widthPx     : 100 * scope.unitWidthPx(),
-                    heightPx    : 30 * scope.unitHeightPx(),
+                    widthPx     : options.tileWidth * scope.unitWidthPx(),
+                    heightPx    : options.tileHeight * scope.unitHeightPx(),
                 });
                 $starsParent.append(tileHtml);
                 scope.tiles[x].html = tileHtml;
@@ -216,15 +219,13 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             $("#starmap_tile_title"+to).html("&nbsp;&nbsp; tile "+to+", "+scope.tiles[to].left+"|"+scope.tiles[to].top);
         };
 
-        // The expanse is tiled in fixed size tiles 100 units wide by 30 units high.
-        // We can break the starmap into 30 tiles wide (ignoring x=1500 since it
-        // does not contain any bodies) and 100 tiles high (again ignoring y=1500)
-        // Taking advantage of this makes the code a bit easier. This may change in the
-        // future when we have the basic code working.
+        // The expanse is tiled in fixed size tiles, options.tileWidth units wide by options.tileHeight
+        // units high.
         //
-        // We can position the tile in a parent div with an area equivalent to the size of the expanse
-        // (in pixels, which depends upon zoom level) and then position the stars and planets
-        // absolutely within the tile.
+        // Each tile is in a 'fixed' position against the background area and we position the stars
+        // and planets at a fixed position on each tile.
+        //
+        // This allows us to move tiles around as we drag the background.
         //
         scope.unitWidthPx = function() {
             return zoomToPixels[options.zoomLevel];
@@ -236,9 +237,15 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         // Given a star unit X,Y location, work out which of the existing tiles have we moved to
         // (or return -1 if we are out of range of all existing tiles)
         scope.getTileToMoveTo = function(unitX, unitY) {
-            var xDelta  = (Math.floor((unitX - options.boundLeft)/100) * 100 + options.boundLeft - scope.oldCentreTile.left) / 100;
-            var yDelta  = (Math.floor((unitY - options.boundBottom)/30) * 30 + options.boundBottom + 29 - scope.oldCentreTile.top) / 30;
-            //alert("xDelta="+xDelta+", yDelta="+yDelta);
+            var xDelta  = (Math.floor((unitX - options.boundLeft)/options.tileWidth) 
+                * options.tileWidth 
+                + options.boundLeft 
+                - scope.oldCentreTile.left) / options.tileWidth;
+            var yDelta  = (Math.floor((unitY - options.boundBottom)/options.tileHeight) 
+                * options.tileHeight 
+                + options.boundBottom 
+                + options.tileHeight - 1
+                - scope.oldCentreTile.top) / options.tileHeight;
             if (Math.abs(xDelta) < 2 && Math.abs(yDelta) < 2) {
                 return 4 + yDelta * 3 + xDelta;
             }
@@ -254,14 +261,14 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             var yDelta  = Math.floor((8 - tileId)/3) - 1;
             var xDelta  = tileId % 3 - 1;
             // Convert to position for the specified tileId (in starmap units)
-            var left    = scope.oldCentreTile.left + xDelta * 100;
-            var top     = scope.oldCentreTile.top - yDelta * 30;
+            var left    = scope.oldCentreTile.left + xDelta * options.tileWidth;
+            var top     = scope.oldCentreTile.top - yDelta * options.tileHeight;
             scope.tiles[tileId] = {
                 html    : '',
                 left    : left,
                 top     : top,
-                right   : left + 99,
-                bottom  : top - 29
+                right   : left + options.tileWidth - 1,
+                bottom  : top - (options.tileHeight - 1)
             };
             return scope.tiles[tileId];
         };
