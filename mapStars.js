@@ -313,7 +313,10 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                             // Map each planet of this star onto the tile
                             var bodies = star.bodies;
                             for (var b=0; b<bodies.length; b++) {
-                                var body = bodies[b];
+                                var body        = bodies[b];
+                                // An attempt to get sensible sizes for planets/asteroids
+                                var image_size  = (body.size < 30 ? 50 : (body.size - 30) / 2 + 75) * scope.unitWidthPx() / 100;
+
                                 var body_div = Template.read.mapStar_body({
                                     assetsUrl   : window.assetsUrl,
                                     id          : body.id,
@@ -326,8 +329,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                     tile_top    : (tile.top - body.y) * scope.unitHeightPx(),
                                     body_image  : body.image,
                                     body_orbit  : body.orbit,
-                                    body_width  : scope.unitWidthPx(),
-                                    body_height : scope.unitWidthPx(),
+                                    body_width  : image_size,
+                                    body_height : image_size,
                                     planet_occupied : 0,            // for now
                                     margin_top  : 5
                                 });
