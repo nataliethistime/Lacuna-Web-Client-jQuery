@@ -105,7 +105,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             var $starsParent = $("#starsParent");
             $starsParent.draggable({
                 stop : function(event, ui) {
-                    scope.recalculateCentre()
+                    scope.processDragStop()
                 }
             });
             $starsParent.html('').width(expanseWidthPx).height(expanseHeightPx);
@@ -113,14 +113,12 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             // First set the position the nine tiles, they will be empty until
             // they are rendered by calls to 'get_star_map'.
             for (var x=0; x<9; x++) {
-                var tile = scope.getTileBounds(x);
-                // calculate the pixel offset to position the tile on the background
-                var absLeft = (tile.left - options.boundLeft) * scope.unitWidthPx();
-                var absTop  = (options.boundTop - tile.top) * scope.unitHeightPx();
+                var tile    = scope.getTileBounds(x);
+                var tileAbs = scope.getTileAbsPosition(x);
 
                 var tileHtml = Template.read.mapStar_tile({
-                    absLeft     : absLeft,
-                    absTop      : absTop,
+                    absLeft     : tileAbs.left,
+                    absTop      : tileAbs.top,
                     x           : tile.left,
                     y           : tile.top,
                     tileId      : x,
@@ -148,11 +146,11 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             var top = viewHeight / 2 - (options.boundTop - options.viewY) * scope.unitHeightPx();
             $starsParent.css('left', left);
             $starsParent.css('top', top);
-            $starsParent = null; // avoid memory leak
+            $starsParent = null; // avoid potential memory leak
         };
 
-        // After a drag-drop, we need to recalculate the centre tile
-        scope.recalculateCentre = function() {
+        // After a drag-drop, we need to recalculate the tiles
+        scope.processDragStop= function() {
             //alert('get here');
             var $starsParent    = $("#starsParent");
             var $starsViewport  = $("#starsViewport");
@@ -166,9 +164,11 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
 
             // Given, the star unit X,Y we need to see if it falls within any of the 9 currently rendered tiles
             var moveToTile = scope.getTileToMoveTo(unitX,unitY);
-            //alert('move to tile '+moveToTile);
             if (moveToTile == -1) {
                 // moved totally outside the current 9 tiles, recalculate everything
+                // TODO it is possible that we have moved the centre tile outside of
+                // any existing tiles, but some edge tiles might still be reusable.
+                // Look at this later.
                 scope.renderStars({
                     viewX : unitX,
                     viewY : unitY
@@ -193,17 +193,25 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                 }
                 // Now adjust the position of all of the tiles
                 for (var x=0; x<9; x++) {
-                    var tile    = scope.tiles[x];
-                    var absLeft = (tile.left - options.boundLeft) * scope.unitWidthPx();
-                    var absTop  = (options.boundTop - tile.top) * scope.unitHeightPx();
-                    $("#starmap_tile"+x).css("top",absTop).css("left",absLeft);
-                    $("#starmap_tile_title"+x).css("top",absTop).css("left",absLeft);
+                    var tileAbs = scope.getTileAbsPosition(x);
+                    $("#starmap_tile"+x).css("top",tileAbs.top).css("left",tileAbs.left);
+                    $("#starmap_tile_title"+x).css("top",tileAbs.top).css("left",tileAbs.left);
                 }
             }
         };
+        // Get the pixel location of the tile on the draggable background
+        scope.getTileAbsPosition = function(tileId) {
+            var tile    = scope.tiles[tileId];
+            return {
+                left    : (tile.left - options.boundLeft) * scope.unitWidthPx(),
+                top     : (options.boundTop - tile.top) * scope.unitHeightPx()
+            };
+        };
+        // Move a tile and adjust the html for that tile
         scope.moveTile = function(from, to) {
             scope.tiles[to] = _.clone(scope.tiles[from]);
             $("#starmap_tile"+to).html($("#starmap_tile"+from).html());
+            $("#starmap_tile"+from).html('');
             // the following is only temporary, for debug purposes.
             $("#starmap_tile_title"+to).html("&nbsp;&nbsp; tile "+to+", "+scope.tiles[to].left+"|"+scope.tiles[to].top);
         };
@@ -215,7 +223,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         // future when we have the basic code working.
         //
         // We can position the tile in a parent div with an area equivalent to the size of the expanse
-        // (in pixels, whiche depends upon zoom level) and then position the stars and planets
+        // (in pixels, which depends upon zoom level) and then position the stars and planets
         // absolutely within the tile.
         //
         scope.unitWidthPx = function() {
@@ -293,8 +301,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 name        : star.name,
                                 tile_width  : scope.unitWidthPx() * 3,
                                 tile_height : scope.unitHeightPx() * 3,
-                                tile_left   : (star.x - tile.left) * scope.unitWidthPx(),
-                                tile_top    : (tile.top - star.y) * scope.unitHeightPx(),
+                                tile_left   : (star.x - tile.left - 1) * scope.unitWidthPx(),
+                                tile_top    : (tile.top - star.y - 1) * scope.unitHeightPx(),
                                 star_color  : star.color,
                                 star_width  : scope.unitWidthPx() * 3,
                                 star_height : scope.unitHeightPx() * 3,
@@ -302,6 +310,29 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 star_seized : 0
                             });
                             tileHtml += star_div;
+                            // Map each planet of this star onto the tile
+                            var bodies = star.bodies;
+                            for (var b=0; b<bodies.length; b++) {
+                                var body = bodies[b];
+                                var body_div = Template.read.mapStar_body({
+                                    assetsUrl   : window.assetsUrl,
+                                    id          : body.id,
+                                    x           : body.x,
+                                    y           : body.y,
+                                    name        : body.name,
+                                    tile_width  : scope.unitWidthPx(),
+                                    tile_height : scope.unitHeightPx(),
+                                    tile_left   : (body.x - tile.left) * scope.unitWidthPx(),
+                                    tile_top    : (tile.top - body.y) * scope.unitHeightPx(),
+                                    body_image  : body.image,
+                                    body_orbit  : body.orbit,
+                                    body_width  : scope.unitWidthPx(),
+                                    body_height : scope.unitWidthPx(),
+                                    planet_occupied : 0,            // for now
+                                    margin_top  : 5
+                                });
+                                tileHtml += body_div;
+                            }
                         }
                         scope.tiles[tileId].html = tileHtml;
                         $("#starmap_tile"+tileId).html(tileHtml);
@@ -314,7 +345,6 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             else {
                 // Then we are outside the bounds, just render a starfield
                 // (we may not need to render anything if we have a tiled background image)
-                Lacuna.alert('Outside bounds');
             }
         };
     };
