@@ -11,19 +11,15 @@
 <script id="mapStar_star">
 <![CDATA[
   <div id="star_tile_<%= id %>" title="<%= name %> (<%= x %>,<%= y %>)" 
-    style = "position: absolute; z-index: 1; width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"
-    class = "tile">
-    <div style = "width: <%= tile_width %>px; height: <%= tile_height %>px; position: absolute; top: 0px; left 0px;">
-      <img src="<%= assetsUrl %>/star_map/<%= star_color %>.png" class "star"
-        style = "width: <%= star_width %>px; height: <%= star_height %>px; margin-top: <%= margin_top %>px;" />
-    </div>
-<% if (star_seized) { %>
-    <div style = "width: <%= tile_width %>px; height: <%= tile_height %>px; position: absolute; top: 0px; left 0px; z-index: 3;">
-      <img src="<%= assetsUrl %>/alliances/<%= alliance_logo %>.png" class="star" 
+    style = "width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"
+    class = "star_tile">
+
+    <img src="<%= assetsUrl %>/star_map/<%= star_color %>.png" class "star star_image"
       style = "width: <%= star_width %>px; height: <%= star_height %>px;" />
-    </div>
+<% if (star_seized) { %>
+    <img src="<%= assetsUrl %>/alliances/<%= alliance_logo %>.png" class="star star_image" 
+      style = "width: <%= star_width %>px; height: <%= star_height %>px;" />
 <% } %>
-    </div>
   </div>
 ]]>
 </script>
@@ -31,19 +27,15 @@
 <script id="mapStar_body">
 <![CDATA[
   <div id="body_tile_<%= id %>" title="<%= name %> (<%= x %>,<%= y %>)" 
-    style = "position: absolute; z-index: 1; width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"
-    class = "tile">
-    <div style = "width: <%= tile_width %>px; height: <%= tile_height %>px; position: absolute; top: 0px; left 0px;">
-      <img src="<%= assetsUrl %>/star_system/<%= body_image %>.png" class "planet planet<%= body_orbit %>"
-        style = "width: <%= body_width %>px; height: <%= body_height %>px; margin-top: <%= margin_top %>px;" />
-    </div>
-<% if (planet_occupied) { %>
-    <div style = "width: <%= tile_width %>px; height: <%= tile_height %>px; position: absolute; top: 0px; left 0px;">
-      <img src="<%= assetsUrl %>/star_map/<%= body_allegence %>.png" class="planet" 
-      style = "width: <%= body_width %>px; height: <%= body_height %>px; margin-top: <%= margin_top %>px;" />
-    </div>
+    style = "width: <%= tile_width %>; height: <%= tile_height %>; left: <%= tile_left %>px; top: <%= tile_top %>px;"
+    class = "body_tile">
+
+    <img src="<%= assetsUrl %>/star_system/<%= body_image %>.png" class "planet planet<%= body_orbit %> planet_image"
+      style = "body_width %>px; height: <%= body_height %>px;" />
+<% if (occupied) { %>
+    <img src="<%= assetsUrl %>/star_map/<%= allegiance %>.png" class="planet planet_image" 
+      style = "width: <%= body_width %>px; height: <%= body_height %>px;" />
 <% } %>
-    </div>
   </div>
 ]]>
 </script>

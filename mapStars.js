@@ -17,13 +17,20 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         // then tiles will generally be created outside of the viewport and it will
         // give the appearance of continuous smooth scrolling.
 
+        // Note: big tiles take a while to scroll (some limitation in browser?) so
+        // we want them small, but the smaller they are the more RPC we make, so we
+        // need a compromise.
+        // Here are some suggested sizes
+        //
+        // Zoom:        max size:       optimum size:
+        //  2           70 x 42         49 x 29
         var defaults = {
             parentContainer     : '#starmap',   // The parent div to contain the starmap
             zoomLevel           : 2,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
-            tileWidth           : 30,          // Width of a tile in starmap units
-            tileHeight          : 15,           // Height of a tile in starmap units
+            tileWidth           : 49,           // Width of a tile in starmap units
+            tileHeight          : 29,           // Height of a tile in starmap units
             boundLeft           : -1500,        // Bounds of the starmap
             boundRight          : 1500,         // +1500 has no bodies, so we can ignore it
             boundTop            : 1500,         // Likewise on the Y axis
@@ -103,8 +110,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
 
             // The starsParent is the draggable object, it's children (the tiles) can be dragged 
             // with it. Let's make it as big as the expanse (in pixels)
-            var expanseWidthPx = scope.unitWidthPx() * (options.boundRight - options.boundLeft);
-            var expanseHeightPx = scope.unitHeightPx() * (options.boundTop - options.boundBottom);
+            var expanseWidthPx = scope.unitSizePx() * (options.boundRight - options.boundLeft);
+            var expanseHeightPx = scope.unitSizePx() * (options.boundTop - options.boundBottom);
             var $starsParent = $("#starsParent");
             $starsParent.draggable({
                 stop : function(event, ui) {
@@ -125,8 +132,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     x           : tile.left,
                     y           : tile.top,
                     tileId      : x,
-                    widthPx     : options.tileWidth * scope.unitWidthPx(),
-                    heightPx    : options.tileHeight * scope.unitHeightPx(),
+                    widthPx     : options.tileWidth * scope.unitSizePx(),
+                    heightPx    : options.tileHeight * scope.unitSizePx(),
                 });
                 $starsParent.append(tileHtml);
                 scope.tiles[x].html = tileHtml;
@@ -145,8 +152,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             var $starsViewport = $("#starsViewport");
             var viewWidth = $starsViewport.width();
             var viewHeight = $starsViewport.height();
-            var left = viewWidth / 2 - (options.viewX - options.boundLeft) * scope.unitWidthPx();
-            var top = viewHeight / 2 - (options.boundTop - options.viewY) * scope.unitHeightPx();
+            var left = viewWidth / 2 - (options.viewX - options.boundLeft) * scope.unitSizePx();
+            var top = viewHeight / 2 - (options.boundTop - options.viewY) * scope.unitSizePx();
             $starsParent.css('left', left);
             $starsParent.css('top', top);
             $starsParent = null; // avoid potential memory leak
@@ -162,8 +169,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             var parentTop       = parseInt($starsParent.css('top'));
             var viewWidth       = parseInt($starsViewport.width());
             var viewHeight      = parseInt($starsViewport.height());
-            var unitX           = Math.round((viewWidth / 2 - parentLeft) / scope.unitWidthPx() + options.boundLeft);
-            var unitY           = Math.round(options.boundTop - (viewHeight / 2 - parentTop) / scope.unitHeightPx());
+            var unitX           = Math.round((viewWidth / 2 - parentLeft) / scope.unitSizePx() + options.boundLeft);
+            var unitY           = Math.round(options.boundTop - (viewHeight / 2 - parentTop) / scope.unitSizePx());
 
             // Given, the star unit X,Y we need to see if it falls within any of the 9 currently rendered tiles
             var moveToTile = scope.getTileToMoveTo(unitX,unitY);
@@ -206,8 +213,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         scope.getTileAbsPosition = function(tileId) {
             var tile    = scope.tiles[tileId];
             return {
-                left    : (tile.left - options.boundLeft) * scope.unitWidthPx(),
-                top     : (options.boundTop - tile.top) * scope.unitHeightPx()
+                left    : (tile.left - options.boundLeft) * scope.unitSizePx(),
+                top     : (options.boundTop - tile.top) * scope.unitSizePx()
             };
         };
         // Move a tile and adjust the html for that tile
@@ -219,18 +226,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             $("#starmap_tile_title"+to).html("&nbsp;&nbsp; tile "+to+", "+scope.tiles[to].left+"|"+scope.tiles[to].top);
         };
 
-        // The expanse is tiled in fixed size tiles, options.tileWidth units wide by options.tileHeight
-        // units high.
-        //
-        // Each tile is in a 'fixed' position against the background area and we position the stars
-        // and planets at a fixed position on each tile.
-        //
-        // This allows us to move tiles around as we drag the background.
-        //
-        scope.unitWidthPx = function() {
-            return zoomToPixels[options.zoomLevel];
-        };
-        scope.unitHeightPx = function() {
+        // Calculate the size of star unit in pixels. (it's square)
+        scope.unitSizePx = function() {
             return zoomToPixels[options.zoomLevel];
         };
 
@@ -300,21 +297,28 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                         // Map each star onto the tile
                         for (var i = 0; i < stars.length; i++) {
                             var star = stars[i];
+                            var alliance_logo = '';
+                            var star_seized = 0;
+                            if (star.station) {
+                                alliance_logo = star.station.alliance.image;
+                                star_seized   = 1;
+                            }
                             var star_div = Template.read.mapStar_star({
                                 assetsUrl   : window.assetsUrl,
                                 id          : star.id,
                                 x           : star.x,
                                 y           : star.y,
                                 name        : star.name,
-                                tile_width  : scope.unitWidthPx() * 3,
-                                tile_height : scope.unitHeightPx() * 3,
-                                tile_left   : (star.x - tile.left - 1) * scope.unitWidthPx(),
-                                tile_top    : (tile.top - star.y - 1) * scope.unitHeightPx(),
+                                tile_width  : scope.unitSizePx() * 3,
+                                tile_height : scope.unitSizePx() * 3,
+                                tile_left   : (star.x - tile.left - 1) * scope.unitSizePx(),
+                                tile_top    : (tile.top - star.y - 1) * scope.unitSizePx(),
                                 star_color  : star.color,
-                                star_width  : scope.unitWidthPx() * 3,
-                                star_height : scope.unitHeightPx() * 3,
+                                star_width  : scope.unitSizePx() * 3,
+                                star_height : scope.unitSizePx() * 3,
                                 margin_top  : 5,
-                                star_seized : 0
+                                star_seized : star_seized,
+                                alliance_logo   : alliance_logo
                             });
                             tileHtml += star_div;
                             // Map each planet of this star onto the tile
@@ -322,7 +326,13 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                             for (var b=0; b<bodies.length; b++) {
                                 var body        = bodies[b];
                                 // An attempt to get sensible sizes for planets/asteroids
-                                var image_size  = (body.size < 30 ? 50 : (body.size - 30) / 2 + 75) * scope.unitWidthPx() / 100;
+                                var image_size  = (body.size < 30 ? 50 : (body.size - 30) / 2 + 75) * scope.unitSizePx() / 100;
+                                var occupied = 0;
+                                var allegiance;
+                                if (body.empire) {
+                                    occupied = 1;
+                                    allegiance = body.empire.alignment;
+                                }
 
                                 var body_div = Template.read.mapStar_body({
                                     assetsUrl   : window.assetsUrl,
@@ -330,16 +340,16 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                     x           : body.x,
                                     y           : body.y,
                                     name        : body.name,
-                                    tile_width  : scope.unitWidthPx(),
-                                    tile_height : scope.unitHeightPx(),
-                                    tile_left   : (body.x - tile.left) * scope.unitWidthPx(),
-                                    tile_top    : (tile.top - body.y) * scope.unitHeightPx(),
+                                    tile_width  : scope.unitSizePx(),
+                                    tile_height : scope.unitSizePx(),
+                                    tile_left   : (body.x - tile.left) * scope.unitSizePx(),
+                                    tile_top    : (tile.top - body.y) * scope.unitSizePx(),
                                     body_image  : body.image,
                                     body_orbit  : body.orbit,
                                     body_width  : image_size,
                                     body_height : image_size,
-                                    planet_occupied : 0,            // for now
-                                    margin_top  : 5
+                                    occupied    : occupied,
+                                    allegiance  : allegiance
                                 });
                                 tileHtml += body_div;
                             }
@@ -351,10 +361,6 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                         // Now populate the tile with the ships
                     }
                 });
-            }
-            else {
-                // Then we are outside the bounds, just render a starfield
-                // (we may not need to render anything if we have a tiled background image)
             }
         };
     };

@@ -179,6 +179,15 @@ label {
     background-repeat: repeat;
 }
 
+.star_tile, .body_tile {
+    position    : absolute; 
+    z-index     : 1; 
+}
+.planet_image, .star_image {
+    position    : absolute; 
+    top         : 0px; 
+    left        : 0px; 
+}
 .to_starmap, .to_planetmap {
     left: 0px;
 }
