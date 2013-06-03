@@ -31,11 +31,16 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                     no_paging       : 1
                 }],
                 success: function(o) {
-                    tab.add(JSON.stringify(o.result));
 
-                    if (o.result.ships_building.length > 0) {
+                    var content = [];
+
+                    if (o.result.number_of_fleets_building > 0) {
                         // Add ships to queue and post to DOM.
-                        tab.add(JSON.stringify(o.result.ships_building)); // Meh...
+                        _.each(o.result.ships_building, function(shipBuilding) {
+                            content[content.length] = Template.read.building_shipyard_build_ship_item({
+                                // TODO
+                            });
+                        });
                     }
                     else {
                         // No ships are currently building.

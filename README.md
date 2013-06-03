@@ -7,7 +7,7 @@ jQuery Client for The Lacuna Expanse.
 Buildings
 =========
 
-The following is the list of buildings that needs to be implemented. If you think you can code a building or two, open up the buildingType/planetaryCommand.js file and have a look at the notes we've written in there for you.
+The following is the list of buildings that needs to be implemented. If you think you can code a building or two, open up the `buildingType/planetaryCommand.js` file and have a look at the notes we've written in there for you.
 
 * Archaeology
 * BlackHoleGenerator
@@ -34,7 +34,7 @@ The following is the list of buildings that needs to be implemented. If you thin
 * OreStorage
 * Park
 * PlanetaryCommand
-    * @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting here.
+    * @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting with the code here.
 * PoliticsTraining
 * Ravine
 * Security
