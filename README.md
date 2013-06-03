@@ -9,45 +9,48 @@ Buildings
 
 The following is the list of buildings that needs to be implemented. If you think you can code a building or two, open up the buildingType/planetaryCommand.js file and have a look at the notes we've written in there for you.
 
-- [ ] Archaeology
-- [ ] BlackHoleGenerator
-- [ ] Capitol
-- [ ] DeployedBleeder
-- [ ] Development
-- [ ] DistributionCenter
-- [ ] Embassy
-- [ ] EnergyReserve
-- [ ] Entertainment
-- [ ] FoodReserve
-- [ ] GeneticsLab
-- [ ] Intelligence
-- [ ] IntelTraining
-- [ ] InterDimensionalRift
-- [ ] LibraryOfJith
-- [ ] LostCityOfTyleon
-- [ ] MayhemTraining
-- [ ] MercenariesGuild
-- [ ] MiningMinistry
-- [ ] MissionCommand
-- [ ] Network19
-- [ ] Observatory
-- [ ] OreStorage
-- [ ] Park
-- [ ] PlanetaryCommand - @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting here.
-- [ ] PoliticsTraining
-- [ ] Ravine
-- [ ] Security
-- [ ] Shipyard - @Vasari is working on this one.
-- [ ] SpacePort
-- [ ] SpaceStationLab
-- [ ] SubspaceSupplyDepot
-- [ ] SupplyPod
-- [ ] TempleOfTheDrajilites
-- [ ] TheDillonForge
-- [ ] TheftTraining
-- [ ] ThemePark
-- [ ] Trade
-- [ ] Transporter
-- [ ] WasteExchanger
-- [ ] WasteSequestration
-- [ ] WaterStorage
+* Archaeology
+* BlackHoleGenerator
+* Capitol
+* DeployedBleeder
+* Development
+* DistributionCenter
+* Embassy
+* EnergyReserve
+* Entertainment
+* FoodReserve
+* GeneticsLab
+* Intelligence
+* IntelTraining
+* InterDimensionalRift
+* LibraryOfJith
+* LostCityOfTyleon
+* MayhemTraining
+* MercenariesGuild
+* MiningMinistry
+* MissionCommand
+* Network19
+* Observatory
+* OreStorage
+* Park
+* PlanetaryCommand
+    * @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting here.
+* PoliticsTraining
+* Ravine
+* Security
+* Shipyard
+    * @Vasari is working on this one.
+    * So far, a very basic version of viewing the buid queue is available.
+* SpacePort
+* SpaceStationLab
+* SubspaceSupplyDepot
+* SupplyPod
+* TempleOfTheDrajilites
+* TheDillonForge
+* TheftTraining
+* ThemePark
+* Trade
+* Transporter
+* WasteExchanger
+* WasteSequestration
+* WaterStorage
