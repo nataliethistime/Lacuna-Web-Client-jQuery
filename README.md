@@ -40,7 +40,7 @@ The following is the list of buildings that needs to be implemented. If you thin
 * Security
 * Shipyard
     * @Vasari is working on this one.
-    * So far, a very basic version of viewing the buid queue is available.
+    * So far, a very basic version of viewing the build queue is available.
 * SpacePort
 * SpaceStationLab
 * SubspaceSupplyDepot
