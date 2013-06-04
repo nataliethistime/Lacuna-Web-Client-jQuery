@@ -29,8 +29,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             zoomLevel           : 2,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
-            tileWidth           : 49,           // Width of a tile in starmap units
-            tileHeight          : 29,           // Height of a tile in starmap units
+            tileWidth           : 70,           // Width of a tile in starmap units
+            tileHeight          : 42,           // Height of a tile in starmap units
             boundLeft           : -1500,        // Bounds of the starmap
             boundRight          : 1500,         // +1500 has no bodies, so we can ignore it
             boundTop            : 1500,         // Likewise on the Y axis
@@ -169,6 +169,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             var parentTop       = parseInt($starsParent.css('top'));
             var viewWidth       = parseInt($starsViewport.width());
             var viewHeight      = parseInt($starsViewport.height());
+            var parentRight     = parentLeft + viewWidth;
+            var parentBottom    = parentTop - viewHeight;
             var unitX           = Math.round((viewWidth / 2 - parentLeft) / scope.unitSizePx() + options.boundLeft);
             var unitY           = Math.round(options.boundTop - (viewHeight / 2 - parentTop) / scope.unitSizePx());
 
@@ -206,6 +208,47 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     var tileAbs = scope.getTileAbsPosition(x);
                     $("#starmap_tile"+x).css("top",tileAbs.top).css("left",tileAbs.left);
                     $("#starmap_tile_title"+x).css("top",tileAbs.top).css("left",tileAbs.left);
+                }
+            }
+
+            // determine which tile(s) have part of the tile visible.
+//            alert("parent left/right/top/bottom="+parentLeft+","+parentRight+","+parentTop+","+parentBottom);
+//            alert("viewHeight="+viewHeight+", viewWidth="+viewWidth);
+            for (var x=0; x<9; x++) {
+                // Get the tile position in pixels.
+                var tileTop     = parseInt($("#starmap_tile"+x).css("top"));
+                var tileLeft    = parseInt($("#starmap_tile"+x).css("left"));
+                var tileBottom  = tileTop - (options.tileHeight * scope.unitSizePx());
+                var tileRight   = tileLeft + (options.tileWidth * scope.unitSizePx());
+//                alert("tile left/right/top/bottom="+tileLeft+","+tileRight+","+tileTop+","+tileBottom);
+                if (   tileRight + parentLeft < 0 
+                    || tileLeft - viewWidth + parentLeft > 0
+                    || tileTop + viewHeight + parentTop < 0
+                    || tileBottom + parentTop > 0) {
+                    // Then tile is not in view
+                    $("#starmap_tile"+x).html('');
+//                    alert("tile "+x+" is NOT visible");
+                }
+                else {
+                    // tile is (partially) visible
+                    var html = scope.tiles[x].html;
+                    $("#starmap_tile"+x).html(html);
+//                    alert("tile "+x+" IS visible");
+                }
+            }
+
+            // For now, clear html for all tiles except tile 4
+            for (var x=0; x<9; x++) {
+                if (x == 4) {
+                    var html = scope.tiles[4].html;
+//                    var divs = scope.tiles[4].divs;
+//                    for (x=0; x<divs.length; x++) {
+//                        html = html + divs[x];
+//                    }
+//                    $("#starmap_tile"+x).html(html);
+                }
+                else {
+//                    $("#starmap_tile"+x).html('');
                 }
             }
         };
@@ -280,6 +323,11 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                 &&  tile.bottom >= options.boundBottom
                 &&  tile.top    <= options.boundTop) {
                 // Then we are within the bounds of the starmap
+
+                // Clear out the current tile.
+                tile.html = '';
+                tile.divs = new Array();
+
                 Lacuna.send({
                     module: '/map',
                     method: 'get_star_map',
@@ -293,7 +341,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     success : function(o) {
                         var stars = o.result.stars;
                         var tileHtml = '';
-
+                        var tileDivs = new Array();
                         // Map each star onto the tile
                         for (var i = 0; i < stars.length; i++) {
                             var star = stars[i];
@@ -303,6 +351,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 alliance_logo = star.station.alliance.image;
                                 star_seized   = 1;
                             }
+                            var tileLeft    = (star.x - tile.left - 1) * scope.unitSizePx();
+                            var tileTop     = (tile.top - star.y - 1) * scope.unitSizePx();
                             var star_div = Template.read.mapStar_star({
                                 assetsUrl   : window.assetsUrl,
                                 id          : star.id,
@@ -311,14 +361,22 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 name        : star.name,
                                 tile_width  : scope.unitSizePx() * 3,
                                 tile_height : scope.unitSizePx() * 3,
-                                tile_left   : (star.x - tile.left - 1) * scope.unitSizePx(),
-                                tile_top    : (tile.top - star.y - 1) * scope.unitSizePx(),
+                                tile_left   : tileLeft,
+                                tile_top    : tileTop,
                                 star_color  : star.color,
                                 star_width  : scope.unitSizePx() * 3,
                                 star_height : scope.unitSizePx() * 3,
                                 margin_top  : 5,
                                 star_seized : star_seized,
                                 alliance_logo   : alliance_logo
+                            });
+                            // Store the html for the star tile
+                            tileDivs.push({
+                                divHtml     : star_div,
+                                left        : tileLeft,
+                                top         : tileTop,
+                                right       : scope.unitSizePx() * 3 + tileLeft,
+                                bottom      : tileTop - scope.unitSizePx() * 3
                             });
                             tileHtml += star_div;
                             // Map each planet of this star onto the tile
@@ -333,6 +391,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                     occupied = 1;
                                     allegiance = body.empire.alignment;
                                 }
+                                var tileLeft    = (body.x - tile.left) * scope.unitSizePx();
+                                var tileTop     = (tile.top - body.y) * scope.unitSizePx();
 
                                 var body_div = Template.read.mapStar_body({
                                     assetsUrl   : window.assetsUrl,
@@ -342,8 +402,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                     name        : body.name,
                                     tile_width  : scope.unitSizePx(),
                                     tile_height : scope.unitSizePx(),
-                                    tile_left   : (body.x - tile.left) * scope.unitSizePx(),
-                                    tile_top    : (tile.top - body.y) * scope.unitSizePx(),
+                                    tile_left   : tileLeft,
+                                    tile_top    : tileTop,
                                     body_image  : body.image,
                                     body_orbit  : body.orbit,
                                     body_width  : image_size,
@@ -351,11 +411,23 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                     occupied    : occupied,
                                     allegiance  : allegiance
                                 });
+                                // Store the html for the planet div
+                                tileDivs.push({
+                                    divHtml     : body_div,
+                                    left        : tileLeft,
+                                    top         : tileTop,
+                                    right       : scope.unitSizePx() + tileLeft,
+                                    bottom      : tileTop - scope.unitSizePx()
+                                });
                                 tileHtml += body_div;
                             }
                         }
                         scope.tiles[tileId].html = tileHtml;
-                        $("#starmap_tile"+tileId).html(tileHtml);
+                        scope.tiles[tileId].divs = tileDivs;
+                        // cludge for now for test purposes
+                        if (tileId == 4) {
+                            $("#starmap_tile"+tileId).html(tileHtml);
+                        }
                         // The following is only temporary for debug purposes
                         $("#starmap_tile_title"+tileId).html("&nbsp;&nbsp; tile "+tileId+", "+scope.tiles[tileId].left+"|"+scope.tiles[tileId].top);
                         // Now populate the tile with the ships
