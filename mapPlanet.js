@@ -153,42 +153,7 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
 
             scope.buildings[idStr] = building;
             if (building.pending_build) {
-                //scope.createBuildTimer(idStrCounter, building.pending_build.seconds_remaining);
                 Queue.addQueueItem(idStrCounter,  building.pending_build.seconds_remaining);
-            }
-        };
-
-        // Then a few helper functions to make things work.
-        // All of the build timer stuff needs to get moved to library.js, sometime.
-        this.createBuildTimer = function(targetEl, seconds) {
-            var formattedTime = Library.formatTime(seconds);
-            
-            // This is faster than jQuery.
-            document.getElementById(targetEl).innerHTML = formattedTime;
-            var interval = setInterval(function() {
-                seconds--;
-                if (seconds === 0) {
-                    // Remove the timer.
-                    clearInterval(interval);
-                    // Remove the interval from the log.
-                    delete scope.intervals[interval];
-                    document.getElementById(targetEl).innerHTML = '';
-                } else {
-                    formattedTime = Library.formatTime(seconds);
-                    // This is faster than jQuery.
-                    document.getElementById(targetEl).innerHTML = formattedTime;
-                }
-            }, 1000);
-            
-            // Log the interval. For later destruction.
-            scope.intervals[targetEl] = interval;
-        };
-
-        this.clearBuildTimer = function(targetEl) {
-            var interval = scope.intervals[targetEl];
-            if (null != interval) {
-                clearInterval(interval);
-                delete scope.intervals[targetEl];
             }
         };
     }
