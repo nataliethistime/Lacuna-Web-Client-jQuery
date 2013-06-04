@@ -54,3 +54,17 @@ The following is the list of buildings that needs to be implemented. If you thin
 * WasteExchanger
 * WasteSequestration
 * WaterStorage
+
+Git Notes
+=========
+
+These are mostly notes for me as I keep forgetting Git commands. :)
+
+##Merging to gh-pages
+
+*Starting from the master branch.*
+
+    $ git checkout gh-pages
+    $ git merge master
+    $ git push origin master
+
