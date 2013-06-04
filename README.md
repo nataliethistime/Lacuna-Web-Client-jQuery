@@ -60,7 +60,7 @@ Git Notes
 
 These are mostly notes for me as I keep forgetting Git commands. :)
 
-##Merging to gh-pages
+###Merging to gh-pages
 
 *Starting from the master branch.*
 

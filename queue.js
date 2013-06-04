@@ -68,18 +68,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
                     // Update the object containing the actual value.
                     scope.queueItems[i].currentTime -= 1;
                 }
-
-                /*
-                _.each(scope.queueItems, function(item) {
-                    var newTime = Library.formatTime((item.currentTime * 1) - 1);
-                    console.log(newTime);
-                    document.getElementById(item['parent']).innerHTML = "" + newTime;
-                });
-*/
             
-            }
-            else {
-                console.log('NOOOOOO!');//debug
             }
         };
 

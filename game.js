@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template'], function($, Lacuna, MapPlanet, Login, Template) {
+define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'queue'], function($, Lacuna, MapPlanet, Login, Template, Queue) {
     function Game() {
 
         Template.load(['game']);
@@ -36,6 +36,9 @@ define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template'], function($, Lacun
 
             // Open the login screen.
             Login.build();
+
+            // Start the main loop, which is used later.
+            Queue.start();
         };
     }
     
