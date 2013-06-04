@@ -1,6 +1,6 @@
 // This defines the HTML structure to contain the buildings to be displayed in the planet image.
 
-define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 'body'], function($, Lacuna, Library, BuildingType, Buildings, Template, Body) {
+define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 'body', 'queue'], function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -19,8 +19,9 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
         // changes.
         this.renderPlanet = function() {
             var buildingsTemplate = [];
-
-            $('#buildingsParent').off('click mouseenter mouseleave'); // Remove event listeners.
+            
+            // Remove event listeners.
+            $('#buildingsParent').off('click mouseenter mouseleave');
 
             for (var x = -5; x < 6; x++) {
                 for (var y = -5; y < 6; y++) {
@@ -111,6 +112,7 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
                 planet_name     : loadedBody.name
             }));
         };
+
         // What to do if the surface_image changes
         this.update_background = function(surface_image) {
             $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/planet_side/" + surface_image + ".jpg')");
@@ -151,7 +153,8 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
 
             scope.buildings[idStr] = building;
             if (building.pending_build) {
-                scope.createBuildTimer(idStrCounter, building.pending_build.seconds_remaining);
+                //scope.createBuildTimer(idStrCounter, building.pending_build.seconds_remaining);
+                Queue.addQueueItem(idStrCounter,  building.pending_build.seconds_remaining);
             }
         };
 

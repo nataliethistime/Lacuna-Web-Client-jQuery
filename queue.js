@@ -1,7 +1,7 @@
 // Module to manage the live timers that are in the client.
 //
 
-define(['jquery', 'underscore'], function($, _) {
+define(['jquery', 'underscore', 'library'], function($, _, Library) {
     function Queue() {
         var scope = this;
 
@@ -16,10 +16,10 @@ define(['jquery', 'underscore'], function($, _) {
         //          // Do stuff when timer finishes
         //      }
         // }
-        this.queueItems = ['Test', 'test'];
+        this.queueItems = [];
 
         // The real looper.
-        this.looper = "something isn't a function";
+        this.looper = "something that isn't a function";
 
         // Boolean to track weather the queue is
         // running. Used to prevent multiple queue
@@ -27,12 +27,32 @@ define(['jquery', 'underscore'], function($, _) {
         // they can't stopped.
         this.isQueueRunning = false;
 
-        this.addQueueItem = function(item) {
-            // TODO
+        this.addQueueItem = function(name, time, callback) {
+            // Should do a check here for duplicates.
+            scope.queueItems[scope.queueItems.length] = {
+                currentTime: time,
+                parent: name,
+                finish: callback || function(){}
+            };
         };
 
-        this.remQueueItem = function(item) {
-            // TODO
+        // Removes the item from the queue based off
+        // of it's parent name. Need to handle duplicate
+        // items.
+        this.remQueueItem = function(parent) {
+            // Loop through and find the item.
+            for (var i = 0; i < scope.queueItems.length; i++) {
+                if (scope.queueItems[i].parent === parent) {
+                    // Set the item to false...
+                    scope.queueItems[i] = false;
+
+                    // ... so that underscore can clean it up.
+                    scope.queueItems = _.compact(scope.queueItems);
+
+                    // Lastly, stop checking.
+                    break;
+                }
+            }
         };
 
         // The function that loops through the
@@ -41,10 +61,25 @@ define(['jquery', 'underscore'], function($, _) {
             // Make sure the queue is meant to be running.
             if (scope.isQueueRunning) {
                 
+                for (var i = 0; i < scope.queueItems.length; i++) {
+                    var newTime = Library.formatTime((scope.queueItems[i].currentTime * 1) - 1);
+                    document.getElementById(scope.queueItems[i].parent).innerHTML = newTime;
+
+                    // Update the object containing the actual value.
+                    scope.queueItems[i].currentTime -= 1;
+                }
+
+                /*
                 _.each(scope.queueItems, function(item) {
-                    console.log(item);//debug
+                    var newTime = Library.formatTime((item.currentTime * 1) - 1);
+                    console.log(newTime);
+                    document.getElementById(item['parent']).innerHTML = "" + newTime;
                 });
+*/
             
+            }
+            else {
+                console.log('NOOOOOO!');//debug
             }
         };
 
@@ -69,8 +104,16 @@ define(['jquery', 'underscore'], function($, _) {
             if (this.isQueueRunning) {
                 clearInterval(scope.looper);
                 scope.isQueueRunning = false;
+                scope.looper = "something that isn't a function";
             }
         
+        };
+
+        // Kills everything without running the 
+        // callbacks for any of the queue items.
+        this.killall = function() {
+            scope.queueItems = [];
+            scope.stop();
         };
     }
 
