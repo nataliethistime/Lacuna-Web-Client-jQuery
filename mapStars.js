@@ -16,17 +16,10 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         // Since the view-port is generally smaller than a tile (especially at high zoom)
         // then tiles will generally be created outside of the viewport and it will
         // give the appearance of continuous smooth scrolling.
-
-        // Note: big tiles take a while to scroll (some limitation in browser?) so
-        // we want them small, but the smaller they are the more RPC we make, so we
-        // need a compromise.
-        // Here are some suggested sizes
-        //
-        // Zoom:        max size:       optimum size:
-        //  2           70 x 42         49 x 29
+        
         var defaults = {
             parentContainer     : '#starmap',   // The parent div to contain the starmap
-            zoomLevel           : 2,            // Default zoom level
+            zoomLevel           : 1,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
             tileWidth           : 70,           // Width of a tile in starmap units
@@ -86,8 +79,6 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         //
         scope.renderStars = function(o) {
 
-            // TODO change this to cater for options already defined
-            // so we can call it multiple times, but retain old options
             if (typeof o == 'object') {
                 options = $.extend(defaults, o);
             }
@@ -158,7 +149,6 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
 
         // After a drag-drop, we need to recalculate the tiles
         scope.processDragStop= function() {
-            //alert('get here');
             var $starsParent    = $("#starsParent");
             var $starsViewport  = $("#starsViewport");
 
@@ -215,7 +205,6 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         // For those tiles that are visible, only render the divs that are visible.
         //
         scope.createTileHtml = function(parentLeft, parentTop, viewWidth, viewHeight) {
-            var diag = "Visible tiles are: - ";
             for (var x=0; x<9; x++) {
                 // Get the tile position in pixels.
                 var tileTop     = parseInt($("#starmap_tile"+x).css("top"));
@@ -231,21 +220,21 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                 }
                 else {
                     // tile is (partially) visible. Only show html for those divs which are visible
-                    diag += x+",";
                     var html = '';
                     var divs = scope.tiles[x].divs;
-                    var divMinX = 0 - parentTop - tileTop;              // min X for divs
-                    var divMaxX = 0 - parentTop + viewHeight - tileTop; // max X for divs
+                    var divMinX = 0 - parentTop - tileTop;                  // min X for divs
+                    var divMaxX = 0 - parentTop + viewHeight - tileTop;     // max X for divs
+                    var divMaxY = 0 - parentLeft - tileLeft + viewWidth;    // max Y for divs
+                    var divMinY = 0 - parentLeft - tileLeft;                // min Y for divs
                     for (var d=0; d < divs.length; d++) {
                         var div = divs[d];
-                        if (div.bottom < divMaxX && div.top > divMinX) {
+                        if (div.bottom < divMaxX && div.top > divMinX && div.left < divMaxY && div.right > divMinY) {
                             html += div.divHtml;
                         }
                     }
                     $("#starmap_tile"+x).html(html);
                 }
             }
-//            alert(diag);
         };
         
 
