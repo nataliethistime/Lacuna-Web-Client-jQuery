@@ -210,48 +210,41 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     $("#starmap_tile_title"+x).css("top",tileAbs.top).css("left",tileAbs.left);
                 }
             }
+            scope.createTileHtml(parentLeft, parentTop, viewWidth, viewHeight);
+        };
 
-            // determine which tile(s) have part of the tile visible.
-//            alert("parent left/right/top/bottom="+parentLeft+","+parentRight+","+parentTop+","+parentBottom);
-//            alert("viewHeight="+viewHeight+", viewWidth="+viewWidth);
+        // Display the content of the tiles.
+        // Note, if none of a tile is visible, then don't add the divs to the tile html
+        // since too many divs makes the browser unresponsive.
+        // We only display html in a tile that is at least partially visible, and then
+        // only for the part of the tile that is visible.
+        //
+        scope.createTileHtml = function(parentLeft, parentTop, viewWidth, viewHeight) {
+            var diag = "Visible tiles are: - ";
             for (var x=0; x<9; x++) {
                 // Get the tile position in pixels.
                 var tileTop     = parseInt($("#starmap_tile"+x).css("top"));
                 var tileLeft    = parseInt($("#starmap_tile"+x).css("left"));
-                var tileBottom  = tileTop - (options.tileHeight * scope.unitSizePx());
+                var tileBottom  = tileTop + (options.tileHeight * scope.unitSizePx());
                 var tileRight   = tileLeft + (options.tileWidth * scope.unitSizePx());
-//                alert("tile left/right/top/bottom="+tileLeft+","+tileRight+","+tileTop+","+tileBottom);
-                if (   tileRight + parentLeft < 0 
-                    || tileLeft - viewWidth + parentLeft > 0
-                    || tileTop + viewHeight + parentTop < 0
-                    || tileBottom + parentTop > 0) {
+                if (   tileRight    < 0 - parentLeft                // all the tile is to the left of the viewport
+                    || tileLeft     > 0 - parentLeft + viewWidth    // to the right of the viewport
+                    || tileTop      > 0 - parentTop + viewHeight    // below the viewport
+                    || tileBottom   < 0 - parentTop ) {             // above the viewport
                     // Then tile is not in view
                     $("#starmap_tile"+x).html('');
-//                    alert("tile "+x+" is NOT visible");
                 }
                 else {
-                    // tile is (partially) visible
+                    // tile is (partially) visible. Only show html for those divs which are visible
+                    diag += x+",";
                     var html = scope.tiles[x].html;
                     $("#starmap_tile"+x).html(html);
-//                    alert("tile "+x+" IS visible");
                 }
             }
-
-            // For now, clear html for all tiles except tile 4
-            for (var x=0; x<9; x++) {
-                if (x == 4) {
-                    var html = scope.tiles[4].html;
-//                    var divs = scope.tiles[4].divs;
-//                    for (x=0; x<divs.length; x++) {
-//                        html = html + divs[x];
-//                    }
-//                    $("#starmap_tile"+x).html(html);
-                }
-                else {
-//                    $("#starmap_tile"+x).html('');
-                }
-            }
+            alert(diag);
         };
+        
+
         // Get the pixel location of the tile on the draggable background
         scope.getTileAbsPosition = function(tileId) {
             var tile    = scope.tiles[tileId];
