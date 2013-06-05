@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         
         var defaults = {
             parentContainer     : '#starmap',   // The parent div to contain the starmap
-            zoomLevel           : 1,            // Default zoom level
+            zoomLevel           : 5,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
             tileWidth           : 70,           // Width of a tile in starmap units
@@ -222,13 +222,15 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     // tile is (partially) visible. Only show html for those divs which are visible
                     var html = '';
                     var divs = scope.tiles[x].divs;
-                    var divMinX = 0 - parentTop - tileTop;                  // min X for divs
-                    var divMaxX = 0 - parentTop + viewHeight - tileTop;     // max X for divs
-                    var divMaxY = 0 - parentLeft - tileLeft + viewWidth;    // max Y for divs
-                    var divMinY = 0 - parentLeft - tileLeft;                // min Y for divs
+
+                    var divMinX = 0 - parentTop - tileTop;          // min X for divs
+                    var divMaxX = divMinX + viewHeight;             // max X for divs
+                    var divMinY = 0 - parentLeft - tileLeft;        // min Y for divs
+                    var divMaxY = divMinY + viewWidth;              // max Y for divs
+
                     for (var d=0; d < divs.length; d++) {
                         var div = divs[d];
-                        if (div.bottom < divMaxX && div.top > divMinX && div.left < divMaxY && div.right > divMinY) {
+                        if (div.top < divMaxX && div.bottom > divMinX && div.left < divMaxY && div.right > divMinY) {
                             html += div.divHtml;
                         }
                     }
@@ -363,7 +365,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 left        : divLeft,
                                 top         : divTop,
                                 right       : scope.unitSizePx() * 3 + divLeft,
-                                bottom      : divTop - scope.unitSizePx() * 3
+                                bottom      : divTop + scope.unitSizePx() * 3
                             });
                             tileHtml += star_div;
                             // Map each planet of this star onto the tile
@@ -404,7 +406,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                     left        : tileLeft,
                                     top         : tileTop,
                                     right       : scope.unitSizePx() + tileLeft,
-                                    bottom      : tileTop - scope.unitSizePx()
+                                    bottom      : tileTop + scope.unitSizePx()
                                 });
                                 tileHtml += body_div;
                             }
