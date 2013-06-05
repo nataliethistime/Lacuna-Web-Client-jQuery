@@ -66,6 +66,7 @@ These are mostly notes for me as I keep forgetting Git commands. :)
 *Starting from the master branch.*
 
     $ git checkout gh-pages
-    $ git merge master
+    $ git merge --ff-only master
     $ git push origin master
 
+(icydee, I added the --ff-only, it's a good habit to get into)
