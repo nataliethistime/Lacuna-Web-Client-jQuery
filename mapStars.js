@@ -66,9 +66,6 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
         // TODO It is possible to scroll off the edge of the map. We
         // can probably stop this by putting bounds on the draggable.
         //
-        // TODO Minor irritation. When dragging, new tile pops up with
-        // what looks like 'old' data which is then overwritten by the
-        // call to get_star_map. Clear it out first.
         var juggleTiles = {
             0   : [4,3,1,0],
             1   : [5,4,3,2,1,0],
@@ -213,11 +210,9 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             scope.createTileHtml(parentLeft, parentTop, viewWidth, viewHeight);
         };
 
-        // Display the content of the tiles.
-        // Note, if none of a tile is visible, then don't add the divs to the tile html
-        // since too many divs makes the browser unresponsive.
-        // We only display html in a tile that is at least partially visible, and then
-        // only for the part of the tile that is visible.
+        // Since displaying large numbers of divs (stars and planets) makes the browser
+        // unresponsive. Only render tiles that are at least partially visible.
+        // For those tiles that are visible, only render the divs that are visible.
         //
         scope.createTileHtml = function(parentLeft, parentTop, viewWidth, viewHeight) {
             var diag = "Visible tiles are: - ";
@@ -237,11 +232,20 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                 else {
                     // tile is (partially) visible. Only show html for those divs which are visible
                     diag += x+",";
-                    var html = scope.tiles[x].html;
+                    var html = '';
+                    var divs = scope.tiles[x].divs;
+                    var divMinX = 0 - parentTop - tileTop;              // min X for divs
+                    var divMaxX = 0 - parentTop + viewHeight - tileTop; // max X for divs
+                    for (var d=0; d < divs.length; d++) {
+                        var div = divs[d];
+                        if (div.bottom < divMaxX && div.top > divMinX) {
+                            html += div.divHtml;
+                        }
+                    }
                     $("#starmap_tile"+x).html(html);
                 }
             }
-            alert(diag);
+//            alert(diag);
         };
         
 
@@ -344,8 +348,9 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 alliance_logo = star.station.alliance.image;
                                 star_seized   = 1;
                             }
-                            var tileLeft    = (star.x - tile.left - 1) * scope.unitSizePx();
-                            var tileTop     = (tile.top - star.y - 1) * scope.unitSizePx();
+                            // divLeft and divTop are the abs position of the div on the tile
+                            var divLeft     = (star.x - tile.left - 1) * scope.unitSizePx();
+                            var divTop      = (tile.top - star.y - 1) * scope.unitSizePx();
                             var star_div = Template.read.mapStar_star({
                                 assetsUrl   : window.assetsUrl,
                                 id          : star.id,
@@ -354,8 +359,8 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                                 name        : star.name,
                                 tile_width  : scope.unitSizePx() * 3,
                                 tile_height : scope.unitSizePx() * 3,
-                                tile_left   : tileLeft,
-                                tile_top    : tileTop,
+                                tile_left   : divLeft,
+                                tile_top    : divTop,
                                 star_color  : star.color,
                                 star_width  : scope.unitSizePx() * 3,
                                 star_height : scope.unitSizePx() * 3,
@@ -366,10 +371,10 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                             // Store the html for the star tile
                             tileDivs.push({
                                 divHtml     : star_div,
-                                left        : tileLeft,
-                                top         : tileTop,
-                                right       : scope.unitSizePx() * 3 + tileLeft,
-                                bottom      : tileTop - scope.unitSizePx() * 3
+                                left        : divLeft,
+                                top         : divTop,
+                                right       : scope.unitSizePx() * 3 + divLeft,
+                                bottom      : divTop - scope.unitSizePx() * 3
                             });
                             tileHtml += star_div;
                             // Map each planet of this star onto the tile
