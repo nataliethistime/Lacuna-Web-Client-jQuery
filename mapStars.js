@@ -1,4 +1,10 @@
-define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Template) {
+// CIRCULAR DEPENDENCIES
+// Do not assign dependency 'lacuna' to a function argument
+// Always access these objects via require("class")
+// e.g. require("lacuna").send()
+// Do not use asynchronous require([]) form
+//
+define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) {
 
     Template.load(['mapStars']);
 
@@ -316,11 +322,11 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                 tile.html = '';
                 tile.divs = new Array();
 
-                Lacuna.send({
+                require("lacuna").send({
                     module: '/map',
                     method: 'get_star_map',
                     params: [{
-                        session_id  : Lacuna.getSession(),
+                        session_id  : require("lacuna").getSession(),
                         left        : tile.left,
                         top         : tile.top,
                         right       : tile.right,
