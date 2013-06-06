@@ -41,7 +41,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapStars', 'body'], function($
                                 .css('visibility', 'hidden');
 
                             // TODO: Clear the buildings data.
-                            Login.build();
+                            Login.start();
                         }
                     });
                 }

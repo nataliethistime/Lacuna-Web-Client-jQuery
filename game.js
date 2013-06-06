@@ -34,7 +34,7 @@ function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue) {
             MapPlanet.renderPlanet();
 
             // Open the login screen.
-            Login.build();
+            Login.start();
 
             // Start the main loop, which is used later.
             Queue.start();
