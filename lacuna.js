@@ -1,4 +1,10 @@
-define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, Body, require) {
+// CIRCULAR DEPENDENCIES
+// Do not assign dependencies 'empire', 'body', 'login' to function arguments
+// Always access these objects via require("class")
+// e.g. require("login").start()
+// Do not use asynchronous require([]) form
+//
+define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'], function($, _, require) {
     function Lacuna() {
  
         // Helper for jQuery's weird scope management.
@@ -110,13 +116,10 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
                     if (data.result.status) {
                         scope.status = data.result.status;
                         
-                        // Another circular dependency
-                        require(['empire'], function(Empire) {
-                            Empire.update(scope.status.empire);
-                        });
+                        require("empire").update(scope.status.empire);
 
                         if (scope.status.body) {
-                            Body.update(scope.status.body);
+                            require("body").update(scope.status.body);
                         }
 
                         // Now that all the data from the status is safely put away
@@ -129,15 +132,13 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
                     
                     // the following can come from a direct call to get a body status
                     if (data.result.body) {
-                        Body.update(data.result.body);
+                        require("body").update(data.result.body);
                         // stash it under {status} for consistency
                         scope.status.body = data.result.body;
                     }
                     
                     if (data.result.empire) {
-                        require(['empire'], function(Empire) {
-                            Empire.update(data.result.empire);
-                        });
+                        require("empire").update(data.result.empire);
                         // stash it under {status} for consistency
                         scope.status.empire = data.result.empire;
                     }
@@ -168,9 +169,7 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
                         // Clear all the panels.
                         //$('#lacuna').fadeOut(500, function() {
                             $('#lacuna').html('');
-                            require(['login'], function(Login) {
-                                Login.start();
-                            });
+                            require("login").start();
                             scope.alert('Session expired. :(');
                         //});
                     }
@@ -195,7 +194,7 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
             sessionId = session;
         };
         this.getCurrentPlanet = function() {
-            return Body.get.id || '';
+            return require("body").get.id || '';
         };
 
         this.showPulser = function() {

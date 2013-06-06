@@ -1,6 +1,12 @@
 // This contains the current Body data, typically updated from any 'Status' return
 //
-define(['require', 'jquery', 'underscore','buildings'], function(require, $, _, Buildings) {
+// CIRCULAR DEPENDENCIES
+// Do not assign dependency 'lacuna' to a function argument
+// Always access these objects via require("class")
+// e.g. require("lacuna").send()
+// Do not use asynchronous require([]) form
+//
+define(['require', 'jquery', 'underscore', 'buildings', 'lacuna'], function(require, $, _, Buildings) {
     function Body() {
         var scope = this;
         var callbacks = $.Callbacks();
@@ -32,22 +38,19 @@ define(['require', 'jquery', 'underscore','buildings'], function(require, $, _, 
         };
 
         this.get_buildings = function(body_id) {
-            // We may want to revisit this, otherwise there is a circular dependency.
-            require(['lacuna'], function(Lacuna) {
-                Lacuna.send({
-                    module: '/body',
-                    method: 'get_buildings',
-                    params: [
-                        Lacuna.getSession(),
-                        body_id
-                    ],
-                    success: function(o) {
-                        // Update all the buildings
-                        Buildings.update(o.result.buildings);
-                        // Update the surface image
-                        scope.update(o.result.body);
-                    }
-                });
+            require("lacuna").send({
+                module: '/body',
+                method: 'get_buildings',
+                params: [
+                    require("lacuna").getSession(),
+                    body_id
+                ],
+                success: function(o) {
+                    // Update all the buildings
+                    Buildings.update(o.result.buildings);
+                    // Update the surface image
+                    scope.update(o.result.body);
+                }
             });
         };
         

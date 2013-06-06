@@ -1,5 +1,11 @@
-define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie', 'mapStars', 'panel'],
-function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
+// CIRCULAR DEPENDENCIES
+// Do not assign dependencies 'lacuna', 'empire' to function arguments
+// Always access these objects via require("class")
+// e.g. require("lacuna").send()
+// Do not use asynchronous require([]) form
+//
+define(['jquery', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire'],
+function($, Template, Z, MapStars, Panel) {
 
     Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -20,7 +26,7 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
         };
 
         this.loginFromSessionCookie = function(session_id) {
-            Lacuna.send({
+            require("lacuna").send({
                 module: '/empire',
                 method: 'get_status',
 
@@ -29,9 +35,9 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
                 ],
 
                 success: function(o) {
-                    Lacuna.hidePulser();
+                    require("lacuna").hidePulser();
 
-                    Lacuna.setSession(session_id);
+                    require("lacuna").setSession(session_id);
 
                     scope.loginSuccess();
                 },
@@ -81,7 +87,7 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
             empireName      = $('#empire').val();
             empirePassword  = $('#password').val();
 
-            Lacuna.send({
+            require("lacuna").send({
                 module: '/empire',
                 method: 'login',
 
@@ -92,9 +98,9 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
                 ],
 
                 success: function(o) {
-                    Lacuna.hidePulser();
+                    require("lacuna").hidePulser();
 
-                    Lacuna.setSession(o.result.session_id);
+                    require("lacuna").setSession(o.result.session_id);
 
                     // Pop the empire name into a cookie.
                     if ($('#rememberEmpire').prop('checked')) {
@@ -117,12 +123,12 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
         this.loginSuccess = function() {
             // This kicks things off for the first time. The response is monitored in lacuna.js
             // and callbacks are made to update the planet view and menus
-            Lacuna.send({
+            require("lacuna").send({
                 module  : '/body',
                 method  : 'get_status',
                 params  : [
-                    Lacuna.getSession(),
-                    Lacuna.status.empire.home_planet_id,
+                    require("lacuna").getSession(),
+                    require("empire").get.home_planet_id
                 ],
                 success: function() {
                     // Log in to the planet view
