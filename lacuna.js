@@ -215,9 +215,6 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
                 '</a>'
             ].join('');
         };
-
-        // HTML templates to simplify the code.
-        this.Templates = {};
     }
     
     return new Lacuna();
