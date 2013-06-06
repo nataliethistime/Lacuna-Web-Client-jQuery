@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
             boundLeft           : -1500,        // Bounds of the starmap
             boundRight          : 1500,         // +1500 has no bodies, so we can ignore it
             boundTop            : 1500,         // Likewise on the Y axis
-            boundBottom         : -1500,        // Lower bound
+            boundBottom         : -1500         // Lower bound
         };
         var options;
         // tiles are an array of 9 tiles arranged by index
@@ -121,7 +121,7 @@ define(['jquery', 'underscore', 'lacuna', 'template'], function($, _, Lacuna, Te
                     y           : tile.top,
                     tileId      : x,
                     widthPx     : options.tileWidth * scope.unitSizePx(),
-                    heightPx    : options.tileHeight * scope.unitSizePx(),
+                    heightPx    : options.tileHeight * scope.unitSizePx()
                 });
                 $starsParent.append(tileHtml);
                 scope.tiles[x].html = tileHtml;

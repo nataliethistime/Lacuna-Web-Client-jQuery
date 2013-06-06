@@ -59,7 +59,7 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                 },
                 hide: {
                     effect: 'fade',
-                    duration: 500,
+                    duration: 500
                 },
                 open: function() {
                     // Initialize Tabs when the Dialog opens.
