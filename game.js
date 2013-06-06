@@ -1,10 +1,10 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'queue'], function($, Lacuna, MapPlanet, Login, Template, Queue) {
+define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'panel', 'queue'], function($, Lacuna, MapPlanet, Login, Template, Panel, Queue) {
     function Game() {
 
         Template.load(['game']);
 
         this.start = function() {
-            Lacuna.Panel.panelWidth = 800; // pixels 
+            Panel.panelWidth = 800; // pixels 
 
             // A Panel's height can be decided manually or left up to jQuery.
             var url = window.location.protocol 
