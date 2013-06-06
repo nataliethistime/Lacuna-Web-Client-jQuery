@@ -123,16 +123,23 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
                         // delete it from the server response.
                         delete data.result.status;
                     }
+                    else {
+                        scope.status = {};
+                    }
                     
                     // the following can come from a direct call to get a body status
                     if (data.result.body) {
                         Body.update(data.result.body);
+                        // stash it under {status} for consistency
+                        scope.status.body = data.result.body;
                     }
                     
                     if (data.result.empire) {
                         require(['empire'], function(Empire) {
                             Empire.update(data.result.empire);
                         });
+                        // stash it under {status} for consistency
+                        scope.status.empire = data.result.empire;
                     }
                     
                     scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
