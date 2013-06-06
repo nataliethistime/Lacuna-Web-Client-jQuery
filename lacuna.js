@@ -169,7 +169,7 @@ define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, B
                         //$('#lacuna').fadeOut(500, function() {
                             $('#lacuna').html('');
                             require(['login'], function(Login) {
-                                Login.build();
+                                Login.start();
                             });
                             scope.alert('Session expired. :(');
                         //});

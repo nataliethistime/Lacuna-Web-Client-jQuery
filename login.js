@@ -9,7 +9,37 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        this.build = function() {
+        this.start = function() {
+            var session_id = $.cookie.read('lacuna-expanse-session');
+            if (session_id) {
+                scope.loginFromSessionCookie(session_id);
+            }
+            else {
+                scope.buildPanel();
+            }
+        };
+
+        this.loginFromSessionCookie = function(session_id) {
+            Lacuna.send({
+                module: '/empire',
+                method: 'get_status',
+
+                params: [
+                    session_id
+                ],
+
+                success: function(o) {
+                    Lacuna.hidePulser();
+
+                    Lacuna.setSession(session_id);
+
+                    scope.loginSuccess();
+                },
+                scope: this
+            });
+        }
+
+        this.buildPanel = function() {
 
             // Build the Login Panel.
             scope.panel = Panel.newTabbedPanel({
@@ -50,7 +80,6 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
         this.login = function() {
             empireName      = $('#empire').val();
             empirePassword  = $('#password').val();
-            Lacuna.showPulser();
 
             Lacuna.send({
                 module: '/empire',
@@ -65,9 +94,9 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
                 success: function(o) {
                     Lacuna.hidePulser();
 
-                    // Pop the empire name into a cookie.
                     Lacuna.setSession(o.result.session_id);
 
+                    // Pop the empire name into a cookie.
                     if ($('#rememberEmpire').prop('checked')) {
                         $.cookie.write('lacuna-expanse-empire-name', empireName, 365 * 24 * 60 * 60); // 1 year.
                     }
@@ -75,26 +104,33 @@ function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
                         $.cookie.destroy('lacuna-expanse-empire-name');
                     }
                     
-                    // This kicks things off for the first time. The response is monitored in lacuna.js
-                    // and callbacks are made to update the planet view and menus
-                    Lacuna.send({
-                        module  : '/body',
-                        method  : 'get_status',
-                        params  : [
-                            o.result.session_id,
-                            Lacuna.status.empire.home_planet_id,
-                        ],
-                        success: function() {
-                            scope.panel.close();
-                            // Log in to the planet view
-                            $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
-                            $('#starsParent').css('visibility', 'hidden');
-                        }
-                    });
+                    // Store login session in session cookie
+                    $.cookie.write('lacuna-expanse-session', o.result.session_id);
+                    
+                    scope.panel.close();
+                    scope.loginSuccess();
                 },
                 scope: this
             });
-        }
+        };
+        
+        this.loginSuccess = function() {
+            // This kicks things off for the first time. The response is monitored in lacuna.js
+            // and callbacks are made to update the planet view and menus
+            Lacuna.send({
+                module  : '/body',
+                method  : 'get_status',
+                params  : [
+                    Lacuna.getSession(),
+                    Lacuna.status.empire.home_planet_id,
+                ],
+                success: function() {
+                    // Log in to the planet view
+                    $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
+                    $('#starsParent').css('visibility', 'hidden');
+                }
+            });
+        };
     }
 
     return new Login();
