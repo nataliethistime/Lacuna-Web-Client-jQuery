@@ -33,12 +33,12 @@ define(['require', 'jquery', 'underscore','buildings'], function(require, $, _, 
 
         this.get_buildings = function(body_id) {
             // We may want to revisit this, otherwise there is a circular dependency.
-            require(['lacuna'], function(lacuna) {
-                lacuna.send({
+            require(['lacuna'], function(Lacuna) {
+                Lacuna.send({
                     module: '/body',
                     method: 'get_buildings',
                     params: [
-                        lacuna.getSession(),
+                        Lacuna.getSession(),
                         body_id
                     ],
                     success: function(o) {
