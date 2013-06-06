@@ -27,7 +27,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         // scope instead. The name of the variable does not matter, but we have
         // created the convention of calling it 'scope'.
         // When using scope, declare all functions as scope.myFunction = (whatever)
-        // but, when setting/using scope wide variables, assign them to scope.
+        // but, when setting or using scope wide variables, assign them to scope.
         var scope = this;
 
         this.getTabs = function() {

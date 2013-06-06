@@ -231,7 +231,7 @@ define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
                 for (var i = 0; i < panel.tabs.length; i++) {
                     var tab = panel.tabs[i];
                     tabHeaders[tabHeaders.length] = '<li><a href="#' + DOMName + '_Tab-' + (i + 1) + '">' + tab.name + '</a></li>';
-                    tabContent[tabContent.length] = '<div id="' + DOMName + '_Tab-' + (i + 1) + '">' + tab.content + '</div>';
+                    tabContent[tabContent.length] = '<div id="' + DOMName + '_Tab-' + (i + 1) + '">' + (tab.content || '') + '</div>';
                 }
 
                 // Finish it all off.
