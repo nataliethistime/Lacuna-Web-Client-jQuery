@@ -12,14 +12,14 @@ define(['jquery'], function($) {
         };
 
         // This was stolen straight from the original Lacuna Web Client.
-        this.formatTime = function(seconds) {
-            if (seconds < 0) {
+        this.formatTime = function(input) {
+            if (input < 0) {
                 return '';
             }
             var secondsInDay = 60 * 60 * 24,
                 secondsInHour = 60 * 60,
-                day = Math.floor(seconds / secondsInDay),
-                hleft = seconds % secondsInDay,
+                day = Math.floor(input / secondsInDay),
+                hleft = input % secondsInDay,
                 hour = Math.floor(hleft / secondsInHour),
                 sleft = hleft % secondsInHour,
                 min = Math.floor(sleft / 60),
