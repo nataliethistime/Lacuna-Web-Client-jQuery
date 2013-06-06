@@ -1,6 +1,12 @@
 // This contains the current Empire data, typically updated from any 'Status' return
 //
-define(['jquery', 'underscore','lacuna'], function($, _, Lacuna) {
+// CIRCULAR DEPENDENCIES
+// Do not assign dependency 'lacuna' to a function argument
+// Always access these objects via require("class")
+// e.g. require("lacuna").send()
+// Do not use asynchronous require([]) form
+//
+define(['jquery', 'underscore','lacuna'], function($, _) {
     function Empire() {
         var scope = this;
         var callbacks = $.Callbacks();
@@ -17,11 +23,11 @@ define(['jquery', 'underscore','lacuna'], function($, _, Lacuna) {
         };
 
         this.get_status = function() {
-            Lacuna.send({
+            require("lacuna").send({
                 module: '/empire',
                 method: 'get_status',
                 params: [
-                    Lacuna.getSession()
+                    require("lacuna").getSession()
                 ],
                 success: Empire.update
             });
