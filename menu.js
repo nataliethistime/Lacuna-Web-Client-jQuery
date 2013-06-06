@@ -8,7 +8,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                 click: function(e) {
                     $('#buildingsParent').css('visibility', 'hidden');
                     $('#starsParent').css('visibility', 'visible');
-                    $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/ui/field.png')");
+                    $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
                     $('#menu_to_starmap').css('visibility', 'hidden');
                     $('#menu_to_planetmap').css('visibility', 'visible');
                     MapStars.renderStars();
@@ -18,7 +18,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                 click: function(e) {
                     $('#buildingsParent').css('visibility', 'visible');
                     $('#starsParent').css('visibility', 'hidden');
-                    $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/ui/field.png')");
+                    $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
                     $('#menu_to_starmap').css('visibility', 'visible');
                     $('#menu_to_planetmap').css('visibility', 'hidden');
                     // Fire the callbacks to redisplay the planet image
