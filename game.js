@@ -1,4 +1,5 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'panel', 'queue'], function($, Lacuna, MapPlanet, Login, Template, Panel, Queue) {
+define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'panel', 'menu', 'queue'],
+function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue) {
     function Game() {
 
         Template.load(['game']);
@@ -26,9 +27,7 @@ define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'panel', 'queue'],
             $('#gameHeader, #gameFooter, #buildingsParent, #starsParent')
                 .css('visibility', 'hidden');
 
-            require(['menu'], function(Menu) {
-                Menu.renderMenu();
-            });
+            Menu.renderMenu();
 
             // This creates the planet map and stars view divisions
             // but they are initially hidden and are populated by callbacks
