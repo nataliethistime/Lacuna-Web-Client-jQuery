@@ -4,8 +4,8 @@
 // e.g. require("lacuna").send()
 // Do not use asynchronous require([]) form
 //
-define(['jquery', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire'],
-function($, Template, Z, MapStars, Panel) {
+define(['jquery', 'require', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire'],
+function($, require, Template, Z, MapStars, Panel) {
 
     Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';

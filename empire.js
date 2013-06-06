@@ -6,7 +6,7 @@
 // e.g. require("lacuna").send()
 // Do not use asynchronous require([]) form
 //
-define(['jquery', 'underscore','lacuna'], function($, _) {
+define(['jquery', 'underscore', 'require', 'lacuna'], function($, _, require) {
     function Empire() {
         var scope = this;
         var callbacks = $.Callbacks();
