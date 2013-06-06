@@ -2,8 +2,8 @@
 // i.e. it does not describe a specific instance of a building (e.g. the building at location x,y on planet q)
 // It defines methods to display information about a type of building
 //
-define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildingType/defaultBuilding']
-, function($, _, Lacuna, Library, Template, Body, DefaultBuildingType) {
+define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel', 'buildingType/defaultBuilding']
+, function($, _, Lacuna, Library, Template, Body, Panel, DefaultBuildingType) {
 
     Template.load('building');
 
@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'buildi
             // Replace out the ' in "Gratch's Gauntlet"
             var panelName = building.name.replace("'","") + ' ' + building.level;
 
-            var panel = Lacuna.Panel.newTabbedPanel({
+            var panel = Panel.newTabbedPanel({
                 draggable       : true,
                 name            : panelName,
                 preTabContent   : scope.getBuildingHeader(building, loadedBuildingType.building),

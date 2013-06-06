@@ -1,4 +1,5 @@
-define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie', 'mapStars'], function($, Lacuna, Empire, Template, Z, MapStars) {
+define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie', 'mapStars', 'panel'],
+function($, Lacuna, Empire, Template, Z, MapStars, Panel) {
 
     Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -11,7 +12,7 @@ define(['jquery', 'lacuna', 'empire', 'template', 'zebra_cookie', 'mapStars'], f
         this.build = function() {
 
             // Build the Login Panel.
-            scope.panel = Lacuna.Panel.newTabbedPanel({
+            scope.panel = Panel.newTabbedPanel({
                 name: 'Welcome', // Could someone please come up with something more creative?
                 tabs: [
                     {
