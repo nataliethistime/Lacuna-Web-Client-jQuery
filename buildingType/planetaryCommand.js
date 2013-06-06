@@ -9,7 +9,7 @@
 // module. As you can see, we need jQuery, Lacuna and Template (Pro'lly more later).
 // These modules are then loaded and sent into the function that can be seen in 
 // parameter 2.
-define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
+define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, Body) {
     
     // Now we need to load the file that has all of the HTML templates we'll be
     // using within this file. Once this template has been loaded, they can be
@@ -31,6 +31,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         var scope = this;
 
         this.getTabs = function() {
+            console.log(Body);
             return [
                 {
                     name: 'Planet',
