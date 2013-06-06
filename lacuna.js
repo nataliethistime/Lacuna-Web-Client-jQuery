@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'body', 'jqueryUI'], function($, _, Body) {
+define(['jquery', 'underscore', 'body', 'require', 'jqueryUI'], function($, _, Body, require) {
     function Lacuna() {
  
         // Helper for jQuery's weird scope management.

@@ -2,8 +2,8 @@
 // i.e. it does not describe a specific instance of a building (e.g. the building at location x,y on planet q)
 // It defines methods to display information about a type of building
 //
-define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel', 'buildingType/defaultBuilding']
-, function($, _, Lacuna, Library, Template, Body, Panel, DefaultBuildingType) {
+define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel', 'require', 'buildingType/defaultBuilding']
+, function($, _, Lacuna, Library, Template, Body, Panel, require, DefaultBuildingType) {
 
     Template.load('building');
 
