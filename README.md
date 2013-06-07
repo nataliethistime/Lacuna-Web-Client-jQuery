@@ -82,8 +82,7 @@ when it could do so.
 
 If on doing a 'git pull --ff-only origin master' you get the following error:-
 
-  (exact message waiting for a cut-paste opportunity, but something along the
-  lines of. 'Cannot do a fast forward merge')
+  fatal: Not possible to fast-forward, aborting.
 
 This means that the upstream (origin) has been modified and updated by someone
 else. In this circumstance you should do the following instead.
