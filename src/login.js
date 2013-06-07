@@ -112,12 +112,12 @@ function($, require, Template, Z, MapStars, Panel) {
                     
                     // This kicks things off for the first time. The response is monitored in lacuna.js
                     // and callbacks are made to update the planet view and menus
-                    Lacuna.send({
+                    require("lacuna").send({
                         module  : '/body',
                         method  : 'get_status',
                         params  : [{
                             'session_id'    : o.result.session_id,
-                            'body_id'       : Lacuna.status.empire.home_planet_id
+                            'body_id'       : require("lacuna").status.empire.home_planet_id
                         }],
                         success: function() {
                             scope.panel.close();
