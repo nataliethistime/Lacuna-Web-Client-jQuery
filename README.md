@@ -42,7 +42,7 @@ The following is the list of buildings that needs to be implemented. If you thin
     * @Vasari is working on this one.
     * So far, a very basic version of viewing the build queue is available.
 * SpacePort
-    * icydee plans to work on this, and on other bits of code that display lists of ships (starmaps etc.)
+    * @icydee plans to work on this, and on other bits of code that display lists of ships (starmaps etc.)
 * SpaceStationLab
 * SubspaceSupplyDepot
 * SupplyPod
@@ -61,13 +61,13 @@ Git Notes
 
 These are mostly notes for me as I keep forgetting Git commands. :)
 
-### Best practices for using git (icydee)
+### Best practices for using Git
 
 I have put these notes here so that we do not get into the git spagetti merge
 nightmare that Lacuna-Server-Open got into. (see the network graph about 12 
 months ago for an example).
 
-# first priciples.
+# First Principles
     Do not use the github 'Merge pull request' Button, ever.
     Do not use 'git pull origin master'
     Do not use 'git merge master'
@@ -126,7 +126,7 @@ This will pull down the master from origin and *replay your changes on top of it
 Note, F' is not the same as F, what has happened is that it looked at the changes
 that you made *from E to F* and instead, applied those changes on top of B.
 
-BIG WARNING NOTICE.
+###BIG WARNING NOTICE
 
 Almost always, your changes are local in which case rewriting history in this way
 is perfectly fine. If however you have pushed the changes elsewhere, which is
@@ -148,4 +148,11 @@ in this way, you can push your changes to your own repository on github.
     $ git merge --ff-only master
     $ git push origin master
 
-(icydee, I added the --ff-only, see my notes above.)
+Grunt 'n' stuff Notes
+=====================
+
+The source urls for the libraries used in this project are. (Note, I plan to write a script that automatically updates all of these)
+
+* jQuery - http://code.jquery.com/jquery-latest.js
+* RequireJs - https://raw.github.com/jrburke/requirejs/master/require.js
+* Zebra_Cookie - https://raw.github.com/stefangabos/Zebra_Cookie/master/public/javascript/zebra_cookie.src.js
