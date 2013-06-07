@@ -31,7 +31,7 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
         var scope = this;
 
         this.getTabs = function() {
-            console.log(Body);
+            //console.log(Body);
             return [
                 {
                     name: 'Planet',
