@@ -83,8 +83,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
             }
         };
 
-        // Stops the loop, should be called when the 
-        // user logs out and when plants get changed.
+        // Stops the loop.
         this.stop = function() {
 
             // Attempting to do this if the queue isn't
@@ -98,11 +97,9 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         
         };
 
-        // Kills everything without running the 
-        // callbacks for any of the queue items.
+        // Clears everything in the queue, doesn't stop it.
         this.killall = function() {
             scope.queueItems = [];
-            scope.stop();
         };
     }
 

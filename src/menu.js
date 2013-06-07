@@ -1,4 +1,4 @@
-define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body', 'buildings'], function($, Lacuna, Template, Login, MapPlanet, MapStars, Body, Buildings) {
+define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body', 'buildings', 'queue'], function($, Lacuna, Template, Login, MapPlanet, MapStars, Body, Buildings, Queue) {
     function Menu() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -38,15 +38,22 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         success: function(o) {
                             Lacuna.hidePulser();
                             
+                            // Remove the session cookie.
                             $.cookie.destroy('lacuna-expanse-session');
+                            
+                            // Delete all the status data to avoid "confusion."
                             delete Lacuna.status;
+
+                            // Clear all the buildings data.
                             Buildings.buildings = {};
                             MapPlanet.renderPlanet();
+
+                            // Kill everything in the queue.
+                            Queue.killall();
 
                             $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'hidden');
                             $('#starsParent').css('visibility', 'visible');
 
-                            // TODO: Clear the buildings data.
                             Login.start();
                         }
                     });
