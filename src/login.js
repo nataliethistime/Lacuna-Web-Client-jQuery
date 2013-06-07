@@ -91,11 +91,11 @@ function($, require, Template, Z, MapStars, Panel) {
                 module: '/empire',
                 method: 'login',
 
-                params: [
-                    empireName,
-                    empirePassword,
-                    'anonymous' // API Key
-                ],
+                params: [{
+                    'name'      : empireName,
+                    'password'  : empirePassword,
+                    'api_key'   : 'anonymous'
+                }],
 
                 success: function(o) {
                     require("lacuna").hidePulser();
@@ -110,11 +110,22 @@ function($, require, Template, Z, MapStars, Panel) {
                         $.cookie.destroy('lacuna-expanse-empire-name');
                     }
                     
-                    // Store login session in session cookie
-                    $.cookie.write('lacuna-expanse-session', o.result.session_id);
-                    
-                    scope.panel.close();
-                    scope.loginSuccess();
+                    // This kicks things off for the first time. The response is monitored in lacuna.js
+                    // and callbacks are made to update the planet view and menus
+                    Lacuna.send({
+                        module  : '/body',
+                        method  : 'get_status',
+                        params  : [{
+                            'session_id'    : o.result.session_id,
+                            'body_id'       : Lacuna.status.empire.home_planet_id
+                        }],
+                        success: function() {
+                            scope.panel.close();
+                            // Log in to the planet view
+                            $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
+                            $('#starsParent').css('visibility', 'hidden');
+                        }
+                    });
                 },
                 scope: this
             });

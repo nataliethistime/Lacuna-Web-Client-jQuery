@@ -207,10 +207,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             Lacuna.send({
                 module  : e.data.url,
                 method  : 'repair',
-                params  : [
-                    Lacuna.getSession(),
-                    e.data.building.id
-                ],
+                params  : [{
+                    'session_id'    : Lacuna.getSession(),
+                    'building_id'   : e.data.building.id
+                }],
                 success: function(o) {
                     e.data.panel.close();
                 }
@@ -230,10 +230,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 module: e.data.url,
                 method: 'upgrade',
 
-                params: [
-                    Lacuna.getSession(),
-                    e.data.building.id
-                ],
+                params: [{
+                    'session_id'    : Lacuna.getSession(),
+                    'building_id'   : e.data.building.id
+                }],
                 
                 success: function(o) {
                     e.data.panel.close();
@@ -251,10 +251,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     Lacuna.send({
                         module: e.data.url,
                         method: 'downgrade',
-                        params: [
-                            Lacuna.getSession(),
-                            e.data.building.id
-                        ],
+                        params: [{
+                            'session_id'    : Lacuna.getSession(),
+                            'building_id'   : e.data.building.id
+                        }],
                         
                         success: function(o) {
                             // Close the panel.
@@ -276,10 +276,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                         module: e.data.url,
                         method: 'demolish',
                         
-                        params: [
-                            Lacuna.getSession(),
-                            e.data.building.id
-                        ],
+                        params: [{
+                            'session_id'    : Lacuna.getSession(),
+                            'building_id'   : e.data.building.id
+                        }],
                         
                         success: function(o) {
                             // Close the panel.
