@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         
         // Config options for jshint.
         jshint: {
-            files: ['*.js', 'src/*.js', 'src/**/*.js'],
+            files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js'],
             options: {
                 // options here to override JSHint defaults
                 globals: {
@@ -23,5 +23,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Specify what tasks can be run.
-    grunt.registerTask('test', ['jshint'/* In here will be Qunit */]);
+    grunt.registerTask('development', ['jshint'/* In here will be Qunit */]);
 };
