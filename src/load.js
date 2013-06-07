@@ -11,6 +11,25 @@ if (window.location.hash != '') {
     window.location.hash = ''; // Remove the hash to prevent infinite looping.
 }
 
+require.config({
+    paths: {
+        jquery: 'src/js/jquery',
+        jqueryUI: 'src/js/jqueryUI',
+        zebra_cookie: 'src/js/zebra_cookie',
+        underscore: 'src/js/underscore'
+    },
+    shim: {
+        jqueryUI: ['jquery'], // Attach jQueryUI to jQuery.
+        underscore: {
+            exports: '_'
+        },
+        zebra_cookie: ['jquery'], // Attach zebra_cookie to jQuery.
+
+        // Bust caching of the JS files.
+        urlArgs : 'bust=' + new Date().getTime()
+    }
+});
+
 requirejs(['jquery', 'game'], function($, Game) {
 
     // Create the URL for use within the client.
