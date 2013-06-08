@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
         //  3  4  5
         //  0  1  2
         //
-        scope.tiles = new Array();
+        scope.tiles = [];
         scope.oldCentreTile = {};
 
         // convert a zoom level into pixels per starmap 'unit'
@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                 bottom  : centreBottom,
                 left    : centreLeft,
                 right   : centreLeft + options.tileWidth
-            }
+            };
 
             // The starsParent is the draggable object, it's children (the tiles) can be dragged 
             // with it. Let's make it as big as the expanse (in pixels)
@@ -109,14 +109,14 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
             var $starsParent = $("#starsParent");
             $starsParent.draggable({
                 stop : function(event, ui) {
-                    scope.processDragStop()
+                    scope.processDragStop();
                 }
             });
             $starsParent.html('').width(expanseWidthPx).height(expanseHeightPx);
 
             // First set the position the nine tiles, they will be empty until
             // they are rendered by calls to 'get_star_map'.
-            for (var x=0; x<9; x++) {
+            for (var x = 0; x < 9; x++) {
                 var tile    = scope.getTileBounds(x);
                 var tileAbs = scope.getTileAbsPosition(x);
 
@@ -137,7 +137,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
             // TODO: We should render all tiles that are visible first
             // but for now render the centre tile first
             scope.renderTile(4);
-            for (var x=0; x < 9; x++) {
+            for (/*var*/ x = 0; x < 9; x++) {
                 if (x != 4) {
                     scope.renderTile(x);
                 }
@@ -158,10 +158,10 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
             var $starsParent    = $("#starsParent");
             var $starsViewport  = $("#starsViewport");
 
-            var parentLeft      = parseInt($starsParent.css('left'));
-            var parentTop       = parseInt($starsParent.css('top'));
-            var viewWidth       = parseInt($starsViewport.width());
-            var viewHeight      = parseInt($starsViewport.height());
+            var parentLeft      = parseInt($starsParent.css('left'), 10);
+            var parentTop       = parseInt($starsParent.css('top'), 10);
+            var viewWidth       = parseInt($starsViewport.width(), 10);
+            var viewHeight      = parseInt($starsViewport.height(), 10);
             var parentRight     = parentLeft + viewWidth;
             var parentBottom    = parentTop - viewHeight;
             var unitX           = Math.round((viewWidth / 2 - parentLeft) / scope.unitSizePx() + options.boundLeft);
@@ -213,8 +213,8 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
         scope.createTileHtml = function(parentLeft, parentTop, viewWidth, viewHeight) {
             for (var x=0; x<9; x++) {
                 // Get the tile position in pixels.
-                var tileTop     = parseInt($("#starmap_tile"+x).css("top"));
-                var tileLeft    = parseInt($("#starmap_tile"+x).css("left"));
+                var tileTop     = parseInt($("#starmap_tile"+x).css("top"), 10);
+                var tileLeft    = parseInt($("#starmap_tile"+x).css("left"), 10);
                 var tileBottom  = tileTop + (options.tileHeight * scope.unitSizePx());
                 var tileRight   = tileLeft + (options.tileWidth * scope.unitSizePx());
                 if (   tileRight    < 0 - parentLeft                // all the tile is to the left of the viewport
@@ -320,7 +320,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
 
                 // Clear out the current tile.
                 tile.html = '';
-                tile.divs = new Array();
+                tile.divs = [];
 
                 require("lacuna").send({
                     module: '/map',
@@ -335,7 +335,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                     success : function(o) {
                         var stars = o.result.stars;
                         var tileHtml = '';
-                        var tileDivs = new Array();
+                        var tileDivs = [];
                         // Map each star onto the tile
                         for (var i = 0; i < stars.length; i++) {
                             var star = stars[i];
@@ -430,7 +430,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                 });
             }
         };
-    };
+    }
 
     return new MapStars();
 });

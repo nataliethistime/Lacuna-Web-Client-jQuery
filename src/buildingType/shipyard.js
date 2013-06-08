@@ -48,7 +48,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                     }
                 }
             });
-        }
+        };
     }
 
     return new Shipyard();

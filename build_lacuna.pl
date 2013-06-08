@@ -13,5 +13,6 @@ if ($status == 0) {
 }
 else {
     say 'Failed to pass JSHint and Unit tests.';
-    exit;
 }
+
+system('pause');
