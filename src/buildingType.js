@@ -12,7 +12,8 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     // Might move this into resources.json at some point.
     var moduleTypes = {
         planetarycommand    :   'planetaryCommand',
-        shipyard            :   'shipyard'
+        shipyard            :   'shipyard',
+        spaceport           :   'spacePort'
     };
 
     // To try to reduce confusion over the various 'building' objects.
