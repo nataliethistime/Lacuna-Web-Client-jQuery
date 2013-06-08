@@ -82,8 +82,7 @@ when it could do so.
 
 If on doing a 'git pull --ff-only origin master' you get the following error:-
 
-  (exact message waiting for a cut-paste opportunity, but something along the
-  lines of. 'Cannot do a fast forward merge')
+  fatal: Not possible to fast-forward, aborting.
 
 This means that the upstream (origin) has been modified and updated by someone
 else. In this circumstance you should do the following instead.
@@ -91,10 +90,10 @@ else. In this circumstance you should do the following instead.
 git pull --rebase origin master
 
 This is what has happened.
-
-       A--B      master on origin
-      /
- D---E---F       master (on your local)
+ 
+          A--B      master on origin
+         /
+    D---E---F       master (on your local)
 
 The last time you pulled down the code from the origin (github) was at revision
 E. You since committed change F locally.
@@ -106,9 +105,9 @@ However that someone committed their changes to origin before you did.
 When you do a 'git pull origin master' to your local directory. It will do the
 following.
 
-       A---B     master on origin
-      /     \
- D---E---F---G   master (on your local)
+          A---B     master on origin
+         /     \
+    D---E---F---G   master (on your local)
 
 It has merged the two divergent branches and this 'loop' will be present in the
 git repository for posterity. As more and more people commit, you get loops on
@@ -121,7 +120,7 @@ git pull --rebase origin master.
 
 This will pull down the master from origin and *replay your changes on top of it*
 
- D---E---A---B---F'
+    D---E---A---B---F'
 
 Note, F' is not the same as F, what has happened is that it looked at the changes
 that you made *from E to F* and instead, applied those changes on top of B.

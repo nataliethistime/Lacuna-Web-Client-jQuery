@@ -156,7 +156,6 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                 error: function(jqXHR, textStatus, errorThrown) {
                     // Hide the "loading" animation.
                     scope.hidePulser();
-
                     // Log the returned data for debugging.
                     scope.debug(jqXHR.responseText);
 
