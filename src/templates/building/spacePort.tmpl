@@ -1,27 +1,63 @@
 <script id="building_space_port_travelling_tab">
 <![CDATA[
-  hiya Vas!
+  do we really need a 'travelling' tab, since we can filter for that
+  on the 'view_all_fleets' tab?
 ]]>
 </script>
 
 
 <script id="building_space_port_view_item">
 <![CDATA[
-<li style="margin-top: 3px;">
+<li style="margin-top: 3px; line-height: normal;">
   <div style="margin-bottom: 2px">
-    <div class="fleet_view_first" style="background: transparent url(<%= assetsUrl %>/star_system/field.png) no-repeat center; text-align: center;">
-      <img src="<%= assetsUrl %>/ships/spy_shuttle.png" title="Spy Shuttle" style="width: 115px; height: 115px;">
+    <div class="fleet_view_first" >
+      <img src="<%= assetsUrl %>/ships/<%= fleet.details.type %>.png" title="<%= fleet.details.type_human %>" style="width: 115px; height: 115px;">
     </div>
+    <div class="fleet_view_summary">
+      <span style="font-weight: bold;"><%= fleet.details.type_human %>:</span>
+      <span style="font-weight: bold;"><%= fleet.task %>:</span>
+<% if (fleet.task == 'Travelling') { %>
+      <table>
+        <tr><td>From:</td><td><%= fleet.from.name %></td></tr>
+        <tr><td>To:</td><td><%= fleet.to.name %></td></tr>
+        <tr><td>Arrives in:</td><td>12:43:05</td></tr>
+        <tr><td>Arrives at:</td><td><%= Library.formatTime(fleet.date_arrives) %></td></tr>
+      </table>
+<% } %>
+    </div>
+    <div class="fleet_view_summary">
+      <table>
+        <tr><th colspan=2>Attributes:</th></tr>
+        <tr><td width="150px">Speed:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.speed) %></td></tr>
+        <tr><td>Hold Size:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.hold_size) %></td></tr>
+        <tr><td>Berth Level:</td><td style="text-align: right"><%= fleet.details.berth_level %></td></tr>
+        <tr><td>Occupants:</td><td style="text-align: right"><%= fleet.details.max_occupants %></td></tr>
+        <tr><td>Stealth:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.stealth) %></td></tr>
+        <tr><td>Combat:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.combat) %></td></tr>
+      </table>
+    </div>
+    <div class="fleet_view_summary">
+      <table>
+        <tr><th colspan>Payload:</th></tr>
+      </table>
+    </div>
+    <div class="clear_float"></div>
   </div>
 </li>
 ]]>
 </script>
 
+<script id="building_space_port_no_ships">
+<![CDATA[
+<li style="margin-top: 3px;">
+  <span class="center">You have no ships on this planet.</span>
+</li>
+]]>
+</script>
 
 <script id="building_space_port_view_list">
 <![CDATA[
 <ul id="fleetViewDetails">
-  <%= fleet_view_list %>
 </ul>
 ]]>
 </script>

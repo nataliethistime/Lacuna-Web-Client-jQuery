@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     // To try to reduce confusion over the various 'building' objects.
     // pBuilding, the building object returned from a planet 'get_buildings' call
     // vBuilding, the building object returned from the 'view' call against the building url
-    // buildingType is the object class representing that type of building
+    // buildingType is the generic object class representing that type of building
 
     function BuildingType() {
         var scope = this;
@@ -40,8 +40,8 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     var vBuilding   = o.result.building;
                     var url         = pBuilding.url;
                     var tabs = [{
-                        name    : 'View',
-                        content : scope.getViewTab(vBuilding)
+                        name    : 'Production',
+                        content : scope.getProductionTab(vBuilding)
                     }];
 
                     // Remove the leading slash from the url to get the building 'type'.
@@ -93,7 +93,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 tabs = tabs.concat([repairTab]);
             }
             else {
-                var extraTabs = buildingType.getTabs();
+                var extraTabs = buildingType.getTabs(vBuilding, url);
                 if (extraTabs.length) {
                     tabs = tabs.concat(extraTabs);
                 }
@@ -157,7 +157,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             });
         };
 
-        this.getViewTab = function(vBuilding) {
+        this.getProductionTab = function(vBuilding) {
             var currentProduction = Template.read.building_current_production({
                 assets_url      : window.assetsUrl,
                 food_hour       : Library.formatNum(vBuilding.food_hour),

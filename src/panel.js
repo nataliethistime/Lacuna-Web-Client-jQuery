@@ -36,6 +36,7 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                         tabHeaders.join(''),
                         tabContent.join(''),
                     '</div>',
+            //console.log(Body);
                 '</div>'
             ];
 
@@ -90,9 +91,9 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
 
             // Return a fancy Panel object.
             return {
-                dialogEl: $('#' + DOMName + '_Panel'), // Get newest version of the jQuery object.
-                tabEl: $('#' + DOMName + '_Tab'),
-                close: function(callback) {
+                dialogEl    : $('#' + DOMName + '_Panel'), // Get newest version of the jQuery object.
+                tabEl       : $('#' + DOMName + '_Tab'),
+                close       : function(callback) {
                     $('#' + DOMName + '_Panel').dialog('close');
                     // Run the callback, if there is one.
                     if (typeof(callback) != 'undefined') {
