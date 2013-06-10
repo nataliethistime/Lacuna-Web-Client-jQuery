@@ -15,30 +15,37 @@
     </div>
     <div class="fleet_view_summary">
       <span style="font-weight: bold;"><%= fleet.details.type_human %>:</span>
-      <span style="font-weight: bold;"><%= fleet.task %>:</span>
+      <span style="font-weight: bold;">(<%= fleet.task %>)</span>
 <% if (fleet.task == 'Travelling') { %>
-      <table>
-        <tr><td>From:</td><td><%= fleet.from.name %></td></tr>
-        <tr><td>To:</td><td><%= fleet.to.name %></td></tr>
-        <tr><td>Arrives in:</td><td>12:43:05</td></tr>
-        <tr><td>Arrives at:</td><td><%= Library.formatTime(fleet.date_arrives) %></td></tr>
-      </table>
+      <ul class="leaders">
+        <li><span>From:</span>          <span><%= fleet.from.name %></span></li>
+        <li><span>To:</span>            <span><%= fleet.to.name %></span></li>
+        <li><span>Arrives in:</span>    <span>12:43:05</span></li>
+        <li><span>Arrives at:</span>    <span><%= Library.formatTime(fleet.date_arrives) %></span></li>
+      </ul>
+<% } %>
+<% if (fleet.task == 'Building') { %>
+      <ul class="leaders">
+        <li><span>Available:</span>     <span><%= Library.formatTime(fleet.details.date_available) %></span>
+      </ul>
+<% } %>
+<% if (fleet.task == 'Defend') { %>
+      <ul class="leaders">
+        <li><span>Defending:</span>     <span><%= fleet.to.name %></span></li>
+      </ul>
 <% } %>
     </div>
     <div class="fleet_view_summary">
-      <dl>
-        <dt><span>Speed:</span></dt>        <dd><%= Library.formatNum(fleet.details.speed) %></dd>
-        <dt><span>Hold Size:</span></dt>    <dd><%= Library.formatNum(fleet.details.hold_size) %></dd>
-        <dt><span>Berth Level:</span></dt>  <dd><%= Library.formatNum(fleet.details.berth_level) %></dd>
-        <dt><span>Occupants:</span></dt>    <dd><%= fleet.details.max_occupants %></dd>
-        <dt><span>Stealth:</span></dt>      <dd><%= Library.formatNum(fleet.details.stealth) %></dd>
-        <dt><span>Combat:</span></dt>       <dd><%= Library.formatNum(fleet.details.combat) %></dd>
-      </dl>
+       <ul class="leaders">
+        <li><span>Speed:</span>         <span><%= Library.formatNum(fleet.details.speed) %></span></li>
+        <li><span>Hold Size:</span>     <span><%= Library.formatNum(fleet.details.hold_size) %></span></li>
+        <li><span>Berth Level:</span>   <span><%= Library.formatNum(fleet.details.berth_level) %></span></li>
+        <li><span>Occupants:</span>     <span><%= fleet.details.max_occupants %></span></li>
+        <li><span>Stealth:</span>       <span><%= Library.formatNum(fleet.details.stealth) %></span></li>
+        <li><span>Combat:</span>        <span><%= Library.formatNum(fleet.details.combat) %></span></li>
+      </ul>
     </div>
     <div class="fleet_view_summary">
-      <table>
-        <tr><th colspan>Payload:</th></tr>
-      </table>
     </div>
     <div class="clear_float"></div>
   </div>

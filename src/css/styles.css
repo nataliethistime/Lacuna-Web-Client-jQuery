@@ -332,29 +332,32 @@ label {
     text-align: center;
     line-height: 1;
 }
-
-dl {
-    width:  170px;
-}
-dt {
-    float:  left;
-    width:  100px;
-    font-weight: normal;
-    overflow: hidden;
-    white-space: nowrap;
-    line-height : normal;
-}
-dd {
-    float:  right;
-    width:  50px;
-    overflow:   hidden;
-    line-height : normal;
-}
-dt span:after {
-    content: "................................................";
+li {
+    line-height: normal;
 }
 
-
+ul.leaders {
+    max-width   : 170px;
+    padding     : 0;
+    overflow-x  : hidden;
+    list-style  : none;
+    margin-top  : 0px;
+}
+ul.leaders li:before {
+    float       : left;
+    width       : 0;
+    white-space : nowrap;
+    content     : "............................................";
+}
+ul.leaders span:first-child {
+    padding-right   : 0.33em;
+    background      : white;
+}
+ul.leaders span + span {
+    float       : right;
+    padding-left : 0.33em;
+    background  : white;
+}
 
 .building-details-num {
     display: inline-block;
