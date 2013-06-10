@@ -85,7 +85,15 @@ function($, require, Template, Z, MapStars, Panel) {
 
         this.login = function() {
             empireName      = $('#empire').val();
-            empirePassword  = $('#password').val();
+
+/* 
+** CHECK
+** I don't want to have to retype this password every time I make a change to 
+** anything and need to reload - tmt.
+*/
+
+            empirePassword  = 'secret56';
+//            empirePassword  = $('#password').val();            empirePassword  = $('#password').val();
 
             require("lacuna").send({
                 module: '/empire',

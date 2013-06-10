@@ -26,15 +26,14 @@
 <% } %>
     </div>
     <div class="fleet_view_summary">
-      <table>
-        <tr><th colspan=2>Attributes:</th></tr>
-        <tr><td width="150px">Speed:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.speed) %></td></tr>
-        <tr><td>Hold Size:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.hold_size) %></td></tr>
-        <tr><td>Berth Level:</td><td style="text-align: right"><%= fleet.details.berth_level %></td></tr>
-        <tr><td>Occupants:</td><td style="text-align: right"><%= fleet.details.max_occupants %></td></tr>
-        <tr><td>Stealth:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.stealth) %></td></tr>
-        <tr><td>Combat:</td><td style="text-align: right"><%= Library.formatNum(fleet.details.combat) %></td></tr>
-      </table>
+      <dl>
+        <dt><span>Speed:</span></dt>        <dd><%= Library.formatNum(fleet.details.speed) %></dd>
+        <dt><span>Hold Size:</span></dt>    <dd><%= Library.formatNum(fleet.details.hold_size) %></dd>
+        <dt><span>Berth Level:</span></dt>  <dd><%= Library.formatNum(fleet.details.berth_level) %></dd>
+        <dt><span>Occupants:</span></dt>    <dd><%= fleet.details.max_occupants %></dd>
+        <dt><span>Stealth:</span></dt>      <dd><%= Library.formatNum(fleet.details.stealth) %></dd>
+        <dt><span>Combat:</span></dt>       <dd><%= Library.formatNum(fleet.details.combat) %></dd>
+      </dl>
     </div>
     <div class="fleet_view_summary">
       <table>

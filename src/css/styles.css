@@ -333,6 +333,29 @@ label {
     line-height: 1;
 }
 
+dl {
+    width:  170px;
+}
+dt {
+    float:  left;
+    width:  100px;
+    font-weight: normal;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height : normal;
+}
+dd {
+    float:  right;
+    width:  50px;
+    overflow:   hidden;
+    line-height : normal;
+}
+dt span:after {
+    content: "................................................";
+}
+
+
+
 .building-details-num {
     display: inline-block;
     width: 120px;
