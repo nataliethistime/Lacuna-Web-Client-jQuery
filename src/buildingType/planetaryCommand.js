@@ -23,7 +23,7 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
     function PlanetaryCommand() {
 
         // Throughout the adventure that is this client, jQuery does some
-        // strange things to the 'this' variable. So, to counter that, we use
+        // strange things to the 'this' keyword. So, to counter that, we use
         // scope instead. The name of the variable does not matter, but we have
         // created the convention of calling it 'scope'.
         // When using scope, declare all functions as scope.myFunction = (whatever)
@@ -78,11 +78,11 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
         };
         
         scope.setupAbandonTab = function() {
-            // Apply the event handler to the Abandon tab.
+            // Apply the event handlers to the Abandon tab.
         };
 
         scope.setupRenameTab = function() {
-            // Apply the event handler to the Rename tab.
+            // Apply the event handlers to the Rename tab.
         };
 
         scope.populatePlansTab = function() {
