@@ -5,12 +5,12 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
     function Shipyard() {
         var scope = this;
 
-        this.getTabs = function() {
+        scope.getTabs = function() {
             return [
                 {
                     name: 'Build Queue',
                     content: Template.read.building_shipyard_build_queue_tab(),
-                    select: this.getQueueTab
+                    select: scope.getQueueTab
                 },
                 {
                     name: 'Build Fleets',
@@ -18,8 +18,10 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
                 }
             ];
         };
+        scope.addEvents = function(vBuilding, url) {
+        };
 
-        this.getQueueTab = function(tab) {
+        scope.getQueueTab = function(tab) {
             Lacuna.send({
                 module: scope.building.url,
                 method: 'view_build_queue',

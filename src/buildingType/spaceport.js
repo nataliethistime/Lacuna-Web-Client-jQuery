@@ -41,6 +41,8 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 }
             ];
         };
+        scope.addEvents = function(vBuilding, url) {
+        };
     }
 
     return new SpacePort();

@@ -14,7 +14,7 @@
       <img src="<%= assetsUrl %>/ships/<%= fleet.details.type %>.png" title="<%= fleet.details.type_human %>" style="width: 115px; height: 115px;">
     </div>
     <div class="fleet_view_summary">
-      <span style="font-weight: bold;"><%= fleet.details.type_human %>:</span>
+      <span class="fleet_name"><%= fleet.details.name %>:</span>
       <span style="font-weight: bold;">(<%= fleet.task %>)</span>
 <% if (fleet.task == 'Travelling') { %>
       <ul class="leaders">

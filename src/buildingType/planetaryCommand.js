@@ -30,7 +30,11 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
         // but, when setting or using scope wide variables, assign them to scope.
         var scope = this;
 
-        this.getTabs = function() {
+        // Get any additional tabs for this building (if there are none, then you
+        // don't need to create this module!)
+        //
+        // vBuilding, the building object returned from the 'view' call against the building url
+        scope.getTabs = function(vBuilding, url) {
             //console.log(Body);
             return [
                 {
@@ -68,27 +72,32 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
             ];
         };
 
-        this.setupAbandonTab = function() {
+        // Add any events that need to be set up for the tabs
+        //
+        scope.addEvents = function(vBuilding, url) {
+        };
+        
+        scope.setupAbandonTab = function() {
             // Apply the event handler to the Abandon tab.
         };
 
-        this.setupRenameTab = function() {
+        scope.setupRenameTab = function() {
             // Apply the event handler to the Rename tab.
         };
 
-        this.populatePlansTab = function() {
+        scope.populatePlansTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        this.populateResourcesTab = function() {
+        scope.populateResourcesTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        this.populateChainsTab = function() {
+        scope.populateChainsTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        this.populateStorageTab = function() {
+        scope.populateStorageTab = function() {
             // Now that I've written this, I'm not sure it's needed.
         };
     }

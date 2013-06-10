@@ -246,6 +246,13 @@ label {
     margin-left     : 10px; 
     width           : 170px;
 }
+.fleet_name {
+    font-weight     : bold;
+    text-decoration : underline;
+    cursor          : hand;
+    cursor          : pointer;
+}
+
 .clear_float {
     float           : left;
     clear           : both;
