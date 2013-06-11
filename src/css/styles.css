@@ -66,6 +66,9 @@ label {
 .textbox, input[type="text"], input[type="password"] {
     width: 250px;
 }
+input.input_tiny {
+    height:  10px;
+}
 
 .centerEverything {
     text-align: center;
@@ -89,7 +92,9 @@ label {
 .wide {
     width: 100%;
 }
-
+.hidden {
+    visibility: hidden;
+}
     /*
         +================+
         |Game UI Elements|

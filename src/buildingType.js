@@ -116,7 +116,6 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     this.repair
                 );
             }
-            buildingType.addEvents(vBuilding, url);
 
             // Now that everything is on the screen, add in all the events.
             if (vBuilding.downgrade.can) {
