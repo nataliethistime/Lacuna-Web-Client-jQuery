@@ -5,7 +5,8 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
     function SpacePort() {
         var scope = this;
 
-        scope.getTabs = function(vBuilding, url) {
+        // request view_all_fleets and update the tab with the result
+        scope.viewAllFleets = function(vBuilding, url) {
             Lacuna.send({
                 module: url,
                 method: 'view_all_fleets',
@@ -34,6 +35,10 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     scope.addEvents(vBuilding, url);
                 }
             });
+        };
+
+        scope.getTabs = function(vBuilding, url) {
+            scope.viewAllFleets(vBuilding, url);
 
             return [
                 {
@@ -65,8 +70,25 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 var $parent = $this.parent();
                 $parent.prev().removeClass('hidden');
                 $parent.addClass('hidden');
-            });
+                var fleetId     = $parent.parent().children().first().val();
+                var fleetName   = $parent.children('.fleet_new_name').first().val();
+                var fleetQty    = $parent.children('.fleet_quantity').first().val();
+                Lacuna.send({
+                    module: url,
+                    method: 'rename_fleet',
 
+                    params: [{
+                        session_id      : Lacuna.getSession(),
+                        building_id     : vBuilding.id,
+                        fleet_id        : fleetId,
+                        name            : fleetName,
+                        quantity        : fleetQty
+                    }],
+                    success: function(o) {
+                        scope.viewAllFleets(vBuilding, url);
+                    }
+                });    
+            });
 
             // Add event handlers for scuttling ships
 
