@@ -37,6 +37,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
             });
         };
 
+        // Get the various tabs
         scope.getTabs = function(vBuilding, url) {
             scope.viewAllFleets(vBuilding, url);
 
@@ -47,6 +48,8 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 }
             ];
         };
+
+        // Add the various event handlers
         scope.addEvents = function(vBuilding, url) {
             // Add event handlers for renaming ships
             var $fleet_view_details = $('#fleet_view_details');
@@ -72,7 +75,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 $parent.addClass('hidden');
                 var fleetId     = $parent.parent().children().first().val();
                 var fleetName   = $parent.children('.fleet_new_name').first().val();
-                var fleetQty    = $parent.children('.fleet_quantity').first().val();
+                var fleetQty    = $parent.children('.fleet_rename_quantity').first().val();
                 Lacuna.send({
                     module: url,
                     method: 'rename_fleet',
@@ -89,10 +92,48 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     }
                 });    
             });
+            // click on 'scuttle' button submits the request
+            $fleet_view_details.on('click', '.fleet_scuttle_button', function(event) {
+                var $this       = $(this);
+                var $parent     = $this.parent();
+                var fleetId     = $parent.children().first().val();
+                var fleetQty    = $parent.children('.fleet_scuttle_quantity').first().val();
+                Lacuna.send({
+                    module  : url,
+                    method  : 'scuttle_fleet',
 
-            // Add event handlers for scuttling ships
+                    params  : [{
+                        session_id      : Lacuna.getSession(),
+                        building_id     : vBuilding.id,
+                        fleet_id        : fleetId,
+                        quantity        : fleetQty
+                    }],
+                    success: function(o) {
+                        scope.viewAllFleets(vBuilding, url);
+                    }
+                });
+            });
+            // click on 'recall' button submits the request
+            $fleet_view_details.on('click', '.fleet_recall_button', function(event) {
+                var $this       = $(this);
+                var $parent     = $this.parent();
+                var fleetId     = $parent.children().first().val();
+                var fleetQty    = $parent.children('.fleet_recall_quantity').first().val();
+                Lacuna.send({
+                    module  : url,
+                    method  : 'recall_fleet',
 
-            // Add event handlers for recalling ships
+                    params  : [{
+                        session_id      : Lacuna.getSession(),
+                        building_id     : vBuilding.id,
+                        fleet_id        : fleetId,
+                        quantity        : fleetQty
+                    }],
+                    success: function(o) {
+                        scope.viewAllFleets(vBuilding, url);
+                    }
+                });
+            });
 
         };
     }

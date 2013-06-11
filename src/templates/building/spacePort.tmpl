@@ -18,7 +18,7 @@
       <span class="fleet_name"><%= fleet.details.name %>:</span>
       <span class="fleet_name_input hidden">
         <input class="fleet_new_name" type="text" style="width:120px" class="input_tiny" value="<%= fleet.details.name %>">
-        <input class="fleet_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>"><br/>
+        <input class="fleet_rename_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>"><br/>
         <button class="fleet_name_rename_button" type="button">Rename</button>
         <button class="fleet_name_cancel_button" type="button">Cancel</button>
       </span><br/>
@@ -41,6 +41,15 @@
         <li><span>Defending:</span>     <span><%= fleet.to.name %></span></li>
       </ul>
 <% } %>
+<% if (fleet.details.can_recall) { %>
+      <input class="fleet_recall_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>">
+      <button class="fleet_recall_button" type="button">Recall</button>
+<% } %>
+<% if (fleet.details.can_scuttle) { %>
+      <input class="fleet_scuttle_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>">
+      <button class="fleet_scuttle_button" type="button">Scuttle</button>
+<% } %>
+
     </div>
     <div class="fleet_view_summary">
        <ul class="leaders">
