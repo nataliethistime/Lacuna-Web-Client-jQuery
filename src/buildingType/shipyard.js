@@ -23,7 +23,7 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
 
         scope.getQueueTab = function(tab) {
             Lacuna.send({
-                module: scope.building.url,
+                module: url,
                 method: 'view_build_queue',
 
                 // Note: this is the 'named argument' call which only works on fleet-action code.

@@ -7,12 +7,7 @@ function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue) {
         this.start = function() {
             Panel.panelWidth = 800; // pixels 
 
-            // A Panel's height can be decided manually or left up to jQuery.
-            var url = window.location.protocol 
-                + '//' 
-                + window.location.hostname
-                + window.location.pathname;
-
+            var url = window.url + window.location.pathname;
             // Remove any tailing 'index.html' or similar
             var n = url.lastIndexOf('/') + 1;
             url = url.substring(0,n) + 'resources.json';

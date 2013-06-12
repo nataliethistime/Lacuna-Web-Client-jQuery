@@ -103,12 +103,13 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
             });
 
             this.debug('Sending to server: ' + data);
-
+            var url = window.url;
+            url = url.substring(0, url.length - 1) + args.module;
             $.ajax({
                 data        : data,
                 dataType    : 'json',
                 type        : 'POST',
-                url         : window.url + args.module,
+                url         : url,
 
                 // Callbacks
                 success: function(data, status, xhr) {
