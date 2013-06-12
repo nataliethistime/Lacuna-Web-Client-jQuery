@@ -7,7 +7,7 @@ function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue) {
         this.start = function() {
             Panel.panelWidth = 800; // pixels 
 
-            var url = window.url + window.location.pathname;
+            var url = window.location.href;
             // Remove any tailing 'index.html' or similar
             var n = url.lastIndexOf('/') + 1;
             url = url.substring(0,n) + 'resources.json';
