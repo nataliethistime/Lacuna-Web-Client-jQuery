@@ -12,7 +12,7 @@ if ($status == 0) {
     system('node r.js -o app.build.js');
 }
 else {
-    say 'Failed to pass JSHint and Unit tests.';
+    say "Failed to pass JSHint and Unit tests with a status code of $status.";
 }
 
 system('pause');

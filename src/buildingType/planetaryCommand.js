@@ -15,7 +15,7 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
     // using within this file. Once this template has been loaded, they can be
     // accessed through the Template.read object. An example of how this loading
     // can be seen below in the getTabs function.
-    Template.load('building/planetaryCommand');
+    Template.load(['building/planetaryCommand']);
 
     // This function, at least to my way of thinking, is a JavaScript class. It
     // is what we use to represent it as a module for RequireJs to understand.
@@ -33,7 +33,8 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
         // Get any additional tabs for this building (if there are none, then you
         // don't need to create this module!)
         //
-        // vBuilding, the building object returned from the 'view' call against the building url
+        // vBuilding is the building object returned from the 'view' call to the 
+        // selected building
         scope.getTabs = function(vBuilding, url) {
             //console.log(Body);
             return [
