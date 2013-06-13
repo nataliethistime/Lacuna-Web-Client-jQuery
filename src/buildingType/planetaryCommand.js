@@ -37,12 +37,24 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
         // selected building
         scope.getTabs = function(vBuilding, url) {
             console.log(Body);//debug
+            console.log(vBuilding);//debug
             return [
                 {
                     name: 'Planet',
                     content: Template.read.building_planetary_command_planet_tab({
                         // This will be using a lot of the Body module.
-                        buildings: Body.get.building_count
+                        buildings: Body.get.building_count,
+                        planetSize: Body.get.size,
+                        plotsAvailable: Body.get.plots_available,
+                        population: Library.formatNum(Body.get.population),
+
+                        // Not easy to find a clean way to access this, leaving until further discussion.
+                        nextColonyCost: Library.formatNum(1),
+                        
+                        location: Body.get.x + ', ' + Body.get.y,
+                        zone: Body.get.zone,
+                        star: Body.get.star_name,
+                        orbit: Body.get.orbit
                     })
                 },
                 {

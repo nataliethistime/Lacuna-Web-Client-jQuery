@@ -6,9 +6,9 @@ define(['jquery'], function($) {
             return $('#' + name).length > 0;
         };
 
-        // Converts 123456789 into 123,456,789.
+        // Converts 123456789 into 123, 456, 789.
         this.formatNum = function(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ', ');
         };
 
         // This was stolen straight from the original Lacuna Web Client.

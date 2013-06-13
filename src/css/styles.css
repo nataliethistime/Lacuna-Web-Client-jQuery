@@ -54,7 +54,8 @@ li {
     overflow: hidden;
 }
 
-label {
+label, .fixedWidth {
+    display: inline-block;
     width: 150px;
 }
 
