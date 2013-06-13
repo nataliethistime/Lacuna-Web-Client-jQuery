@@ -36,17 +36,20 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
         // vBuilding is the building object returned from the 'view' call to the 
         // selected building
         scope.getTabs = function(vBuilding, url) {
-            //console.log(Body);
+            console.log(Body);//debug
             return [
                 {
                     name: 'Planet',
                     content: Template.read.building_planetary_command_planet_tab({
                         // This will be using a lot of the Body module.
+                        buildings: Body.get.building_count
                     })
                 },
                 {
                     name: 'Abandon',
-                    content: Template.read.building_planetary_command_abandon_tab(),
+                    content: Template.read.building_planetary_command_abandon_tab({
+                        name: Body.get.name
+                    }),
                     select: scope.setupAbandonTab
                 },
                 {
@@ -75,31 +78,58 @@ define(['jquery', 'lacuna', 'template', 'body'], function($, Lacuna, Template, B
 
         // Add any events that need to be set up for the tabs
         //
-        scope.addEvents = function(vBuilding, url) {
+        this.addEvents = function(vBuilding, url) {
         };
         
-        scope.setupAbandonTab = function() {
-            // Apply the event handlers to the Abandon tab.
+        this.setupAbandonTab = function() {
+            $('#abandonPlanetButton').on('click', scope.abandonPlanet);
         };
 
-        scope.setupRenameTab = function() {
+        this.setupRenameTab = function() {
             // Apply the event handlers to the Rename tab.
         };
 
-        scope.populatePlansTab = function() {
+        this.populatePlansTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        scope.populateResourcesTab = function() {
+        this.populateResourcesTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        scope.populateChainsTab = function() {
+        this.populateChainsTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        scope.populateStorageTab = function() {
+        this.populateStorageTab = function() {
             // Now that I've written this, I'm not sure it's needed.
+        };
+
+        // Function that makes the actual abandon call to the server.
+        this.abandonPlanet = function() {
+            Lacuna.confirm(
+                'Are you sure you want to abandon ' + Body.get.name + '?',
+                'Look out!',
+                function(response) {
+                
+                if (response) {
+                    Lacuna.send({
+                        module: '/body',
+                        method: 'abandon',
+
+                        params: [
+                            Lacuna.getSession(),
+                            Body.get.id
+                        ],
+
+                        success: function(o) {
+                            // TODO
+                        }
+
+                    });
+                }
+
+            });
         };
     }
 

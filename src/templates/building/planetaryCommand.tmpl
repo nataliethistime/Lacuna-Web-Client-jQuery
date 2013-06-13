@@ -1,16 +1,49 @@
 <script id="building_planetary_command_planet_tab">
 <![CDATA[
-  hiya Vas!
+    
+    <ul class="noDot">
+        <li><label>Buildings:</label><%= buildings %></li>
+    </ul>
+
+    <!-- The following is the html from the web client
+
+    <div class="yui-g buildingDetailsExtra">
+        <div class="yui-u first">
+            <ul>
+                <li><span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/food.png" title="Food" class="smallFood"></span>                <span class="pcStored">35787395390</span><span class="pcSlash">/</span><span class="pcCapacity">35787395390</span> @ <span class="pcPerHour">1.5B</span>/hr</li>
+                <li><span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/ore.png" title="Ore" class="smallOre"></span>                <span class="pcStored">35787395390</span><span class="pcSlash">/</span><span class="pcCapacity">35787395390</span> @ <span class="pcPerHour">4.7B</span>/hr</li>
+                <li><span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/water.png" title="Water" class="smallWater"></span>                <span class="pcStored">35787395390</span><span class="pcSlash">/</span><span class="pcCapacity">35787395390</span> @ <span class="pcPerHour">1.6B</span>/hr</li>
+                <li><span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/energy.png" title="Energy" class="smallEnergy"></span>                <span class="pcStored">35787395390</span><span class="pcSlash">/</span><span class="pcCapacity">35787395390</span> @ <span class="pcPerHour">1.7B</span>/hr</li>
+                <li><span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/waste.png" title="Waste" class="smallWaste"></span>                <span class="pcStored">35939251382</span><span class="pcSlash">/</span><span class="pcCapacity">35939251382</span> @ <span class="pcPerHour">57.8M</span>/hr</li>
+                <li><span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/happiness.png" title="Happiness" class="smallHappy"></span>                <span class="pcStored">259252179173340</span><span class="pcSlash">&nbsp;</span><span class="pcCapacity">&nbsp;</span> @ <span class="pcPerHour">46.1B</span>/hr</li>
+            </ul>
+        </div>
+        <div class="yui-u first">
+            <ul class="buildingDetailsPC">
+                <li><label>Buildings:</label>104</li>
+                <li><label>Planet Size:</label>120</li>
+                <li><label>Plots Available:</label>16</li>
+                <li><label>Population:</label>23,710,000</li>
+                <li><label>Next Colony Cost:</label>797,664,430,769<span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/happiness.png"></span></li>
+                <li><label>Location:</label>564x : -1202y</li>
+                <li><label>Zone:</label>2|-4</li>
+                <li><label>Star:</label>S.M.A. PAW2 45</li>
+                <li><label>Orbit:</label>5</li>
+            </ul>
+        </div>
+    </div>
+
+-->
 ]]>
 </script>
 
 <script id="building_planetary_command_abandon_tab">
 <![CDATA[
-	<button type="button" id="abandonPlanetButton">Abadon <% name %>!</button>
+	<button type="button" id="abandonPlanetButton">Abadon <%= name %>!</button>
 ]]>
 </script>
 
 <script id="building_planetary_command_rename_tab">
 <![CDATA[
-  yay Vas!
+    yay Vas!
 ]]>
