@@ -19,7 +19,17 @@ define(['require', 'jquery', 'underscore', 'buildings', 'lacuna'], function(requ
             // 'new_body' can either be the 'body' from the get_buildings call (only surface_image is returned)
             // or the complete body details.
             //
-            if ( new_body.id && ! _.isEqual(scope.get, new_body)) {
+
+            if (new_body.surface_image && new_body.surface_image != scope.surface_image) {
+                scope.surface_image = new_body.surface_image;
+                backgroundCallbacks.fire(scope.surface_image);
+            }
+
+            // Use _.extend to merge the objects together, making the new body take priority 
+            // over the old one. 
+            new_body = _.extend(scope.get || {}, new_body);
+
+            if (new_body.id) {
                 var refresh_buildings = 0;
                 if ( ! scope.get || scope.get.surface_version != new_body.surface_version) {
                     refresh_buildings = 1;
@@ -30,10 +40,6 @@ define(['require', 'jquery', 'underscore', 'buildings', 'lacuna'], function(requ
                 if (refresh_buildings) {
                     scope.get_buildings(new_body.id);
                 }
-            }
-            if (new_body.surface_image && new_body.surface_image != scope.surface_image) {
-                scope.surface_image = new_body.surface_image;
-                backgroundCallbacks.fire(scope.surface_image);
             }
         };
 
