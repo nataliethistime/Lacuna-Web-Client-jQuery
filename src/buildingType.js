@@ -93,7 +93,13 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 tabs = tabs.concat([repairTab]);
             }
             else {
-                var extraTabs = buildingType.getTabs(vBuilding, url);
+
+                // Add vBuilding to the building's scope.
+                buildingType.building = vBuilding;
+
+                // Then call it.
+                var extraTabs = buildingType.getTabs.call(buildingType, vBuilding, url);
+
                 if (extraTabs.length) {
                     tabs = tabs.concat(extraTabs);
                 }

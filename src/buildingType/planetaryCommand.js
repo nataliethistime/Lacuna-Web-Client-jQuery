@@ -36,8 +36,7 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
         // vBuilding is the building object returned from the 'view' call to the 
         // selected building
         scope.getTabs = function(vBuilding, url) {
-            console.log(Body);//debug
-            console.log(vBuilding);//debug
+            console.log(this);//debug
             return [
                 {
                     name: 'Planet',
@@ -93,16 +92,34 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
         this.addEvents = function(vBuilding, url) {
         };
         
-        this.setupAbandonTab = function() {
+        this.setupAbandonTab = function(tab) {
             $('#abandonPlanetButton').on('click', scope.abandonPlanet);
         };
 
-        this.setupRenameTab = function() {
+        this.setupRenameTab = function(tab) {
             $('#renamePlanetButton').on('click', scope.renamePlanet);
         };
 
-        this.populatePlansTab = function() {
-            // Makes server request, populates items into the tab.
+        this.populatePlansTab = function(tab) {
+            Lacuna.send({
+                module: '/planetarycommand',
+                method: 'view_plans',
+
+                params: [
+                    Lacuna.getSession(),
+                    scope.building.id
+                ],
+
+                success: function(o) {
+                    if (o.result.plans.length) {
+                        tab.add(JSON.stringify(o.result.plans));
+                    }
+                    else {
+                        tab.add(Template.read.building_planetary_command_plans_none());
+                    }
+                }
+
+            });
         };
 
         this.populateResourcesTab = function() {
