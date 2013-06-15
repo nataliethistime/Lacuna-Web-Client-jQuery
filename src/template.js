@@ -14,7 +14,7 @@ define(['jquery', 'underscore'], function($, _) {
                 if ( ! _.isUndefined(scope.file[file])) {
                     return;
                 }
-                var url = 'src/templates/' + file + '.tmpl';
+                var url = 'templates/' + file + '.tmpl';
                 $.ajax({
                     url     : url,
                     async   : false,
