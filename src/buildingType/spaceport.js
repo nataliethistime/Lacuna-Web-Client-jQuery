@@ -23,6 +23,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                         content.push(Template.read.building_space_port_no_ships({}));
                     }
                     else {
+                        content.push(Template.read.building_space_port_view_toolbar({}));
                         _.each(o.result.fleets, function(fleet) {
                             content.push(Template.read.building_space_port_view_item({
                                 assetsUrl   : window.assetsUrl,
@@ -39,12 +40,13 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
 
         // Get the various tabs
         scope.getTabs = function(vBuilding, url) {
-            scope.viewAllFleets(vBuilding, url);
-
             return [
                 {
                     name    : 'Fleets',
-                    content : Template.read.building_space_port_view_list({})
+                    content : Template.read.building_space_port_view_list({}),
+                    select  : function(e) {
+                        scope.viewAllFleets(vBuilding, url);
+                    }
                 }
             ];
         };

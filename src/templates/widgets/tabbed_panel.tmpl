@@ -1,0 +1,28 @@
+<script id="widget_tabbed_panel">
+<![CDATA[
+<div id="<%= dom_name %>_Panel" title="<%= panel_name %>" style="z-index:1001;">
+  <%= pre_tab_content %>
+  <div id="<%= dom_name %>_Tab">
+    <ul>
+      <%= tab_top %>
+    </ul>
+    <%= tab_bottom %>
+  </div>
+</div>
+]]>
+</script>
+
+<script id="widget_tabbed_panel_tab_top">
+<![CDATA[
+      <li><a href="#<%= dom_name %>_Tab-<%= tab_id %>"><span><%= tab_name %></span></a></li>
+]]>
+</script>
+
+<script id="widget_tabbed_panel_tab_bottom">
+<![CDATA[
+    <div id="<%= dom_name %>_Tab-<%= tab_id %>">
+      <%= tab_content %>
+    </div>
+]]>
+</script>
+
