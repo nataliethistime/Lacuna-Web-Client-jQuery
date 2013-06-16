@@ -22,7 +22,7 @@
     </div>
     <div class="fleet_view_summary">
       <input type="hidden" value="<%= fleet.id %>" />
-      <span class="fleet_name"><%= fleet.details.name %>:</span>
+      <span class="fleet_name"><%= fleet.details.name %>: qty (<%= fleet.quantity %>)</span>
       <span class="fleet_name_input hidden">
         <input class="fleet_new_name" type="text" style="width:120px" class="input_tiny" value="<%= fleet.details.name %>">
         <input class="fleet_rename_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>"><br/>
@@ -76,7 +76,7 @@
 ]]>
 </script>
 
-<script id="building_space_port_no_ships">
+<script id="building_space_port_no_fleets">
 <![CDATA[
 <li style="margin-top: 3px;">
   <span class="center">You have no ships on this planet.</span>
@@ -84,10 +84,35 @@
 ]]>
 </script>
 
-<script id="building_space_port_view_list">
+<script id="building_space_port_no_available_fleets">
 <![CDATA[
-<ul id="fleet_view_details">
+<li style="margin-top: 3px;">
+  <span class="center">You have no ships available to send.</span>
+</li>
+]]>
+</script>
+
+
+<script id="building_space_port_view_tab">
+<![CDATA[
+<ul id="fleet_view_details" class="building_space_port_tab">
 </ul>
 ]]>
 </script>
+
+<script id="building_space_port_foreign_tab">
+<![CDATA[
+<ul id="fleet_foreign_details">
+</ul>
+]]>
+</script>
+
+<script id="building_space_port_send_tab">
+<![CDATA[
+<%= widget_fleet_send %>
+<ul id="fleet_send_details" class="building_space_port_tab">
+</ul>
+]]>
+</script>
+
 

@@ -13,7 +13,7 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
         var sessionId = 0;
 
         // Helper function for the below confirm() and alert().
-        this.dialog = function(args) {
+        scope.dialog = function(args) {
             $(document.createElement('div')).dialog({
                 title: args.title || 'Woopsie!',
                 modal: args.modal || true, // Make the background dark.
@@ -41,15 +41,15 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
             });
         };
  
-        this.alert = function(text, title) {
-            this.dialog({
+        scope.alert = function(text, title) {
+            scope.dialog({
                 text: text,
                 title: title
             });
         };
  
-        this.confirm = function(text, title, callback) {
-            this.dialog({
+        scope.confirm = function(text, title, callback) {
+            scope.dialog({
                 text: text,
                 title: title,
                 buttons: [{
@@ -71,10 +71,10 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
         // Posts a debug message if debug mode is switched on,
         // either via the URL parameter or window.debug
         // declared in index.html.
-        this.debugMode = (window.debug || window.location.toString().search('debug') > 0);
-        this.debug = function(message) {
+        scope.debugMode = (window.debug || window.location.toString().search('debug') > 0);
+        scope.debug = function(message) {
             // Check if debug mode is on.
-            if (this.debugMode) {
+            if (scope.debugMode) {
                 console.log('DEBUG: ' + message);
             }
         };
@@ -89,12 +89,14 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
         //     params: [
         //         '$stuff'
         //     ],
-        //     success: function(receivedData){},
-        //     failure: function(receivedError){}
+        //     success  : function(receivedData){},
+        //     error    : function(receivedError){}, // Optional
+        //     complete : function(receivedStatus){} // Optional
+        //
         // }
-        this.send = function(args) {
+        scope.send = function(args) {
             // Show the Blue "loading" animation.
-            this.showPulser();
+            scope.showPulser();
             var data = JSON.stringify({
                 'jsonrpc'   : '2.0',
                 'id'        : 1,
@@ -102,7 +104,7 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                 'params'    : args.params
             });
 
-            this.debug('Sending to server: ' + data);
+            scope.debug('Sending to server: ' + data);
             var url = window.url;
             url = url.substring(0, url.length - 1) + args.module;
             $.ajax({
@@ -174,42 +176,47 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                         //});
                     }
                     else {
-                        // Call the failure function, or alert the human readable error message.
-                        if (typeof(args.failure) === 'function') {
-                            args.failure(error);
+                        // Call the error function, or alert the human readable error message.
+                        if (typeof(args.error) === 'function') {
+                            args.error(error);
                         }
                         else {
                             scope.alert(error.message);
                         }
+                    }
+                },
+                complete: function(jqXHR, textStatus) {
+                    if (typeof(args.complete) === 'function') {
+                        args.complete(textStatus);
                     }
                 }
             });
         };
 
         // Utility functions/helpers.
-        this.getSession = function() {
+        scope.getSession = function() {
             return sessionId || '';
         };
-        this.setSession = function(session) {
+        scope.setSession = function(session) {
             sessionId = session;
         };
-        this.getCurrentPlanet = function() {
+        scope.getCurrentPlanet = function() {
             return require("body").get.id || '';
         };
 
-        this.showPulser = function() {
+        scope.showPulser = function() {
             $('#pulser').css('visibility', 'visible');
         };
-        this.hidePulser = function() {
+        scope.hidePulser = function() {
             $('#pulser').css('visibility', 'hidden');
         };
 
         // Resources
-        this.getBuildingDesc = function(url) {
+        scope.getBuildingDesc = function(url) {
             return [
-                this.Resources.buildings[url].description || '',
+                scope.Resources.buildings[url].description || '',
                 '<br />',
-                '<a href="', this.Resources.buildings[url].wiki, '" target="_blank">',
+                '<a href="', scope.Resources.buildings[url].wiki, '" target="_blank">',
                 ' More information on the Wiki.',
                 '</a>'
             ].join('');

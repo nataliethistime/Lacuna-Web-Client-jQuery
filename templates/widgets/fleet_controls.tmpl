@@ -1,0 +1,26 @@
+<script id="widget_fleet_send">
+<![CDATA[
+<div id="fleet_send_control">
+  <span>Send To</span>
+  <span>
+    <select id="send_fleet_target_type">
+      <option value="body_name">Planet Name</option>
+      <option value="body_id">Planet ID</option>
+      <option value="star_name">Star Name</option>
+      <option value="star_id">Star ID</option>
+      <option value="xy">X,Y</option>
+      <option value="bookmark">Bookmark</option>
+    </select>
+  </span>
+  <span id="send_fleet_select_text">
+    <input type="text" id="send_fleet_target_text" style="width:75px;">
+  </span>
+  <span id="send_fleet_select_xy" class="hidden">
+    X: <input type="text" id="send_fleet_target_x" style="width:25px;">
+    Y: <input type="text" id="send_fleet_target_y" style="width:25px;">
+  </span>
+  <span><button type="button" id="send_available_fleet_button">Get available fleets for target</button></span>
+</div>
+]]>
+</script>
+

@@ -74,9 +74,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
         //
         this.createTabs = function(tabs, vBuilding, url, buildingType) {
 
-            // Replace out the ' in "Gratch's Gauntlet" and the '[' in Beach plans
-            // I am not convinced this is the best way of doing this.
-            var panelName = vBuilding.name.replace(/\W/g," ") + ' ' + vBuilding.level;
+            var panelName = vBuilding.name + ' ' + vBuilding.level;            
             if (vBuilding.efficiency < 100) {
                 var repairTab = {
                     name    : 'Repair',
