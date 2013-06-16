@@ -5,6 +5,35 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
     function SpacePort() {
         var scope = this;
 
+        // Get the various tabs
+        scope.getTabs = function(vBuilding, url) {
+            return [
+                {
+                    name    : 'Fleets',
+                    content : Template.read.building_space_port_view_tab({}),
+                    select  : function(e) {
+                        scope.viewAllFleets(vBuilding, url);
+                    }
+                },
+                {
+                    name    : 'Send',
+                    content : Template.read.building_space_port_send_tab({
+                        widget_fleet_send   : Template.read.widget_fleet_send({}),
+                    }),
+                    select  : function(e) {
+                        scope.addEvents(vBuilding, url);
+                    }
+                },
+                {
+                    name    : 'Foreign',
+                    content : Template.read.building_space_port_foreign_tab({}),
+                    select  : function(e) {
+                        scope.addEvents(vBuilding, url);
+                    }
+                },
+            ];
+        };
+
         // request view_all_fleets and update the tab with the result
         scope.viewAllFleets = function(vBuilding, url) {
             Lacuna.send({
@@ -36,56 +65,6 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     scope.addEvents(vBuilding, url);
                 }
             });
-        };
-
-        // Add the view for 'send fleets' tab
-        scope.viewSendFleets = function(vBuilding, url) {
-            // Add events for send-to controls
-            var $fleet_send_details = $('#fleet_send_details');
-            var $fleet_send_control = $('#fleet_send_control');
-            $('#send_fleet_target_type').on('change', 
-                {vBuilding : vBuilding, url : url}, 
-                function(e) {
-                    var $this = $(this);
-                    if ($this.val() == 'xy') {
-                        $('#send_fleet_select_xy').removeClass('hidden');
-                        $('#send_fleet_select_text').addClass('hidden');
-                    }
-                    else {
-                        $('#send_fleet_select_xy').addClass('hidden');
-                        $('#send_fleet_select_text').removeClass('hidden');
-                    }
-                }
-            );
-            scope.addEvents(vBuilding, url);
-        };
-
-        // Get the various tabs
-        scope.getTabs = function(vBuilding, url) {
-            return [
-                {
-                    name    : 'Fleets',
-                    content : Template.read.building_space_port_view_tab({}),
-                    select  : function(e) {
-                        scope.viewAllFleets(vBuilding, url);
-                    }
-                },
-                {
-                    name    : 'Send',
-                    content : Template.read.building_space_port_send_tab({
-                        widget_fleet_send   : Template.read.widget_fleet_send({}),
-                    }),
-                    select  : function(e) {
-                        scope.viewSendFleets(vBuilding, url);
-                    }
-                },
-                {
-                    name    : 'Foreign',
-                    content : Template.read.building_space_port_foreign_tab({})
-                },
-
-
-            ];
         };
 
         // **** Event handlers ****
@@ -287,6 +266,19 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 domObj      : $tab_parent
                 }, scope.eventGetAvailableFleet);
 
+            $tab_parent.on('change', '#send_fleet_target_type', function(e) {
+                    var $this = $(this);
+                    if ($this.val() == 'xy') {
+                        $('#send_fleet_select_xy').removeClass('hidden');
+                        $('#send_fleet_select_text').addClass('hidden');
+                    }
+                    else {
+                        $('#send_fleet_select_xy').addClass('hidden');
+                        $('#send_fleet_select_text').removeClass('hidden');
+                    }
+                }
+            );
+ 
             scope.eventsAdded = 1;
         };
     }
