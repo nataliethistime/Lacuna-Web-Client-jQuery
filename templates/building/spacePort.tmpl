@@ -56,7 +56,11 @@
       <input class="fleet_scuttle_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>">
       <button class="fleet_scuttle_button" type="button">Scuttle</button>
 <% } %>
-
+<% if (fleet.earliest_arrival) { %>
+      <span>Earliest Arrival: <%= fleet.earliest_arrival.day %>:<%= fleet.earliest_arrival.hour %>:<%= fleet.earliest_arrival.minute %>:<%= fleet.earliest_arrival.second %></span>
+      <input class="fleet_send_quantity" type="text" style="width:25px" class="input_tiny" value="<%= fleet.quantity %>">
+      <button class="fleet_send_button" type="button">Send</button>
+<% } %>
     </div>
     <div class="fleet_view_summary">
        <ul class="leaders">
