@@ -36,34 +36,33 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
 
         // request view_all_fleets and update the tab with the result
         scope.viewAllFleets = function(vBuilding, url) {
-            Lacuna.send({
-                module: url,
-                method: 'view_all_fleets',
-
-                params: [{
+            var deferredViewAllFleets = Lacuna.send({
+                module  : url,
+                method  : 'view_all_fleets',
+                params  : [{
                     session_id      : Lacuna.getSession(),
                     building_id     : vBuilding.id,
-                }],
-                success: function(o) {
+                }]
+            });
+        
+            deferredViewAllFleets.done(function(o) {
+                var content = [];
 
-                    var content = [];
-
-                    if (o.result.number_of_fleets <= 0) {
-                        content.push(Template.read.building_space_port_no_fleets({}));
-                    }
-                    else {
-                        content.push(Template.read.building_space_port_view_toolbar({}));
-                        _.each(o.result.fleets, function(fleet) {
-                            content.push(Template.read.building_space_port_view_item({
-                                assetsUrl   : window.assetsUrl,
-                                fleet       : fleet,
-                                Library     : Library
-                            }));
-                        });
-                    }
-                    $("#fleet_view_details").html(content.join(''));
-                    scope.addEvents(vBuilding, url);
+                if (o.result.number_of_fleets <= 0) {
+                    content.push(Template.read.building_space_port_no_fleets({}));
                 }
+                else {
+                    content.push(Template.read.building_space_port_view_toolbar({}));
+                    _.each(o.result.fleets, function(fleet) {
+                        content.push(Template.read.building_space_port_view_item({
+                            assetsUrl   : window.assetsUrl,
+                            fleet       : fleet,
+                            Library     : Library
+                        }));
+                    });
+                }
+                $("#fleet_view_details").html(content.join(''));
+                scope.addEvents(vBuilding, url);
             });
         };
 
@@ -91,28 +90,28 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
             var fleetId     = $parent.parent().children().first().val();
             var fleetName   = $parent.children('.fleet_new_name').first().val();
             var fleetQty    = $parent.children('.fleet_rename_quantity').first().val();
-            Lacuna.send({
-                module: e.data.url,
-                method: 'rename_fleet',
-
-                params: [{
+            var deferredRenameFleet = Lacuna.send({
+                module  : e.data.url,
+                method  : 'rename_fleet',
+                params  : [{
                     session_id      : Lacuna.getSession(),
                     building_id     : e.data.vBuilding.id,
                     fleet_id        : fleetId,
                     name            : fleetName,
                     quantity        : fleetQty
-                }],
-                success     : function(o) {
-                    scope.viewAllFleets(e.data.vBuilding, e.data.url);
-                },
-                complete    : function(status) {
-                    // re-enable the event handler
-                    e.data.domObj.one('click', '.fleet_name_rename_button', {
-                        vBuilding   : e.data.vBuilding,
-                        url         : e.data.url,
-                        domObj      : e.data.domObj
-                        }, scope.eventFleetRenameConfirm);
-                }
+                }]
+            });
+            deferredRenameFleet.done(function(o) {
+                scope.viewAllFleets(e.data.vBuilding, e.data.url);
+            });
+            deferredRenameFleet.always(function(status) {
+                // re-enable the event handler
+                e.data.domObj.one('click', '.fleet_name_rename_button', {
+                    vBuilding   : e.data.vBuilding,
+                    url         : e.data.url,
+                    domObj      : e.data.domObj
+                    }, scope.eventFleetRenameConfirm
+                );
             });    
         };
         // Scuttle a number of ships from a fleet
@@ -121,27 +120,28 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
             var $parent     = $this.parent();
             var fleetId     = $parent.children().first().val();
             var fleetQty    = $parent.children('.fleet_scuttle_quantity').first().val();
-            Lacuna.send({
+            var deferredScuttleFleet = Lacuna.send({
                 module  : e.data.url,
                 method  : 'scuttle_fleet',
-
                 params  : [{
                     session_id      : Lacuna.getSession(),
                     building_id     : e.data.vBuilding.id,
                     fleet_id        : fleetId,
                     quantity        : fleetQty
-                }],
-                success     : function(o) {
-                    scope.viewAllFleets(e.data.vBuilding, e.data.url);
-                },
-                complete    : function(status) {
-                    // re-enable the event handler
-                    e.data.domObj.one('click', '.fleet_scuttle_button', {
-                        vBuilding   : e.data.vBuilding,
-                        url         : e.data.url,
-                        domObj      : e.data.domObj
-                        }, scope.eventFleetScuttle);
-                }
+                }]
+            });
+
+            deferredScuttleFleet.done(function(o) {
+                scope.viewAllFleets(e.data.vBuilding, e.data.url);
+            });
+            deferredScuttleFleet.always(function(status) {
+                // re-enable the event handler
+                e.data.domObj.one('click', '.fleet_scuttle_button', {
+                    vBuilding   : e.data.vBuilding,
+                    url         : e.data.url,
+                    domObj      : e.data.domObj
+                    }, scope.eventFleetScuttle
+                );
             });
         };
         // Recall a number of ships from a fleet
@@ -150,27 +150,27 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
             var $parent     = $this.parent();
             var fleetId     = $parent.children().first().val();
             var fleetQty    = $parent.children('.fleet_recall_quantity').first().val();
-            Lacuna.send({
+            var deferredRecallFleet = Lacuna.send({
                 module  : e.data.url,
                 method  : 'recall_fleet',
-
                 params  : [{
                     session_id      : Lacuna.getSession(),
                     building_id     : e.data.vBuilding.id,
                     fleet_id        : fleetId,
                     quantity        : fleetQty
-                }],
-                success     : function(o) {
-                    scope.viewAllFleets(e.data.vBuilding, e.data.url);
-                },
-                complete    : function(status) {
-                    // re-enable the event handler
-                    e.data.domObj.one('click', '.fleet_recall_button', {
-                        vBuilding   : e.data.vBuilding,
-                        url         : e.data.url,
-                        domObj      : e.data.domObj
-                        }, scope.eventFleetRecall);
-                }
+                }]
+            });
+            deferredRecallFleet.done(function(o) {
+                scope.viewAllFleets(e.data.vBuilding, e.data.url);
+            });
+            deferredRecallFleet.always(function(status) {
+                // re-enable the event handler
+                e.data.domObj.one('click', '.fleet_recall_button', {
+                    vBuilding   : e.data.vBuilding,
+                    url         : e.data.url,
+                    domObj      : e.data.domObj
+                    }, scope.eventFleetRecall
+                );
             });
         };
         // Get available fleets for a target.
@@ -187,44 +187,45 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 target[targetType] = $('#send_fleet_target_text').val();
             }
     
-            Lacuna.send({
+            var deferredViewAvailableFleets = Lacuna.send({
                 module  : e.data.url,
                 method  : 'view_available_fleets',
-
-                params: [{
+                params  : [{
                     session_id      : Lacuna.getSession(),
                     body_id         : e.data.vBuilding.body_id,
                     target          : target
 //                  filter          : {},
 //                  sort            : {}
-                }],
-                success     : function(o) {
-                    var content = [];
-                    if (! o.result.available || o.result.available.length <= 0) {
-                        content.push(Template.read.building_space_port_no_available_fleets({}));
-                    }
-                    else {
-                        content.push(Template.read.building_space_port_view_toolbar({}));
-                        _.each(o.result.available, function(fleet) {
-                            content.push(Template.read.building_space_port_view_item({
-                                assetsUrl   : window.assetsUrl,
-                                fleet       : fleet,
-                                Library     : Library
-                            }));
-                        });
-                    }
-                    $("#fleet_send_details").html(content.join(''));
-                },
-                error       : function(error) {
-                    $("#fleet_send_details").html(error.message);
-                },
-                complete    : function(status) {
-                    e.data.domObj.one('click', '#send_available_fleet_button', {
-                        vBuilding   : e.data.vBuilding,
-                        url         : e.data.url,
-                        domObj      : e.data.domObj
-                        }, scope.eventGetAvailableFleet);
+                }]
+            });
+
+            deferredViewAvailableFleets.done(function(o) {
+                var content = [];
+                if (! o.result.available || o.result.available.length <= 0) {
+                    content.push(Template.read.building_space_port_no_available_fleets({}));
                 }
+                else {
+                    content.push(Template.read.building_space_port_view_toolbar({}));
+                    _.each(o.result.available, function(fleet) {
+                        content.push(Template.read.building_space_port_view_item({
+                            assetsUrl   : window.assetsUrl,
+                            fleet       : fleet,
+                            Library     : Library
+                        }));
+                    });
+                }
+                $("#fleet_send_details").html(content.join(''));
+            });
+            deferredViewAvailableFleets.fail(function(error) {
+                $("#fleet_send_details").html(error.message);
+            });
+            deferredViewAvailableFleets.always(function(status) {
+                e.data.domObj.one('click', '#send_available_fleet_button', {
+                    vBuilding   : e.data.vBuilding,
+                    url         : e.data.url,
+                    domObj      : e.data.domObj
+                    }, scope.eventGetAvailableFleet
+                );
             });
         };
 

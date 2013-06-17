@@ -89,101 +89,92 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
 
         // Add any events that need to be set up for the tabs
         //
-        this.addEvents = function(vBuilding, url) {
+        scope.addEvents = function(vBuilding, url) {
         };
         
-        this.setupAbandonTab = function(tab) {
+        scope.setupAbandonTab = function(tab) {
             $('#abandonPlanetButton').on('click', scope.abandonPlanet);
         };
 
-        this.setupRenameTab = function(tab) {
+        scope.setupRenameTab = function(tab) {
             $('#renamePlanetButton').on('click', scope.renamePlanet);
         };
 
-        this.populatePlansTab = function(tab) {
-            Lacuna.send({
-                module: '/planetarycommand',
-                method: 'view_plans',
-
-                params: [
+        scope.populatePlansTab = function(tab) {
+            var deferredViewPlans = Lacuna.send({
+                module  : '/planetarycommand',
+                method  : 'view_plans',
+                params  : [
                     Lacuna.getSession(),
                     scope.building.id
-                ],
-
-                success: function(o) {
-                    if (o.result.plans.length) {
-                        tab.add(JSON.stringify(o.result.plans));
-                    }
-                    else {
-                        tab.add(Template.read.building_planetary_command_plans_none());
-                    }
+                ]
+            });
+            deferredViewPlans.done(function(o) {
+                if (o.result.plans.length) {
+                    tab.add(JSON.stringify(o.result.plans));
                 }
-
+                else {
+                    tab.add(Template.read.building_planetary_command_plans_none());
+                }
             });
         };
 
-        this.populateResourcesTab = function() {
+        scope.populateResourcesTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        this.populateChainsTab = function() {
+        scope.populateChainsTab = function() {
             // Makes server request, populates items into the tab.
         };
 
-        this.populateStorageTab = function() {
+        scope.populateStorageTab = function() {
             // Now that I've written this, I'm not sure it's needed.
         };
 
         // Function that makes the actual abandon call to the server.
-        this.abandonPlanet = function() {
+        scope.abandonPlanet = function() {
             Lacuna.confirm(
                 'Are you sure you want to abandon ' + Body.get.name + '?',
                 'Look out!',
                 function(response) {
                 
                 if (response) {
-                    Lacuna.send({
-                        module: '/body',
-                        method: 'abandon',
-
-                        params: [
+                    var deferredAbandon = Lacuna.send({
+                        module  : '/body',
+                        method  : 'abandon',
+                        params  : [
                             Lacuna.getSession(),
                             Body.get.id
-                        ],
-
-                        success: function(o) {
-                            // TODO
-                        }
-
+                        ]
+                    });
+                    deferredAbandon.done(function(o) {
+                        // TODO
                     });
                 }
 
             });
         };
 
-        this.renamePlanet = function() {
+        scope.renamePlanet = function() {
 
             var newName = $('#renamePlanetInput').val();
 
             if (newName) {
-                Lacuna.send({
-                    module: '/body',
-                    method: 'rename',
-
-                    params: [
+                var deferredRename = Lacuna.send({
+                    module  : '/body',
+                    method  : 'rename',
+                    params  : [
                         Lacuna.getSession(),
                         Body.get.id,
                         newName
-                    ],
-
-                    success: function(o) {
-                        if (o.result) {
-                            Body.update({
-                                name: newName
-                            });
-                        }
+                    ]
+                });
+                deferredRename.done(function(o) {
+                    if (o.result) {
+                        Body.update({
+                            name: newName
+                        });
                     }
-
                 });
             }
         };

@@ -27,35 +27,31 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
             });
             $('#menu_logout').on({
                 click: function(e) {
-                    Lacuna.send({
-                        module: '/empire',
-                        method: 'logout',
-
-                        params: [
+                    var deferred = Lacuna.send({
+                        module  : '/empire',
+                        method  : 'logout',
+                        params  : [
                             Lacuna.getSession()
-                        ],
-
-                        success: function(o) {
-                            Lacuna.hidePulser();
+                        ]
+                    });
+                    deferred.done(function(o) {
+                        // Remove the session cookie.
+                        $.cookie.destroy('lacuna-expanse-session');
                             
-                            // Remove the session cookie.
-                            $.cookie.destroy('lacuna-expanse-session');
-                            
-                            // Delete all the status data to avoid "confusion."
-                            delete Lacuna.status;
+                        // Delete all the status data to avoid "confusion."
+                        delete Lacuna.status;
 
-                            // Clear all the buildings data.
-                            Buildings.buildings = {};
-                            MapPlanet.renderPlanet();
+                        // Clear all the buildings data.
+                        Buildings.buildings = {};
+                        MapPlanet.renderPlanet();
 
-                            // Kill everything in the queue.
-                            Queue.killall();
+                        // Kill everything in the queue.
+                        Queue.killall();
 
-                            $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'hidden');
-                            $('#starsParent').css('visibility', 'visible');
+                        $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'hidden');
+                        $('#starsParent').css('visibility', 'visible');
 
-                            Login.start();
-                        }
+                        Login.start();
                     });
                 }
             });

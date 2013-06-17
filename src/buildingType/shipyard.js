@@ -22,32 +22,29 @@ define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
         };
 
         scope.getQueueTab = function(tab) {
-            Lacuna.send({
-                module: url,
-                method: 'view_build_queue',
-
-                // Note: this is the 'named argument' call which only works on fleet-action code.
-                params: [{
+            var deferredViewBuildQueue = Lacuna.send({
+                module  : url,
+                method  : 'view_build_queue',
+                params  : [{
                     session_id      : Lacuna.getSession(),
                     building_id     : scope.building.id,
                     no_paging       : 1
-                }],
-                success: function(o) {
+                }]
+            });
+            deferredViewBuildQueue.done(function(o) {
+                var content = [];
 
-                    var content = [];
-
-                    if (o.result.number_of_fleets_building > 0) {
-                        // Add ships to queue and post to DOM.
-                        _.each(o.result.ships_building, function(shipBuilding) {
-                            content[content.length] = Template.read.building_shipyard_build_ship_item({
-                                // TODO
-                            });
+                if (o.result.number_of_fleets_building > 0) {
+                    // Add ships to queue and post to DOM.
+                    _.each(o.result.ships_building, function(shipBuilding) {
+                        content[content.length] = Template.read.building_shipyard_build_ship_item({
+                            // TODO
                         });
-                    }
-                    else {
-                        // No ships are currently building.
-                        tab.add('<span class="center">No ships are currently building at this Shipyard.</span>');
-                    }
+                    });
+                }
+                else {
+                    // No ships are currently building.
+                    tab.add('<span class="center">No ships are currently building at this Shipyard.</span>');
                 }
             });
         };

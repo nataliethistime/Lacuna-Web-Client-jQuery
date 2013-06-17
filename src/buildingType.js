@@ -26,45 +26,45 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
         var modules = new Array();
 
         // View the building Dialog
-        this.view = function(pBuilding) {
+        scope.view = function(pBuilding) {
 
-            Lacuna.send({
-                module: pBuilding.url,
-                method: 'view',
-                params: [
+            var deferredView = Lacuna.send({
+                module  : pBuilding.url,
+                method  : 'view',
+                params  : [
                     Lacuna.getSession(),
                     pBuilding.id
-                ],
+                ]
+            });
 
-                success: function(o) {
-                    var vBuilding   = o.result.building;
-                    var url         = pBuilding.url;
-                    var tabs = [{
-                        name    : 'Production',
-                        content : scope.getProductionTab(vBuilding)
-                    }];
+            deferredView.done(function(o) {
+                var vBuilding   = o.result.building;
+                var url         = pBuilding.url;
+                var tabs = [{
+                    name    : 'Production',
+                    content : scope.getProductionTab(vBuilding)
+                }];
 
-                    // Remove the leading slash from the url to get the building 'type'.
-                    var building_type = url.replace('/', '');
+                // Remove the leading slash from the url to get the building 'type'.
+                var building_type = url.replace('/', '');
 
-                    if (modules[building_type]) {
-                        scope.createTabs(tabs, vBuilding, url, modules[building_type]);
+                if (modules[building_type]) {
+                    scope.createTabs(tabs, vBuilding, url, modules[building_type]);
+                }
+                else {
+                    if (moduleTypes[building_type]) {
+                        // it is a building type with it's own handler code
+                        require(['buildingType/'+moduleTypes[building_type]], function(buildingType) {
+                            // We only have to load it once, then we can use the cached value
+                            // for convenience, put the url in the buildingType
+                            modules[building_type] = buildingType;
+                            scope.createTabs(tabs, vBuilding, url, modules[building_type]);
+                        });
                     }
                     else {
-                        if (moduleTypes[building_type]) {
-                            // it is a building type with it's own handler code
-                            require(['buildingType/'+moduleTypes[building_type]], function(buildingType) {
-                                // We only have to load it once, then we can use the cached value
-                                // for convenience, put the url in the buildingType
-                                modules[building_type] = buildingType;
-                                scope.createTabs(tabs, vBuilding, url, modules[building_type]);
-                            });
-                        }
-                        else {
-                            // it is a 'generic' building with no special handlers
-                            modules[building_type] = DefaultBuildingType;
-                            scope.createTabs(tabs, vBuilding, url, modules[building_type]);
-                        }
+                        // it is a 'generic' building with no special handlers
+                        modules[building_type] = DefaultBuildingType;
+                        scope.createTabs(tabs, vBuilding, url, modules[building_type]);
                     }
                 }
             });
@@ -72,7 +72,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
 
         // Add any building specific tabs, output the building Dialog box
         //
-        this.createTabs = function(tabs, vBuilding, url, buildingType) {
+        scope.createTabs = function(tabs, vBuilding, url, buildingType) {
 
             var panelName = vBuilding.name + ' ' + vBuilding.level;            
             if (vBuilding.efficiency < 100) {
@@ -117,7 +117,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                         url         : url,
                         panel       : panel
                     },
-                    this.repair
+                    scope.repair
                 );
             }
 
@@ -129,7 +129,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                         url         : url,
                         panel       : panel
                     },
-                    this.downgrade
+                    scope.downgrade
                 );
             }
             if (vBuilding.upgrade.can) {
@@ -139,7 +139,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                         url         : url,
                         panel       : panel
                     },
-                    this.upgrade
+                    scope.upgrade
                 );
             }
 
@@ -149,11 +149,11 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     url         : url,
                     panel       : panel
                 },
-                this.demolish
+                scope.demolish
             );
         };
 
-        this.getBuildingHeader = function(vBuilding, url) {
+        scope.getBuildingHeader = function(vBuilding, url) {
             return Template.read.building_header({
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
@@ -162,7 +162,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             });
         };
 
-        this.getProductionTab = function(vBuilding) {
+        scope.getProductionTab = function(vBuilding) {
             var currentProduction = Template.read.building_current_production({
                 assets_url      : window.assetsUrl,
                 food_hour       : Library.formatNum(vBuilding.food_hour),
@@ -217,21 +217,21 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             ].join('');
         };
 
-        this.repair = function(event) {
-            Lacuna.send({
+        scope.repair = function(event) {
+            var deferredRepair = Lacuna.send({
                 module  : event.data.url,
                 method  : 'repair',
                 params  : [{
                     'session_id'    : Lacuna.getSession(),
                     'building_id'   : event.data.vBuilding.id
-                }],
-                success: function(o) {
-                    event.data.panel.close();
-                }
+                }]
+            });
+            deferredRepair.done(function(o) {
+                event.data.panel.close();
             });
         };
 
-        this.upgrade = function(event) {
+        scope.upgrade = function(event) {
 
             // TODO: As per the current Web Client there is a popup
             // which warns users about accidentally upgrading a
@@ -240,67 +240,63 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             // to show the warning but not bother the more experienced
             // players with extra clicking.
 
-            Lacuna.send({
-                module: event.data.url,
-                method: 'upgrade',
-
-                params: [{
+            var deferredUpgrade = Lacuna.send({
+                module  : event.data.url,
+                method  : 'upgrade',
+                params  : [{
                     'session_id'    : Lacuna.getSession(),
                     'building_id'   : event.data.vBuilding.id
-                }],
-                
-                success: function(o) {
-                    event.data.panel.close();
-                }
+                }]
+            });
+
+            deferredUpgrade.done(function(o) {      
+               event.data.panel.close();
             });
         };
 
-        this.downgrade = function(event) {
+        scope.downgrade = function(event) {
             Lacuna.confirm('Are you sure you want to downgrade your ' + event.data.vBuilding.name +
                 ' to level ' + (parseInt(event.data.vBuilding.level) - 1) + '?',
             undefined, function(response) {
                 // Once the user has confirmed that they actually
                 // want to downgrade the building, do it!
                 if (response) {
-                    Lacuna.send({
+                    var deferredDowngrade = Lacuna.send({
                         module: event.data.url,
                         method: 'downgrade',
                         params: [{
                             'session_id'    : Lacuna.getSession(),
                             'building_id'   : event.data.vBuilding.id
-                        }],
-                        
-                        success: function(o) {
-                            // Close the panel.
-                            event.data.panel.close(function() {
-                                // nothing to do, building updates take care of themselves now
-                            });
-                        }
+                        }]
+                    });
+                    deferredDowngrade.done(function(o) {
+                        // Close the panel.
+                        event.data.panel.close(function() {
+                            // nothing to do, building updates take care of themselves now
+                        });
                     });
                 }
             });
         };
 
-        this.demolish = function(event) {
+        scope.demolish = function(event) {
             Lacuna.confirm(
                 'Are you sure you want to demolish your ' + event.data.vBuilding.name + '?',
             undefined, function(response) {
                 if (response) {
-                    Lacuna.send({
-                        module: event.data.url,
-                        method: 'demolish',
-                        
-                        params: [{
+                    var deferredDemolish = Lacuna.send({
+                        module  : event.data.url,
+                        method  : 'demolish',
+                        params  : [{
                             'session_id'    : Lacuna.getSession(),
                             'building_id'   : event.data.vBuilding.id
-                        }],
-                        
-                        success: function(o) {
-                            // Close the panel.
-                            event.data.panel.close(function() {
-                                // nothing to do, building updates take care of themselves now
-                            });
-                        }
+                        }]
+                    });
+                    deferredDemolish.done(function(o) {                        
+                        // Close the panel.
+                        event.data.panel.close(function() {
+                            // nothing to do, building updates take care of themselves now
+                        });
                     });
                 }
             });

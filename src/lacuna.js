@@ -150,17 +150,14 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                 scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
                     
                 if (data.result) {
-                    // ONWARD!
-                    args.success.call(args.scope || scope || this, data);
+                    if (typeof(args.success) === 'function') {
+                        // ONWARD!
+                        args.success.call(args.scope || scope || this, data);
+                    }
                 }
-
-                // And finally, hide the "loading" animation.
-                scope.hidePulser();
             });
 
             deferred.fail(function(jqXHR, textStatus, errorThrown) {
-                // Hide the "loading" animation.
-                scope.hidePulser();
                 // Log the returned data for debugging.
                 scope.debug(jqXHR.responseText);
 
@@ -188,6 +185,7 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                 }
             });
             deferred.always(function(jqXHR, textStatus, errorThrown) {
+                scope.hidePulser();
                 if (typeof(args.complete) === 'function') {
                     args.complete(textStatus);
                 }
