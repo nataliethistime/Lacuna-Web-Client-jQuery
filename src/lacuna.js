@@ -107,90 +107,92 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
             scope.debug('Sending to server: ' + data);
             var url = window.url;
             url = url.substring(0, url.length - 1) + args.module;
-            $.ajax({
+
+            var deferred = $.ajax({
                 data        : data,
                 dataType    : 'json',
                 type        : 'POST',
-                url         : url,
+                url         : url
+            });
 
-                // Callbacks
-                success: function(data, status, xhr) {
-                    // Cache the status block and empire for later use
-                    if (data.result.status) {
-                        scope.status = data.result.status;
+            deferred.done(function(data, status, xhr) {
+                // Cache the status block and empire for later use
+                if (data.result.status) {
+                    scope.status = data.result.status;
                         
-                        require("empire").update(scope.status.empire);
+                    require("empire").update(scope.status.empire);
 
-                        if (scope.status.body) {
-                            require("body").update(scope.status.body);
-                        }
+                    if (scope.status.body) {
+                        require("body").update(scope.status.body);
+                    }
 
-                        // Now that all the data from the status is safely put away
-                        // delete it from the server response.
-                        delete data.result.status;
+                    // Now that all the data from the status is safely put away
+                    // delete it from the server response.
+                    delete data.result.status;
+                }
+                else {
+                    scope.status = {};
+                }
+                    
+                // the following can come from a direct call to get a body status
+                if (data.result.body) {
+                    require("body").update(data.result.body);
+                    // stash it under {status} for consistency
+                    scope.status.body = data.result.body;
+                }
+                    
+                if (data.result.empire) {
+                    require("empire").update(data.result.empire);
+                    // stash it under {status} for consistency
+                    scope.status.empire = data.result.empire;
+                }
+                    
+                scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
+                    
+                if (data.result) {
+                    // ONWARD!
+                    args.success.call(args.scope || scope || this, data);
+                }
+
+                // And finally, hide the "loading" animation.
+                scope.hidePulser();
+            });
+
+            deferred.fail(function(jqXHR, textStatus, errorThrown) {
+                // Hide the "loading" animation.
+                scope.hidePulser();
+                // Log the returned data for debugging.
+                scope.debug(jqXHR.responseText);
+
+                // Get the error block the server returned.
+                var response = $.parseJSON(jqXHR.responseText || ''),
+                    error = response.error || {
+                        message: 'Response content type is not JSON.'
+                    };
+                if (error.code == 1006) {
+                    // Clear all the panels.
+                    //$('#lacuna').fadeOut(500, function() {
+                        $('#lacuna').html('');
+                        require("login").start();
+                        scope.alert('Session expired. :(');
+                    //});
+                }
+                else {
+                    // Call the error function, or alert the human readable error message.
+                    if (typeof(args.error) === 'function') {
+                        args.error(error);
                     }
                     else {
-                        scope.status = {};
-                    }
-                    
-                    // the following can come from a direct call to get a body status
-                    if (data.result.body) {
-                        require("body").update(data.result.body);
-                        // stash it under {status} for consistency
-                        scope.status.body = data.result.body;
-                    }
-                    
-                    if (data.result.empire) {
-                        require("empire").update(data.result.empire);
-                        // stash it under {status} for consistency
-                        scope.status.empire = data.result.empire;
-                    }
-                    
-                    scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
-                    
-                    if (data.result) {
-                        // ONWARD!
-                        args.success.call(args.scope || scope || this, data);
-                    }
-
-                    // And finally, hide the "loading" animation.
-                    scope.hidePulser();
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    // Hide the "loading" animation.
-                    scope.hidePulser();
-                    // Log the returned data for debugging.
-                    scope.debug(jqXHR.responseText);
-
-                    // Get the error block the server returned.
-                    var response = $.parseJSON(jqXHR.responseText || ''),
-                        error = response.error || {
-                            message: 'Response content type is not JSON.'
-                        };
-                    if (error.code == 1006) {
-                        // Clear all the panels.
-                        //$('#lacuna').fadeOut(500, function() {
-                            $('#lacuna').html('');
-                            require("login").start();
-                            scope.alert('Session expired. :(');
-                        //});
-                    }
-                    else {
-                        // Call the error function, or alert the human readable error message.
-                        if (typeof(args.error) === 'function') {
-                            args.error(error);
-                        }
-                        else {
-                            scope.alert(error.message);
-                        }
-                    }
-                },
-                complete: function(jqXHR, textStatus) {
-                    if (typeof(args.complete) === 'function') {
-                        args.complete(textStatus);
+                        scope.alert(error.message);
                     }
                 }
             });
+            deferred.always(function(jqXHR, textStatus, errorThrown) {
+                if (typeof(args.complete) === 'function') {
+                    args.complete(textStatus);
+                }
+            });
+            return deferred;
         };
 
         // Utility functions/helpers.
