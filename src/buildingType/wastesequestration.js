@@ -11,10 +11,6 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
                     name: 'Storage',
                     content: scope.getStorageTab(vBuilding)
                 },
-                {
-                    name: 'Details',
-                    content: scope.getDetailsTab(vBuilding)
-                },
             ];
         };
 
@@ -41,16 +37,6 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
             return [
                 currentStorage,
                 upgradeStorage
-            ].join('');
-        };
-
-        scope.getDetailsTab = function(vBuilding) {
-            var details = Template.read.building_waste_sequestration_details({
-                assets_url:     window.assetsUrl,
-                building_id:    vBuilding.id,
-            });
-            return [
-                details,
             ].join('');
         };
 
