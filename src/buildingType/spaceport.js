@@ -18,7 +18,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 {
                     name    : 'Send',
                     content : Template.read.building_space_port_send_tab({
-                        widget_fleet_send   : Template.read.widget_fleet_send({}),
+                        widget_fleet_send   : Template.read.widget_fleet_send({})
                     }),
                     select  : function(e) {
                         scope.addEvents(vBuilding, url);
@@ -30,7 +30,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     select  : function(e) {
                         scope.addEvents(vBuilding, url);
                     }
-                },
+                }
             ];
         };
 
@@ -41,7 +41,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 method  : 'view_all_fleets',
                 params  : [{
                     session_id      : Lacuna.getSession(),
-                    building_id     : vBuilding.id,
+                    building_id     : vBuilding.id
                 }]
             });
         
@@ -177,7 +177,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
         scope.eventGetAvailableFleet = function(e) {
             var targetType = $('#send_fleet_target_type :selected').val();
             var target = {};
-            if (targetType == 'xy') {
+            if (targetType === 'xy') {
                 target = {
                     x   : $('#send_fleet_target_x').val(),
                     y   : $('#send_fleet_target_y').val()
@@ -269,7 +269,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
 
             $tab_parent.on('change', '#send_fleet_target_type', function(e) {
                     var $this = $(this);
-                    if ($this.val() == 'xy') {
+                    if ($this.val() === 'xy') {
                         $('#send_fleet_select_xy').removeClass('hidden');
                         $('#send_fleet_select_text').addClass('hidden');
                     }

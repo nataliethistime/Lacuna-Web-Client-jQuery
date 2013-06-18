@@ -1,15 +1,5 @@
 {
-    "jQuery": false,
-    "console": true,
-    "module": true,
-    "camelcase": true,
     "curly": true,
     "eqeqeq": true,
-    "es3": true,
-    "indent": 4,
-    "undef": true,
-    "unused": true,
-    "maxlen": 80,
-    "laxbreak": true,
-    "document": true
+    "laxbreak": true
 }

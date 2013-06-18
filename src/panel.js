@@ -10,7 +10,7 @@ define(['jquery', 'underscore', 'jqueryUI', 'template'], function($, _, UI, Temp
         // All the fun stuff with Panels.
         scope.newTabbedPanel = function(panel) {
             // Generate tabbed panel, see http://jqueryui.com/tabs/ for details
-            var DOMName = panel.name.replace(/\W/g,"_")
+            var DOMName = panel.name.replace(/\W/g,"_");
 
             var tab_top = '';
             var tab_bottom = '';
@@ -89,7 +89,7 @@ define(['jquery', 'underscore', 'jqueryUI', 'template'], function($, _, UI, Temp
                 close       : function(callback) {
                     $('#' + DOMName + '_Panel').dialog('close');
                     // Run the callback, if there is one.
-                    if (typeof(callback) != 'undefined') {
+                    if (typeof(callback) !== 'undefined') {
                         setTimeout(callback, 500);
                     }
                 },

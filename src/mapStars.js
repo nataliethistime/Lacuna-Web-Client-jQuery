@@ -85,7 +85,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
         //
         scope.renderStars = function(o) {
 
-            if (typeof o == 'object') {
+            if (typeof o === 'object') {
                 options = $.extend(defaults, o);
             }
             else {
@@ -138,7 +138,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
             // but for now render the centre tile first
             scope.renderTile(4);
             for (/*var*/ x = 0; x < 9; x++) {
-                if (x != 4) {
+                if (x !== 4) {
                     scope.renderTile(x);
                 }
             }
@@ -169,7 +169,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
 
             // Given, the star unit X,Y we need to see if it falls within any of the 9 currently rendered tiles
             var moveToTile = scope.getTileToMoveTo(unitX,unitY);
-            if (moveToTile == -1) {
+            if (moveToTile === -1) {
                 // moved totally outside the current 9 tiles, recalculate everything
                 // TODO it is possible that we have moved the centre tile outside of
                 // any existing tiles, but some edge tiles might still be reusable.
@@ -179,7 +179,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                     viewY : unitY
                 });
             }
-            else if (moveToTile != 4) {
+            else if (moveToTile !== 4) {
                 // tile 4 means 'no movement', so omit it
                 var delta = 4 - moveToTile;
                 var tiles = _.clone(juggleTiles[moveToTile]);
@@ -193,7 +193,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                 scope.oldCentreTile = _.clone(scope.tiles[4]);
                 // render the remaining tiles.
                 while(tilesToDo.length) {
-                    var tile = tilesToDo.shift();
+                    /*var*/ tile = tilesToDo.shift();
                     scope.renderTile(tile);
                 }
                 // Now adjust the position of all of the tiles
@@ -420,7 +420,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                         scope.tiles[tileId].html = tileHtml;
                         scope.tiles[tileId].divs = tileDivs;
                         // cludge for now for test purposes
-                        if (tileId == 4) {
+                        if (tileId === 4) {
                             $("#starmap_tile"+tileId).html(tileHtml);
                         }
                         // The following is only temporary for debug purposes
