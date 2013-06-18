@@ -62,7 +62,6 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     });
                 }
                 $("#fleet_view_details").html(content.join(''));
-                scope.addEvents(vBuilding, url);
             });
         };
 
@@ -215,6 +214,25 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     });
                 }
                 $("#fleet_send_details").html(content.join(''));
+                // Find all 'earliest arrival' times and convert them into timers.
+                $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
+                    var $this = $(this);
+
+                    $this.data({
+                        timeArray   : $this.html().split(':'),
+                        type        : 'earliest_arrival',
+                    });
+                });
+
+                window.setTimeout(function() {
+                    $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
+                        var $this = $(this);
+                        $this.html($this.data('type'));
+                    });
+                },
+                2000);
+
+                scope.addEvents(vBuilding, url);
             });
             deferredViewAvailableFleets.fail(function(error) {
                 $("#fleet_send_details").html(error.message);

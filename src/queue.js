@@ -29,30 +29,20 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
 
         scope.addQueueItem = function(name, time, callback) {
             // Should do a check here for duplicates.
-            scope.queueItems[scope.queueItems.length] = {
-                currentTime: time,
-                parent: name,
-                finish: callback || function(){}
-            };
+            scope.queueItems.push({
+                currentTime : time,
+                parent  : name,
+                finish  : callback || function(){}
+            });
         };
 
-        // Removes the item from the queue based off
-        // of it's parent name. Need to handle duplicate
-        // items.
+        // Removes any items from the queue based on their parents name.
+        // 
         scope.remQueueItem = function(parent) {
-            // Loop through and find the item.
-            for (var i = 0; i < scope.queueItems.length; i++) {
-                if (scope.queueItems[i].parent === parent) {
-                    // Set the item to false...
-                    scope.queueItems[i] = false;
-
-                    // ... so that underscore can clean it up.
-                    scope.queueItems = _.compact(scope.queueItems);
-
-                    // Lastly, stop checking.
-                    break;
-                }
-            }
+            // Let grep remove the items (even duplicates)
+            scope.queueItems = $.grep(scope.queueItems, function(a) {
+                return ! a.parent === parent;
+            });
         };
 
         // The function that loops through the
@@ -63,8 +53,8 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
                 
                 _.each(scope.queueItems, function(item, index) {
 
-                    var increment = item.direction === 'up' ? -1 : 1,
-                        newTime   = Library.formatTime((item.currentTime * 1) - increment),
+                    var increment = item.direction === 'up' ? 1 : -1,
+                        newTime   = Library.formatTime((item.currentTime * 1) + increment),
                         el        = document.getElementById(item.parent)
                     ;
 
@@ -74,10 +64,9 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
                         // Update the object containing the actual value.
                         scope.queueItems[index].currentTime -= increment;
                     }
-
-                    // Something destroyed the element and it needs to be removed from
-                    // the queue.
                     else {
+                        // Something destroyed the element and it needs to be removed from
+                        // the queue.
                         scope.remQueueItem(item);
                     }
                 });
@@ -86,7 +75,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         };
 
         // Starts the loop, should be called when the 
-        // user logs in and when plants get changed.
+        // user logs in and when planets get changed.
         scope.start = function() {
             // Don't start the queue if there's already
             // one running.
