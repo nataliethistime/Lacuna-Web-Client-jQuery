@@ -237,6 +237,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 return;
             }
             // Add event handlers for the Space Port. Let them bubble up to the div holding the tabs
+            // so that we don't have to keep adding them for every fleet.
             var $tab_parent = $('#fleet_view_details').parents('.ui-tabs').first();
 
             $tab_parent.on('click', '.fleet_name', scope.eventFleetRename);

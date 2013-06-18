@@ -2,10 +2,10 @@ define(['jquery', 'underscore'], function($, _) {
     function Template() {
         var scope = this;
 
-        this.file = [];
-        this.read = [];
+        scope.file = [];
+        scope.read = [];
         
-        this.load = function(templates) {
+        scope.load = function(templates) {
             if (! _.isArray(templates)) {
                 templates = [templates];
             }

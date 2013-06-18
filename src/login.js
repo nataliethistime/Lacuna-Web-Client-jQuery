@@ -1,11 +1,5 @@
-// CIRCULAR DEPENDENCIES
-// Do not assign dependencies 'lacuna', 'empire' to function arguments
-// Always access these objects via require("class")
-// e.g. require("lacuna").send()
-// Do not use asynchronous require([]) form
-//
-define(['jquery', 'require', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire'],
-function($, require, Template, Z, MapStars, Panel) {
+define(['jquery', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire'],
+function($, Template, Z, MapStars, Panel, Lacuna, Empire) {
 
     Template.load(['login']);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -15,7 +9,7 @@ function($, require, Template, Z, MapStars, Panel) {
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        this.start = function() {
+        scope.start = function() {
             var session_id = $.cookie.read('lacuna-expanse-session');
             if (session_id) {
                 scope.loginFromSessionCookie(session_id);
@@ -25,8 +19,8 @@ function($, require, Template, Z, MapStars, Panel) {
             }
         };
 
-        this.loginFromSessionCookie = function(session_id) {
-            require("lacuna").send({
+        scope.loginFromSessionCookie = function(session_id) {
+            Lacuna.send({
                 module: '/empire',
                 method: 'get_status',
 
@@ -35,9 +29,7 @@ function($, require, Template, Z, MapStars, Panel) {
                 ],
 
                 success: function(o) {
-                    require("lacuna").hidePulser();
-
-                    require("lacuna").setSession(session_id);
+                    Lacuna.setSession(session_id);
 
                     scope.loginSuccess();
                 },
@@ -45,7 +37,7 @@ function($, require, Template, Z, MapStars, Panel) {
             });
         }
 
-        this.buildPanel = function() {
+        scope.buildPanel = function() {
 
             // Build the Login Panel.
             scope.panel = Panel.newTabbedPanel({
@@ -83,80 +75,58 @@ function($, require, Template, Z, MapStars, Panel) {
             $('#loginButton').click(scope.login);
         };
 
-        this.login = function() {
+        scope.login = function() {
             empireName      = $('#empire').val();
 
-/* 
-** CHECK
-** I don't want to have to retype this password every time I make a change to 
-** anything and need to reload - tmt.
-*/
-
+            // TODO: Re-enable this before we go live!
             empirePassword  = 'secret56';
 //            empirePassword  = $('#password').val();            empirePassword  = $('#password').val();
 
-            require("lacuna").send({
-                module: '/empire',
-                method: 'login',
-
-                params: [{
+            var deferredLogin = Lacuna.send({
+                module  : '/empire',
+                method  : 'login',
+                params  : [{
                     'name'      : empireName,
                     'password'  : empirePassword,
                     'api_key'   : 'anonymous'
-                }],
-
-                success: function(o) {
-                    require("lacuna").hidePulser();
-
-                    require("lacuna").setSession(o.result.session_id);
-
-                    // Pop the empire name into a cookie.
-                    if ($('#rememberEmpire').prop('checked')) {
-                        $.cookie.write('lacuna-expanse-empire-name', empireName, 365 * 24 * 60 * 60); // 1 year.
-                    }
-                    else {
-                        $.cookie.destroy('lacuna-expanse-empire-name');
-                    }
-                    
-                    // This kicks things off for the first time. The response is monitored in lacuna.js
-                    // and callbacks are made to update the planet view and menus
-                    require("lacuna").send({
-                        module  : '/body',
-                        method  : 'get_status',
-                        params  : [{
-                            'session_id'    : o.result.session_id,
-                            'body_id'       : require("lacuna").status.empire.home_planet_id
-                        }],
-                        success: function() {
-                            scope.panel.close();
-                            // Log in to the planet view
-                            $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
-                            $('#starsParent').css('visibility', 'hidden');
-                        }
-                    });
-                },
-                scope: this
+                }]
             });
+
+            deferredLogin.done(function(o) {
+                Lacuna.setSession(o.result.session_id);
+
+                // Pop the empire name into a cookie.
+                if ($('#rememberEmpire').prop('checked')) {
+                    $.cookie.write('lacuna-expanse-empire-name', empireName, 365 * 24 * 60 * 60); // 1 year.
+                }
+                else {
+                    $.cookie.destroy('lacuna-expanse-empire-name');
+                }
+                scope.loginSuccess();
+            });
+                    
         };
         
-        this.loginSuccess = function() {
+        scope.loginSuccess = function() {
             // This kicks things off for the first time. The response is monitored in lacuna.js
             // and callbacks are made to update the planet view and menus
-            require("lacuna").send({
+            var deferredGetStatus = Lacuna.send({
                 module  : '/body',
                 method  : 'get_status',
-                params  : [
-                    require("lacuna").getSession(),
-                    require("empire").get.home_planet_id
-                ],
-                success: function() {
-                    // Log in to the planet view
-                    $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
-                    $('#starsParent').css('visibility', 'hidden');
-                }
+                params  : [{
+                    'session_id'    : Lacuna.getSession(),
+                    'body_id'       : Lacuna.status.empire.home_planet_id
+                }]
+            });
+            deferredGetStatus.done(function() {
+                scope.panel.close();
+                // Log in to the planet view
+                $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
+                $('#starsParent').css('visibility', 'hidden');
             });
         };
     }
 
     return new Login();
 });
+

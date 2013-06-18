@@ -3,7 +3,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        this.renderMenu = function() {
+        scope.renderMenu = function() {
             $('#menu_to_starmap').on({
                 click: function(e) {
                     $('#buildingsParent').css('visibility', 'hidden');
@@ -22,7 +22,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                     $('#menu_to_starmap').css('visibility', 'visible');
                     $('#menu_to_planetmap').css('visibility', 'hidden');
                     // Fire the callbacks to redisplay the planet image
-                    Body.backgroundCallbackFire();
+                    Body.backgroundCallbacks.fire();
                 }
             });
             $('#menu_logout').on({

@@ -1,10 +1,4 @@
-// CIRCULAR DEPENDENCIES
-// Do not assign dependency 'lacuna' to a function argument
-// Always access these objects via require("class")
-// e.g. require("lacuna").send()
-// Do not use asynchronous require([]) form
-//
-define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) {
+define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template, Lacuna) {
 
     Template.load(['mapStars']);
 
@@ -322,111 +316,111 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template) 
                 tile.html = '';
                 tile.divs = [];
 
-                require("lacuna").send({
+                var deferredGetStarMap = Lacuna.send({
                     module: '/map',
                     method: 'get_star_map',
                     params: [{
-                        session_id  : require("lacuna").getSession(),
+                        session_id  : Lacuna.getSession(),
                         left        : tile.left,
                         top         : tile.top,
                         right       : tile.right,
                         bottom      : tile.bottom
-                    }],
-                    success : function(o) {
-                        var stars = o.result.stars;
-                        var tileHtml = '';
-                        var tileDivs = [];
-                        // Map each star onto the tile
-                        for (var i = 0; i < stars.length; i++) {
-                            var star = stars[i];
-                            var alliance_logo = '';
-                            var star_seized = 0;
-                            if (star.station) {
-                                alliance_logo = star.station.alliance.image;
-                                star_seized   = 1;
+                    }]
+                });
+                deferredGetStarMap.done(function(o) {
+                    var stars = o.result.stars;
+                    var tileHtml = '';
+                    var tileDivs = [];
+                    // Map each star onto the tile
+                    for (var i = 0; i < stars.length; i++) {
+                        var star = stars[i];
+                        var alliance_logo = '';
+                        var star_seized = 0;
+                        if (star.station) {
+                            alliance_logo = star.station.alliance.image;
+                            star_seized   = 1;
+                        }
+                        // divLeft and divTop are the abs position of the div on the tile
+                        var divLeft     = (star.x - tile.left - 1) * scope.unitSizePx();
+                        var divTop      = (tile.top - star.y - 1) * scope.unitSizePx();
+                        var star_div = Template.read.mapStar_star({
+                            assetsUrl   : window.assetsUrl,
+                            id          : star.id,
+                            x           : star.x,
+                            y           : star.y,
+                            name        : star.name,
+                            tile_width  : scope.unitSizePx() * 3,
+                            tile_height : scope.unitSizePx() * 3,
+                            tile_left   : divLeft,
+                            tile_top    : divTop,
+                            star_color  : star.color,
+                            star_width  : scope.unitSizePx() * 3,
+                            star_height : scope.unitSizePx() * 3,
+                            margin_top  : 5,
+                            star_seized : star_seized,
+                            alliance_logo   : alliance_logo
+                        });
+                        // Store the html for the star tile
+                        tileDivs.push({
+                            divHtml     : star_div,
+                            left        : divLeft,
+                            top         : divTop,
+                            right       : scope.unitSizePx() * 3 + divLeft,
+                            bottom      : divTop + scope.unitSizePx() * 3
+                        });
+                        tileHtml += star_div;
+                        // Map each planet of this star onto the tile
+                        var bodies = star.bodies;
+                        for (var b=0; b<bodies.length; b++) {
+                            var body        = bodies[b];
+                            // An attempt to get sensible sizes for planets/asteroids
+                            var image_size  = (body.size < 30 ? 50 : (body.size - 30) / 2 + 75) * scope.unitSizePx() / 100;
+                            var occupied = 0;
+                            var allegiance;
+                            if (body.empire) {
+                                occupied = 1;
+                                allegiance = body.empire.alignment;
                             }
-                            // divLeft and divTop are the abs position of the div on the tile
-                            var divLeft     = (star.x - tile.left - 1) * scope.unitSizePx();
-                            var divTop      = (tile.top - star.y - 1) * scope.unitSizePx();
-                            var star_div = Template.read.mapStar_star({
-                                assetsUrl   : window.assetsUrl,
-                                id          : star.id,
-                                x           : star.x,
-                                y           : star.y,
-                                name        : star.name,
-                                tile_width  : scope.unitSizePx() * 3,
-                                tile_height : scope.unitSizePx() * 3,
-                                tile_left   : divLeft,
-                                tile_top    : divTop,
-                                star_color  : star.color,
-                                star_width  : scope.unitSizePx() * 3,
-                                star_height : scope.unitSizePx() * 3,
-                                margin_top  : 5,
-                                star_seized : star_seized,
-                                alliance_logo   : alliance_logo
-                            });
-                            // Store the html for the star tile
-                            tileDivs.push({
-                                divHtml     : star_div,
-                                left        : divLeft,
-                                top         : divTop,
-                                right       : scope.unitSizePx() * 3 + divLeft,
-                                bottom      : divTop + scope.unitSizePx() * 3
-                            });
-                            tileHtml += star_div;
-                            // Map each planet of this star onto the tile
-                            var bodies = star.bodies;
-                            for (var b=0; b<bodies.length; b++) {
-                                var body        = bodies[b];
-                                // An attempt to get sensible sizes for planets/asteroids
-                                var image_size  = (body.size < 30 ? 50 : (body.size - 30) / 2 + 75) * scope.unitSizePx() / 100;
-                                var occupied = 0;
-                                var allegiance;
-                                if (body.empire) {
-                                    occupied = 1;
-                                    allegiance = body.empire.alignment;
-                                }
-                                var tileLeft    = (body.x - tile.left) * scope.unitSizePx();
-                                var tileTop     = (tile.top - body.y) * scope.unitSizePx();
+                            var tileLeft    = (body.x - tile.left) * scope.unitSizePx();
+                            var tileTop     = (tile.top - body.y) * scope.unitSizePx();
 
-                                var body_div = Template.read.mapStar_body({
-                                    assetsUrl   : window.assetsUrl,
-                                    id          : body.id,
-                                    x           : body.x,
-                                    y           : body.y,
-                                    name        : body.name,
-                                    tile_width  : scope.unitSizePx(),
-                                    tile_height : scope.unitSizePx(),
-                                    tile_left   : tileLeft,
-                                    tile_top    : tileTop,
-                                    body_image  : body.image,
-                                    body_orbit  : body.orbit,
-                                    body_width  : image_size,
-                                    body_height : image_size,
-                                    occupied    : occupied,
-                                    allegiance  : allegiance
-                                });
-                                // Store the html for the planet div
-                                tileDivs.push({
-                                    divHtml     : body_div,
-                                    left        : tileLeft,
-                                    top         : tileTop,
-                                    right       : scope.unitSizePx() + tileLeft,
-                                    bottom      : tileTop + scope.unitSizePx()
-                                });
-                                tileHtml += body_div;
-                            }
+                            var body_div = Template.read.mapStar_body({
+                                assetsUrl   : window.assetsUrl,
+                                id          : body.id,
+                                x           : body.x,
+                                y           : body.y,
+                                name        : body.name,
+                                tile_width  : scope.unitSizePx(),
+                                tile_height : scope.unitSizePx(),
+                                tile_left   : tileLeft,
+                                tile_top    : tileTop,
+                                body_image  : body.image,
+                                body_orbit  : body.orbit,
+                                body_width  : image_size,
+                                body_height : image_size,
+                                occupied    : occupied,
+                                allegiance  : allegiance
+                            });
+                            // Store the html for the planet div
+                            tileDivs.push({
+                                divHtml     : body_div,
+                                left        : tileLeft,
+                                top         : tileTop,
+                                right       : scope.unitSizePx() + tileLeft,
+                                bottom      : tileTop + scope.unitSizePx()
+                            });
+                            tileHtml += body_div;
                         }
-                        scope.tiles[tileId].html = tileHtml;
-                        scope.tiles[tileId].divs = tileDivs;
-                        // cludge for now for test purposes
-                        if (tileId === 4) {
-                            $("#starmap_tile"+tileId).html(tileHtml);
-                        }
-                        // The following is only temporary for debug purposes
-                        $("#starmap_tile_title"+tileId).html("&nbsp;&nbsp; tile "+tileId+", "+scope.tiles[tileId].left+"|"+scope.tiles[tileId].top);
-                        // Now populate the tile with the ships
                     }
+                    scope.tiles[tileId].html = tileHtml;
+                    scope.tiles[tileId].divs = tileDivs;
+                    // cludge for now for test purposes
+                    if (tileId == 4) {
+                        $("#starmap_tile"+tileId).html(tileHtml);
+                    }
+                    // The following is only temporary for debug purposes
+                    $("#starmap_tile_title"+tileId).html("&nbsp;&nbsp; tile "+tileId+", "+scope.tiles[tileId].left+"|"+scope.tiles[tileId].top);
+                    // Now populate the tile with the ships
                 });
             }
         };

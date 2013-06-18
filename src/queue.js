@@ -16,18 +16,18 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         //          // Do stuff when timer finishes
         //      }
         // }
-        this.queueItems = [];
+        scope.queueItems = [];
 
         // The real looper.
-        this.looper = "something that isn't a function";
+        scope.looper = "something that isn't a function";
 
         // Boolean to track weather the queue is
         // running. Used to prevent multiple queue
         // instances. If there's more than one, 
         // they can't stopped.
-        this.isQueueRunning = false;
+        scope.isQueueRunning = false;
 
-        this.addQueueItem = function(name, time, callback) {
+        scope.addQueueItem = function(name, time, callback) {
             // Should do a check here for duplicates.
             scope.queueItems[scope.queueItems.length] = {
                 currentTime: time,
@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         // Removes the item from the queue based off
         // of it's parent name. Need to handle duplicate
         // items.
-        this.remQueueItem = function(parent) {
+        scope.remQueueItem = function(parent) {
             // Loop through and find the item.
             for (var i = 0; i < scope.queueItems.length; i++) {
                 if (scope.queueItems[i].parent === parent) {
@@ -57,7 +57,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
 
         // The function that loops through the
         // queue items and updates as needed.
-        this.loop = function() {
+        scope.loop = function() {
             // Make sure the queue is meant to be running.
             if (scope.isQueueRunning) {
                 
@@ -87,7 +87,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
 
         // Starts the loop, should be called when the 
         // user logs in and when plants get changed.
-        this.start = function() {
+        scope.start = function() {
             // Don't start the queue if there's already
             // one running.
             if (!scope.isQueueRunning) {
@@ -97,12 +97,12 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         };
 
         // Stops the loop.
-        this.stop = function() {
+        scope.stop = function() {
 
             // Attempting to do this if the queue isn't
             // running doesn't throw and JS errors, but 
             // I prefer to live on the safe side.
-            if (this.isQueueRunning) {
+            if (scope.isQueueRunning) {
                 clearInterval(scope.looper);
                 scope.isQueueRunning = false;
                 scope.looper = "something that isn't a function";
@@ -111,7 +111,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         };
 
         // Clears everything in the queue, doesn't stop it.
-        this.killall = function() {
+        scope.killall = function() {
             scope.queueItems = [];
         };
     }

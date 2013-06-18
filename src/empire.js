@@ -1,44 +1,40 @@
 // This contains the current Empire data, typically updated from any 'Status' return
 //
-// CIRCULAR DEPENDENCIES
-// Do not assign dependency 'lacuna' to a function argument
-// Always access these objects via require("class")
-// e.g. require("lacuna").send()
-// Do not use asynchronous require([]) form
-//
-define(['jquery', 'underscore', 'require', 'lacuna'], function($, _, require) {
+define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
     function Empire() {
         var scope = this;
-        var callbacks = $.Callbacks();
+        // callbacks that want to be informed when the Empire status changes
+        scope.callbacks = $.Callbacks();
+        // Get the empire data itself
+        scope.get;
 
-        this.get;
-
-        this.update = function(new_empire) {
-
-            if ( ! _.isEqual(scope.get, new_empire)) {
-                scope.get = _.clone(new_empire);
-                callbacks.fire(scope.get);
+        // Callback method to be called whenever Lacuna.send is done
+        scope.updateEmpire = function(o) {
+            if (o.result.status) {
+                // Empire data can come directly from the result or from the status
+                var empireData = o.result.status.empire || o.result.empire;
+                if ( ! _.isEqual(scope.get, empireData)) {
+                    scope.get = _.clone(empireData);
+                    // Fire all callbacks that care about Empire changes.
+                    scope.callbacks.fire(scope.get);
+                }
             }
-
         };
 
-        this.get_status = function() {
-            require("lacuna").send({
-                module: '/empire',
-                method: 'get_status',
-                params: [
-                    require("lacuna").getSession()
-                ],
-                success: Empire.update
+        Lacuna.callbacks.add(scope.updateEmpire);
+
+        // Specific call to get the empire status (not usually needed)
+        // 
+        scope.get_status = function() {
+            var deferredStatus = Lacuna.send({
+                module  : '/empire',
+                method  : 'get_status',
+                params  : [
+                    Lacuna.getSession()
+                ]
             });
-        };
-        
-        // callback methods on change of empire details
-        this.callback_add = function(callback) {
-            callbacks.add(callback);
-        };
-        this.callback_remove = function(callback) {
-            callbacks.remove(callback);
+            // We don't actually care about the 'done' since updateEmpire is called
+            // via a callback in Lacuna
         };
     }
 

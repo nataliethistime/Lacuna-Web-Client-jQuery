@@ -1,16 +1,13 @@
 // CIRCULAR DEPENDENCIES
-// Do not assign dependencies 'empire', 'body', 'login' to function arguments
-// Always access these objects via require("class")
-// e.g. require("login").start()
-// Do not use asynchronous require([]) form
+// This module is a dependency for most others. Don't add direct dependencies
+// to (for example Empire) in here, instead rewrite it to use a callback.
 //
-define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'], function($, _, require) {
+define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
     function Lacuna() {
- 
         // Helper for jQuery's weird scope management.
         var scope = this;
-        this.status;
-        var sessionId = 0;
+        scope.status;
+        scope.sessionId = 0;
 
         // Helper function for the below confirm() and alert().
         scope.dialog = function(args) {
@@ -40,14 +37,15 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                 resizable: false
             });
         };
- 
+        // standard alert box 
         scope.alert = function(text, title) {
             scope.dialog({
                 text: text,
                 title: title
             });
         };
- 
+
+        // Standard confirm dialog box
         scope.confirm = function(text, title, callback) {
             scope.dialog({
                 text: text,
@@ -78,20 +76,24 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                 console.log('DEBUG: ' + message);
             }
         };
- 
-        // Function for sending data to the server. An
-        // object is passed in which looks like the
-        // following:
+
+        // Callbacks that want to extract data (such as status,body,empire) from
+        // each and every API call.
+        scope.callbacks = $.Callbacks();
+
+        // Method to make a call to the Server API.
+        // call it like so:
         //
-        // {
-        //     method: 'login',
-        //     module: '/empire',
-        //     params: [
-        //         '$stuff'
-        //     ],
-        //     success  : function(receivedData){},
-        //     error    : function(receivedError){}, // Optional
-        //     complete : function(receivedStatus){} // Optional
+        // var deferredLogin = Lacuna.send({
+        //      method  : 'login',
+        //      module  : '/empire',
+        //      params  : [{
+        //          session_id : session_id
+        //      }]
+        // });
+        //
+        // Returns a 'deferred' object. see http://api.jquery.com/category/deferred-object/
+        // for more details.
         //
         // }
         scope.send = function(args) {
@@ -116,45 +118,10 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
             });
 
             deferred.done(function(data, status, xhr) {
-                // Cache the status block and empire for later use
-                if (data.result.status) {
-                    scope.status = data.result.status;
-                        
-                    require("empire").update(scope.status.empire);
+                scope.status = data.result.status || {};
 
-                    if (scope.status.body) {
-                        require("body").update(scope.status.body);
-                    }
-
-                    // Now that all the data from the status is safely put away
-                    // delete it from the server response.
-                    delete data.result.status;
-                }
-                else {
-                    scope.status = {};
-                }
-                    
-                // the following can come from a direct call to get a body status
-                if (data.result.body) {
-                    require("body").update(data.result.body);
-                    // stash it under {status} for consistency
-                    scope.status.body = data.result.body;
-                }
-                    
-                if (data.result.empire) {
-                    require("empire").update(data.result.empire);
-                    // stash it under {status} for consistency
-                    scope.status.empire = data.result.empire;
-                }
-                    
-                scope.debug('Called ' + args.method + ' with a response of ' + JSON.stringify(data));
-                    
-                if (data.result) {
-                    if (typeof(args.success) === 'function') {
-                        // ONWARD!
-                        args.success.call(args.scope || scope || this, data);
-                    }
-                }
+                // Inform everyone who is interested in a change in the data.
+                scope.callbacks.fire(data);
             });
 
             deferred.fail(function(jqXHR, textStatus, errorThrown) {
@@ -170,7 +137,7 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
                     // Clear all the panels.
                     //$('#lacuna').fadeOut(500, function() {
                         $('#lacuna').html('');
-                        require("login").start();
+//                        require("login").start();
                         scope.alert('Session expired. :(');
                     //});
                 }
@@ -195,13 +162,10 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
 
         // Utility functions/helpers.
         scope.getSession = function() {
-            return sessionId || '';
+            return scope.sessionId || '';
         };
         scope.setSession = function(session) {
-            sessionId = session;
-        };
-        scope.getCurrentPlanet = function() {
-            return require("body").get.id || '';
+            scope.sessionId = session;
         };
 
         scope.showPulser = function() {
@@ -211,7 +175,7 @@ define(['jquery', 'underscore', 'require', 'jqueryUI', 'empire', 'body', 'login'
             $('#pulser').css('visibility', 'hidden');
         };
 
-        // Resources
+        // Resources TODO: Not sure this belongs in here...
         scope.getBuildingDesc = function(url) {
             return [
                 scope.Resources.buildings[url].description || '',
