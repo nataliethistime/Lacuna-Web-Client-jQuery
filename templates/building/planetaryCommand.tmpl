@@ -77,3 +77,26 @@
     <p>These are not the plans you are looking for. Move along.</p>
 ]]>
 </script>
+
+<script id="building_planetary_command_plans_heading">
+<![CDATA[
+    <ul>
+        <li style="width: 100px;" class="left bold">Quantity</li>
+        <li style="width: 300px;" class="left bold">Plan</li>
+        <li style="width: 50px;"  class="left bold">Level</li>
+        <li style="width: 120px;" class="left bold">Extra Build Level</li>
+    </ul><br />
+    <%= content %>
+]]>
+</script>
+
+<script id="building_planetary_command_plan">
+<![CDATA[
+    <ul>
+        <li style="width: 100px;" class="left"><%= plan.quantity %></li>
+        <li style="width: 300px;" class="left"><%= plan.name %></li>
+        <li style="width: 50px;"  class="left"><%= plan.level %></li>
+        <li style="width: 120px;" class="left"><%= plan.extra_level || 0 %></li>
+    </ul><br />
+]]>
+</script>

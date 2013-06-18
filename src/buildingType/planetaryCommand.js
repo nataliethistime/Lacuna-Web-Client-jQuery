@@ -109,9 +109,22 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
                     scope.building.id
                 ]
             });
+
             deferredViewPlans.done(function(o) {
                 if (o.result.plans.length) {
-                    tab.add(JSON.stringify(o.result.plans));
+
+                    var content = [];
+
+                    _.each(o.result.plans, function(plan) {
+                        content.push(Template.read.building_planetary_command_plan({
+                            plan: plan
+                        }));
+                    });
+
+                    tab.add(Template.read.building_planetary_command_plans_heading({
+                        content: content.join('')
+                    }));
+                    
                 }
                 else {
                     tab.add(Template.read.building_planetary_command_plans_none());

@@ -1,7 +1,7 @@
 Lacuna-Web-Client-jQuery
 ========================
 
-jQuery Client for The Lacuna Expanse.
+Rewrite of the current Lacuna Expanse Web Client using jQuery & friends.
 
 
 Buildings
@@ -35,6 +35,7 @@ The following is the list of buildings that needs to be implemented. If you thin
 * Park
 * PlanetaryCommand
     * @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting with the code here.
+        * The Planet, Abandon and Plans tabs have been started and the Rename tab started and finished. Planet tab just needs some values to be filled in and some styles fixed up. With the Abandon tab, due to the fact that we haven't implemented planet changing (@icydee?) I can't really do the it because a planet change would be required in there somewhere. Lastly, the Plans tab is mostly finished, I just need to make sure it looks right on other browsers.
 * PoliticsTraining
 * Ravine
 * Security

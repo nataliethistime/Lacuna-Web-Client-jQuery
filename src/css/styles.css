@@ -86,6 +86,10 @@ input.input_tiny {
     margin-right: auto;
 }
 
+.left {
+    float: left;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -398,4 +402,10 @@ ul.leaders span + span {
     margin-left: 1.99%;
     float: left;
     width: 32%;
+}
+
+/* Cruel hack to make sure the height of panels remains sane. */
+.ui-tabs-panel {
+    height: 300px;
+    overflow: auto;
 }

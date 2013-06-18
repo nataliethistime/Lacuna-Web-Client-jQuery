@@ -47,7 +47,7 @@ define(['jquery', 'underscore', 'jqueryUI', 'template'], function($, _, UI, Temp
             $dialogEl.dialog({
                 resizable   : true,
                 draggable   : panel.draggable   || false,
-                width       : panel.widthi || scope.panelWidth,
+                width       : panel.width || scope.panelWidth,
                 show: {
                     effect      : 'fade',
                     duration    : 500
@@ -59,8 +59,7 @@ define(['jquery', 'underscore', 'jqueryUI', 'template'], function($, _, UI, Temp
                 open: function() {
                     // Initialize Tabs when the Dialog opens.
                     $tabEl.tabs({
-                        active      : 0,        // Default, open the first tab.
-                        heightStyle : 'auto',
+                        active      : 0, // Default, open the first tab.
                         activate    : function(event, ui) {
                             var tab = panel.tabs[ui.newTab.index()];
                             // Generate the Tab object then pass it through.
