@@ -404,6 +404,17 @@ ul.leaders span + span {
     width: 32%;
 }
 
+/* Storage only needs two columns, not three like Production */
+#currentStorage {
+    float: left;
+    width: 40%;
+}
+#upgradeStorage {
+    margin-left: 1.99%;
+    float: left;
+    width: 40%;
+}
+
 /* Cruel hack to make sure the height of panels remains sane. */
 .ui-tabs-panel {
     height: 300px;

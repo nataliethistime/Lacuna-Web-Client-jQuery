@@ -13,7 +13,8 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     var moduleTypes = {
         planetarycommand    :   'planetaryCommand',
         shipyard            :   'shipyard',
-        spaceport           :   'spaceport'
+        spaceport           :   'spaceport',
+        wastesequestration  :   'wastesequestration',
     };
 
     // To try to reduce confusion over the various 'building' objects.
@@ -157,6 +158,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             return Template.read.building_header({
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
+                building_id         : vBuilding.id,
                 building_image      : vBuilding.image,
                 building_desc       : Lacuna.getBuildingDesc(url)
             });
