@@ -61,13 +61,26 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
             // Make sure the queue is meant to be running.
             if (scope.isQueueRunning) {
                 
-                for (var i = 0; i < scope.queueItems.length; i++) {
-                    var newTime = Library.formatTime((scope.queueItems[i].currentTime * 1) - 1);
-                    document.getElementById(scope.queueItems[i].parent).innerHTML = newTime;
+                _.each(scope.queueItems, function(item, index) {
 
-                    // Update the object containing the actual value.
-                    scope.queueItems[i].currentTime -= 1;
-                }
+                    var increment = item.direction === 'up' ? -1 : 1,
+                        newTime   = Library.formatTime((item.currentTime * 1) - increment),
+                        el        = document.getElementById(item.parent)
+                    ;
+
+                    if (el) {
+                        el.innerHTML = newTime;
+
+                        // Update the object containing the actual value.
+                        scope.queueItems[index].currentTime -= increment;
+                    }
+
+                    // Something destroyed the element and it needs to be removed from
+                    // the queue.
+                    else {
+                        scope.remQueueItem(item);
+                    }
+                });
             
             }
         };
