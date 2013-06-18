@@ -13,7 +13,8 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     var moduleTypes = {
         planetarycommand    :   'planetaryCommand',
         shipyard            :   'shipyard',
-        spaceport           :   'spaceport'
+        spaceport           :   'spaceport',
+        wastesequestration  :   'wastesequestration',
     };
 
     // To try to reduce confusion over the various 'building' objects.
