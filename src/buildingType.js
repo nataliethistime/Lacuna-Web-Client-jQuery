@@ -158,6 +158,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             return Template.read.building_header({
                 background_image    : $('#lacuna').css('background-image'),
                 assets_url          : window.assetsUrl,
+                building_id         : vBuilding.id,
                 building_image      : vBuilding.image,
                 building_desc       : Lacuna.getBuildingDesc(url)
             });

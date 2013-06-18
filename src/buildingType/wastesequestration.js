@@ -29,15 +29,13 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
                 waste_capacity:         Library.formatNum(vBuilding.waste_capacity),
             });
             var upgradeStorage = Template.read.building_waste_sequestration_upgrade_storage({
-                assets_url:             window.assetsUrl,
-                building_id:            vBuilding.id,
-                // Icy says there's currently no easy way to get these; 
-                // leaving bogus until that's decided.
-                food_capacity_next:     Library.formatNum(1),
-                ore_capacity_next:      Library.formatNum(1),
-                water_capacity_next:    Library.formatNum(1),
-                energy_capacity_next:   Library.formatNum(1),
-                waste_capacity_next:    Library.formatNum(1),
+                assets_url:                 window.assetsUrl,
+                building_id:                vBuilding.id,
+                food_capacity_upgrade:      Library.formatNum(vBuilding.upgrade.production.food_capacity),
+                ore_capacity_upgrade:       Library.formatNum(vBuilding.upgrade.production.ore_capacity),
+                water_capacity_upgrade:     Library.formatNum(vBuilding.upgrade.production.water_capacity),
+                energy_capacity_upgrade:    Library.formatNum(vBuilding.upgrade.production.energy_capacity),
+                waste_capacity_upgrade:     Library.formatNum(vBuilding.upgrade.production.waste_capacity),
             });
 
             return [

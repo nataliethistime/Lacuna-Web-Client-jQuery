@@ -6,30 +6,30 @@
             <li><strong>Current Storage</strong></li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/food.png" title="Food" class="smallFood"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/food.png" title="Food" class="smallFood"></span>
                 </span>
                 <span class="pcStored"><%= food_capacity %></span>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/ore.png" title="Ore" class="smallOre"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/ore.png" title="Ore" class="smallOre"></span>
                 </span>
                 <span class="pcStored"><%= ore_capacity %></span>
             </li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/water.png" title="Water" class="smallWater"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/water.png" title="Water" class="smallWater"></span>
                 </span>
                 <span class="pcStored"><%= water_capacity %></span>
             </li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/energy.png" title="Energy" class="smallEnergy"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/energy.png" title="Energy" class="smallEnergy"></span>
                 </span>
                 <span class="pcStored"><%= energy_capacity %></span>
             </li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/waste.png" title="Waste" class="smallWaste"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/waste.png" title="Waste" class="smallWaste"></span>
                 </span>
                 <span class="pcStored"><%= waste_capacity %></span>
             </li>
@@ -46,32 +46,32 @@
             <li><strong>Upgraded Storage</strong></li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/food.png" title="Food" class="smallFood"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/food.png" title="Food" class="smallFood"></span>
                 </span>
-                <span class="pcStored"><%= food_capacity_next %></span>
+                <span class="pcStored"><%= food_capacity_upgrade %></span>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/ore.png" title="Ore" class="smallOre"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/ore.png" title="Ore" class="smallOre"></span>
                 </span>
-                <span class="pcStored"><%= ore_capacity_next %></span>
+                <span class="pcStored"><%= ore_capacity_upgrade %></span>
             </li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/water.png" title="Water" class="smallWater"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/water.png" title="Water" class="smallWater"></span>
                 </span>
-                <span class="pcStored"><%= water_capacity_next %></span>
+                <span class="pcStored"><%= water_capacity_upgrade %></span>
             </li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/energy.png" title="Energy" class="smallEnergy"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/energy.png" title="Energy" class="smallEnergy"></span>
                 </span>
-                <span class="pcStored"><%= energy_capacity_next %></span>
+                <span class="pcStored"><%= energy_capacity_upgrade %></span>
             </li>
             <li>
                 <span class="fixedWidth">
-                    <span class="smallImg"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/waste.png" title="Waste" class="smallWaste"></span>
+                    <span class="smallImg"><img src="<%= assets_url %>/ui/s/waste.png" title="Waste" class="smallWaste"></span>
                 </span>
-                <span class="pcStored"><%= waste_capacity_next %></span>
+                <span class="pcStored"><%= waste_capacity_upgrade %></span>
             </li>
         </ul>
     </div>
@@ -90,7 +90,7 @@
     <div id="sequestrationDetails" class="scriptDetails">
         <ul class="noDot">
             <li>
-                <span class="fixedWidth"> Building ID: </span>
+                <span class="fixedWidth">Building ID:</span>
                 <span><%= building_id %></span>
             </li>
         </ul>
