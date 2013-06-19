@@ -23,7 +23,7 @@ my $total_count = 0;
 find(\&wanted, $path);
 
 ## Finished
-say "There are $total_count lines in the project.";
+say "There are $total_count lines SLOC in the project.";
 
     ###################
     ### SUBROUTINES ###
