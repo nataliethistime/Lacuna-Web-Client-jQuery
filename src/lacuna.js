@@ -99,6 +99,8 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
         scope.send = function(args) {
             // Show the Blue "loading" animation.
             scope.showPulser();
+
+            // Generate the data.
             var data = JSON.stringify({
                 'jsonrpc'   : '2.0',
                 'id'        : 1,
