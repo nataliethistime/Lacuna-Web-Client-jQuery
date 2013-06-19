@@ -216,35 +216,9 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 $("#fleet_send_details").html(content.join(''));
                 // Find all 'earliest arrival' times and convert them into timers.
 
-//                scope.setEarliestArrivalTimers('#fleet_send_details .fleet_earliest_arrival');
-
-                $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
-                    var $this = $(this);
-
-                    $this.data({
-                        timeArray   : $this.html().split(':'),
-                        type        : 'earliest_arrival',
-                    });
-                });
-                // Now set up a one second timer to increment the timer
-                var tid = setInterval(function() {
-                    var $fsd = $("#fleet_send_details");
-                    if ($fsd.length) {
-                        $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
-                            var $this = $(this);
-                            var timeArray = $this.data('timeArray');
-                            timeArray[3]++;
-                            $this.data('timeArray', timeArray);
-                            $this.html(timeArray[3]);
-                        });
-                    }
-                    else {
-                        // DOM object has been destroyed, stop the timer
-                        clearInterval(tid);
-                        alert('timer stopped');
-                    }
-                },1000);
+                scope.setEarliestArrivalTimers('#fleet_send_details', '.fleet_earliest_arrival');
             });
+            
             deferredViewAvailableFleets.fail(function(error) {
                 $("#fleet_send_details").html(error.message);
             });
@@ -257,6 +231,50 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 );
             });
         };
+
+        // Earliest arrival timers show
+        // a)  the days:hours:minutes:seconds as a fixed duration for the arrival time
+        // b)  the UST time at which the ship could arrive (always incrementing 1sec/sec)
+        // c)  the browser local time at which the ship could arrive (always incrementing at 1sec/sec)
+        //
+        scope.setEarliestArrivalTimers = function(parentSel, childSel) {
+
+            // Read the initial html, split out the timers and update the DOM data structure.
+            //
+            $(parentSel+" "+childSel).each(function(i) {
+                var $this = $(this);
+
+                $this.data({
+                    timeArray   : $this.html().split(':'),
+                    mode        : 'earliest'
+                });
+            });
+
+            // Now set up a one second timer to increment all the arrival time DOM objects.
+            var tid = setInterval(function() {
+                var $fsd = $(parentSel);
+                if ($fsd.length) {
+                    $(parentSel+' '+childSel).each(function(i) {
+                        var $this = $(this);
+                        var timeArray = $this.data('timeArray');
+                        var mode = $this.data('mode');
+                        if (mode === 'earliest') {
+                            $this.html(timeArray.join(':'));
+                        }
+                        else if (mode === 'UST') {
+                            $this.html(Library.formatDateEarliestToUST(timeArray));
+                        }
+                        else if (mode == 'local') {
+                            $this.html(Library.formatDateEarliestToLocal(timeArray));
+                        }
+                    });
+                }
+                else {
+                    // DOM object has been destroyed, stop the timer
+                    clearInterval(tid);
+                }
+            },1000);
+        });
 
         scope.eventsAdded = 0;
 
