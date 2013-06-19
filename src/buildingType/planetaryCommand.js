@@ -2,11 +2,11 @@
 // You'll be reading this to gain a better understand of how everything here
 // is coded! You've come to the right place! Let's get started right away!
 
-// The define function lets us defined "modules" or sections of the code,
+// The define function lets us define "modules" or sections of the code,
 // we use this to keep things neat and tidy. 
 
 // The first parameter in the define function is an array of dependences for the 
-// module. As you can see, we need jQuery, Lacuna and Template (Pro'lly more later).
+// module. As you can see, we need jQuery, Lacuna, Template, Body and Library.
 // These modules are then loaded and sent into the function that can be seen in 
 // parameter 2.
 define(['jquery', 'lacuna', 'template', 'body', 'library', 'text!templates/building/planetaryCommand.tmpl'], 
@@ -27,15 +27,15 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         // strange things to the 'this' keyword. So, to counter that, we use
         // scope instead. The name of the variable does not matter, but we have
         // created the convention of calling it 'scope'.
-        // When using scope, declare all functions as scope.myFunction = (whatever)
-        // but, when setting or using scope wide variables, assign them to scope.
+        // When using scope, declare all functions and variables as children of
+        // the scope object.
         var scope = this;
 
         // Get any additional tabs for this building (if there are none, then you
         // don't need to create this module!)
         //
         // vBuilding is the building object returned from the 'view' call to the 
-        // selected building
+        // selected building.
         scope.getTabs = function(vBuilding, url) {
             console.log(this);//debug
             return [

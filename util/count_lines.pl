@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use v5.10;
 
 use File::Find;
 use Cwd;
@@ -23,7 +22,7 @@ my $total_count = 0;
 find(\&wanted, $path);
 
 ## Finished
-say "There are $total_count lines SLOC in the project.";
+say("There are $total_count lines SLOC in the project.");
 
     ###################
     ### SUBROUTINES ###
@@ -37,7 +36,7 @@ sub wanted {
         not $_ eq 'r.js' and
         not $_ eq 'Lacuna-Web-Client-jQuery-Build.js') {
 
-        say 'Reading ' . $File::Find::name if ($debug);
+        say('Reading ' . $File::Find::name) if ($debug);
 
         $total_count += count_lines($File::Find::name);
 
@@ -59,6 +58,11 @@ sub count_lines {
     close FH;
 
     return $count;
+}
+
+sub say {
+    my ($message) = @_;
+    print $message . "\n";
 }
 
 __END__
