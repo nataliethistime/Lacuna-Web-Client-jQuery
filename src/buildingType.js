@@ -2,8 +2,8 @@
 // i.e. it does not describe a specific instance of a building (e.g. the building at location x,y on planet q)
 // It defines methods to display information about a type of building
 //
-define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel', 'require', 'buildingType/defaultBuilding']
-, function($, _, Lacuna, Library, Template, Body, Panel, require, DefaultBuildingType) {
+define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel', 'require', 'buildingType/defaultBuilding'],
+    function($, _, Lacuna, Library, Template, Body, Panel, require, DefaultBuildingType) {
 
     Template.load('building');
 
@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
         planetarycommand    :   'planetaryCommand',
         shipyard            :   'shipyard',
         spaceport           :   'spaceport',
-        wastesequestration  :   'wastesequestration',
+        wastesequestration  :   'wastesequestration'
     };
 
     // To try to reduce confusion over the various 'building' objects.
@@ -24,7 +24,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
 
     function BuildingType() {
         var scope = this;
-        var modules = new Array();
+        var modules = [];
 
         // View the building Dialog
         scope.view = function(pBuilding) {
@@ -183,13 +183,13 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 up_energy_hour  : Library.formatNum(vBuilding.upgrade.production.energy_hour),
                 up_waste_hour   : Library.formatNum(vBuilding.upgrade.production.waste_hour),
                 up_happy_hour   : Library.formatNum(vBuilding.upgrade.production.happiness_hour),
-                up_food_bad     : parseInt(vBuilding.upgrade.production.food_hour) > parseInt(Body.get.food_hour),
-                up_ore_bad      : parseInt(vBuilding.upgrade.production.ore_hour) > parseInt(Body.get.ore_hour),
-                up_water_bad    : parseInt(vBuilding.upgrade.production.water_hour) > parseInt(Body.get.water_hour),
-                up_energy_bad   : parseInt(vBuilding.upgrade.production.energy_hour) > parseInt(Body.get.energy_hour),
-                up_happy_bad    : parseInt(vBuilding.upgrade.production.happiness_hour) > parseInt(Body.get.happiness_hour),
+                up_food_bad     : parseInt(vBuilding.upgrade.production.food_hour, 10) > parseInt(Body.get.food_hour, 10),
+                up_ore_bad      : parseInt(vBuilding.upgrade.production.ore_hour, 10) > parseInt(Body.get.ore_hour, 10),
+                up_water_bad    : parseInt(vBuilding.upgrade.production.water_hour, 10) > parseInt(Body.get.water_hour, 10),
+                up_energy_bad   : parseInt(vBuilding.upgrade.production.energy_hour, 10) > parseInt(Body.get.energy_hour, 10),
+                up_happy_bad    : parseInt(vBuilding.upgrade.production.happiness_hour, 10) > parseInt(Body.get.happiness_hour, 10),
                 building_id     : vBuilding.id,
-                to_level        : parseInt(vBuilding.level) - 1,
+                to_level        : parseInt(vBuilding.level, 10) - 1,
                 downgrade_reason: vBuilding.downgrade.reason[1],
                 can_downgrade   : vBuilding.downgrade.can
             });
@@ -201,13 +201,13 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 up_energy_cost  : Library.formatNum(vBuilding.upgrade.cost.energy || 0),
                 up_waste_cost   : Library.formatNum(vBuilding.upgrade.cost.waste || 0),
                 up_time_cost    : Library.formatNum(vBuilding.upgrade.cost.time || 15),
-                up_food_bad     : parseInt(vBuilding.upgrade.cost.food) > parseInt(Body.get.food_storage),
-                up_ore_bad      : parseInt(vBuilding.upgrade.cost.ore) > parseInt(Body.get.ore_storage),
-                up_water_bad    : parseInt(vBuilding.upgrade.cost.water) > parseInt(Body.get.water_storage),
-                up_energy_bad   : parseInt(vBuilding.upgrade.cost.energy) > parseInt(Body.get.energy_storage),
-                up_waste_bad    : parseInt(vBuilding.upgrade.cost.waste) > parseInt(Body.get.waste_storage),
+                up_food_bad     : parseInt(vBuilding.upgrade.cost.food, 10) > parseInt(Body.get.food_storage, 10),
+                up_ore_bad      : parseInt(vBuilding.upgrade.cost.ore, 10) > parseInt(Body.get.ore_storage, 10),
+                up_water_bad    : parseInt(vBuilding.upgrade.cost.water, 10) > parseInt(Body.get.water_storage, 10),
+                up_energy_bad   : parseInt(vBuilding.upgrade.cost.energy, 10) > parseInt(Body.get.energy_storage, 10),
+                up_waste_bad    : parseInt(vBuilding.upgrade.cost.waste, 10) > parseInt(Body.get.waste_storage, 10),
                 building_id     : vBuilding.id,
-                to_level        : parseInt(vBuilding.level) + 1,
+                to_level        : parseInt(vBuilding.level, 10) + 1,
                 upgrade_reason  : vBuilding.upgrade.reason[1],
                 can_upgrade     : vBuilding.upgrade.can
             });
@@ -258,7 +258,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
 
         scope.downgrade = function(event) {
             Lacuna.confirm('Are you sure you want to downgrade your ' + event.data.vBuilding.name +
-                ' to level ' + (parseInt(event.data.vBuilding.level) - 1) + '?',
+                ' to level ' + (parseInt(event.data.vBuilding.level, 10) - 1) + '?',
             undefined, function(response) {
                 // Once the user has confirmed that they actually
                 // want to downgrade the building, do it!

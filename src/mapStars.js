@@ -175,23 +175,29 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template, 
             }
             else if (moveToTile !== 4) {
                 // tile 4 means 'no movement', so omit it
-                var delta = 4 - moveToTile;
-                var tiles = _.clone(juggleTiles[moveToTile]);
-                var tilesToDo = [0,1,2,3,4,5,6,7,8];
+                var delta = 4 - moveToTile,
+                    tiles = _.clone(juggleTiles[moveToTile]),
+                    tilesToDo = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    tile
+                ;
+
                 while(tiles.length) {
-                    var tile = tiles.shift();
+                    tile = tiles.shift();
                     scope.moveTile(tile,tile+delta);
                     // remove this tile from tilesToDo (native indexOf not supported in IE 8 or below)
                     tilesToDo.splice(_.indexOf(tilesToDo, tile+delta), 1);
                 }
+
                 scope.oldCentreTile = _.clone(scope.tiles[4]);
+                
                 // render the remaining tiles.
                 while(tilesToDo.length) {
-                    /*var*/ tile = tilesToDo.shift();
+                    tile = tilesToDo.shift();
                     scope.renderTile(tile);
                 }
+                
                 // Now adjust the position of all of the tiles
-                for (var x=0; x<9; x++) {
+                for (var x = 0; x < 9; x++) {
                     var tileAbs = scope.getTileAbsPosition(x);
                     $("#starmap_tile"+x).css("top",tileAbs.top).css("left",tileAbs.left);
                     $("#starmap_tile_title"+x).css("top",tileAbs.top).css("left",tileAbs.left);
@@ -415,7 +421,7 @@ define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template, 
                     scope.tiles[tileId].html = tileHtml;
                     scope.tiles[tileId].divs = tileDivs;
                     // cludge for now for test purposes
-                    if (tileId == 4) {
+                    if (tileId === 4) {
                         $("#starmap_tile"+tileId).html(tileHtml);
                     }
                     // The following is only temporary for debug purposes

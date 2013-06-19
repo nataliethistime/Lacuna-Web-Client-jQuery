@@ -39,44 +39,9 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
 
                     // Mouse over effects.
                     $('#buildingsParent').on({
-                        mouseenter: function(e) {
-                            // Display the pretty border.
-                            $('#' + e.data.borderEl).css({
-                                'border-style': 'dashed',
-                                'border-color': 'white',
-                                'border-width': '2px',
-                                'margin': '0px' // Stop the images jumping around.
-                            });
-                            // Then the level/build number/image.
-                            $('#' + e.data.centerEl).css('display', '');
-                        },
-                        mouseleave: function(e) {
-                            // Hide the border.
-                            $('#' + e.data.borderEl).css({
-                                'border-style': '',
-                                'border-color': '',
-                                'border-width': '',
-                                'margin': '2px' // Stop the images jumping around.
-                            });
-                            // Then the level/build number/image.
-                            $('#' + e.data.centerEl).css('display', 'none');
-                        },
-                        click: function(e) {
-                            // This bit is rather fun. If there's an item
-                            // in the scope.buildings object that matches
-                            // the selected plot, then the building view
-                            // panel will be opened. Otherwise, the plot
-                            // will be assumed empty, and the build panel
-                            // will be opened.
-                            if (scope.buildings[e.data.borderEl]) {
-                                // Open view panel.
-                                BuildingType.view(scope.buildings[e.data.borderEl]);
-                            } else {
-                                // Open build panel.
-                                // TODO
-                                Lacuna.alert("This is the building panel.");
-                            }
-                        }
+                        mouseenter: scope.displayTileBorder,
+                        mouseleave: scope.hideTileBorder,
+                        click: scope.handleBuildingClick
                     }, '#' + idStr, {
                         borderEl: idStr,
                         centerEl: idStrCenter
@@ -155,6 +120,49 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
             if (building.pending_build) {
                 Queue.addQueueItem(idStrCounter,  building.pending_build.seconds_remaining);
             }
+        };
+
+        // Called when the user clicks on a building.
+        scope.handleBuildingClick = function(e) {
+            // This bit is rather fun. If there's an item
+            // in the scope.buildings object that matches
+            // the selected plot, then the building view
+            // panel will be opened. Otherwise, the plot
+            // will be assumed empty, and the build panel
+            // will be opened.
+            if (scope.buildings[e.data.borderEl]) {
+                // Open view panel.
+                BuildingType.view(scope.buildings[e.data.borderEl]);
+            } else {
+                // Open build panel.
+                // TODO
+                Lacuna.alert("This is the building panel.");
+            }
+        };
+
+        scope.displayTileBorder = function(e) {
+            // Display the pretty border.
+            $('#' + e.data.borderEl).css({
+                'border-style': 'dashed',
+                'border-color': 'white',
+                'border-width': '2px',
+                'margin': '0px' // Stop the images jumping around.
+            });
+
+            // Then the level/build number/image.
+            $('#' + e.data.centerEl).css('display', '');
+        };
+
+        scope.hideTileBorder = function(e) {
+            // Hide the border.
+            $('#' + e.data.borderEl).css({
+                'border-style': '',
+                'border-color': '',
+                'border-width': '',
+                'margin': '2px' // Stop the images jumping around.
+            });
+            // Then the level/build number/image.
+            $('#' + e.data.centerEl).css('display', 'none');
         };
     }
 

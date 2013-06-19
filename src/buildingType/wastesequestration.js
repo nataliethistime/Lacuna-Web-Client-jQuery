@@ -10,7 +10,7 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
                 {
                     name: 'Storage',
                     content: scope.getStorageTab(vBuilding)
-                },
+                }
             ];
         };
 
@@ -22,7 +22,7 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
                 ore_capacity:           Library.formatNum(vBuilding.ore_capacity),
                 water_capacity:         Library.formatNum(vBuilding.water_capacity),
                 energy_capacity:        Library.formatNum(vBuilding.energy_capacity),
-                waste_capacity:         Library.formatNum(vBuilding.waste_capacity),
+                waste_capacity:         Library.formatNum(vBuilding.waste_capacity)
             });
             var upgradeStorage = Template.read.building_waste_sequestration_upgrade_storage({
                 assets_url:                 window.assetsUrl,
@@ -31,7 +31,7 @@ define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, 
                 ore_capacity_upgrade:       Library.formatNum(vBuilding.upgrade.production.ore_capacity),
                 water_capacity_upgrade:     Library.formatNum(vBuilding.upgrade.production.water_capacity),
                 energy_capacity_upgrade:    Library.formatNum(vBuilding.upgrade.production.energy_capacity),
-                waste_capacity_upgrade:     Library.formatNum(vBuilding.upgrade.production.waste_capacity),
+                waste_capacity_upgrade:     Library.formatNum(vBuilding.upgrade.production.waste_capacity)
             });
 
             return [

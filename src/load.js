@@ -4,7 +4,7 @@
 // When they do this, there's a lot of funk happening,
 // so, I've found it's best to just remove the hash
 // and load afresh.
-if (window.location.hash != '') {
+if (window.location.hash !== '') {
     var newUrl = window.location.protocol +
         '//' + window.location.hostname + (window.location.pathname || '') + (window.location.search || '');
     window.location.href = newUrl; // Automatically refreshes.
@@ -33,7 +33,7 @@ require.config({
 requirejs(['jquery', 'game'], function($, Game) {
 
     // Create the URL for use within the client.
-    if (typeof(window.serverUrl) != 'undefined') {
+    if (typeof(window.serverUrl) !== 'undefined') {
         window.url = window.serverUrl;
     }
     else {

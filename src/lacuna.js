@@ -6,7 +6,7 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
     function Lacuna() {
         // Helper for jQuery's weird scope management.
         var scope = this;
-        scope.status;
+        scope.status = {};
         scope.sessionId = 0;
 
         // Helper function for the below confirm() and alert().
@@ -133,7 +133,7 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                     error = response.error || {
                         message: 'Response content type is not JSON.'
                     };
-                if (error.code == 1006) {
+                if (error.code === 1006) {
                     // Clear all the panels.
                     //$('#lacuna').fadeOut(500, function() {
                         $('#lacuna').html('');

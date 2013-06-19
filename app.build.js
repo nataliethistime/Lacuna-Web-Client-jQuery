@@ -18,11 +18,13 @@
         jqueryUI: 'js/jqueryUI',
         zebra_cookie: 'js/zebra_cookie',
         underscore: 'js/underscore'
-    },
+    }
 
+    /*
     modules: [
         { name: "buildingType/planetaryCommand" },
         { name: "buildingType/shipyard" },
         { name: "buildingType/spaceport" }
     ]
+    */
 })

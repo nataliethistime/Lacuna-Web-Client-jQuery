@@ -35,7 +35,7 @@ function($, Template, Z, MapStars, Panel, Lacuna, Empire) {
                 },
                 scope: this
             });
-        }
+        };
 
         scope.buildPanel = function() {
 

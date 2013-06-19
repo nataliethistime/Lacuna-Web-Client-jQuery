@@ -6,8 +6,8 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
         scope.callbacks = $.Callbacks();
         scope.backgroundCallbacks = $.Callbacks();
         
-        scope.get;
-        scope.surface_image;
+        scope.get = {};
+        scope.surface_image = '';
 
         // Update the body data from the data returned from the server
         scope.updateBody = function(o) {
@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
             
             var newBody = o.result.body;
             if (newBody && newBody.surface_image) {
-                if (newBody.surface_image != scope.surface_image) {
+                if (newBody.surface_image !== scope.surface_image) {
                     scope.surface_image = newBody.surface_image;
                     scope.backgroundCallbacks.fire(scope.surface_image);
                 }
@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
             }
             if (o.result.body) {
                 newBody = o.result.body;
-                if (newBody.surface_image && newBody.surface_image != scope.surface_image) {
+                if (newBody.surface_image && newBody.surface_image !== scope.surface_image) {
                     scope.surface_image = newBody.surface_image;
                     scope.backgroundCallbacks.fire(scope.surface_image);
                 }
@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
             if (newBody && newBody.id) {
                 var refresh_buildings = 0;
                 if (scope.get) {
-                    if (scope.get.surface_version != newBody.surface_version) {
+                    if (scope.get.surface_version !== newBody.surface_version) {
                         refresh_buildings = 1;
                     }
                 }

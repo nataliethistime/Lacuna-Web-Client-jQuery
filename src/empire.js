@@ -3,10 +3,12 @@
 define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
     function Empire() {
         var scope = this;
+        
         // callbacks that want to be informed when the Empire status changes
         scope.callbacks = $.Callbacks();
+        
         // Get the empire data itself
-        scope.get;
+        scope.get = {};
 
         // Callback method to be called whenever Lacuna.send is done
         scope.updateEmpire = function(o) {
