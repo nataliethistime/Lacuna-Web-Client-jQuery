@@ -148,6 +148,20 @@ in this way, you can push your changes to your own repository on github.
     $ git merge --ff-only master
     $ git push origin master
 
+###Correctly merging someone else's branch into master.
+
+*We'll use @tmtowtdi as an example. :)*
+
+    $ git checkout master
+    $ git pull --ff-only origin master
+    $ git remote add tmtowtdi http://github.com/tmtowtdi/Lacuna-Web-Client-jQuery.git
+    $ git fetch tmtowtdi
+    $ git checkout tmtowtdi/master
+    $ git rebase master
+    $ git checkout master
+    $ git merge --ff-only tmtowtdi/master
+    $ git push origin master
+
 Grunt 'n' stuff Notes
 =====================
 
