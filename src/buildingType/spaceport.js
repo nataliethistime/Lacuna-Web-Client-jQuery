@@ -215,6 +215,9 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                 }
                 $("#fleet_send_details").html(content.join(''));
                 // Find all 'earliest arrival' times and convert them into timers.
+
+//                scope.setEarliestArrivalTimers('#fleet_send_details .fleet_earliest_arrival');
+
                 $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
                     var $this = $(this);
 
@@ -223,16 +226,24 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                         type        : 'earliest_arrival',
                     });
                 });
-
-                window.setTimeout(function() {
-                    $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
-                        var $this = $(this);
-                        $this.html($this.data('type'));
-                    });
-                },
-                2000);
-
-                scope.addEvents(vBuilding, url);
+                // Now set up a one second timer to increment the timer
+                var tid = setInterval(function() {
+                    var $fsd = $("#fleet_send_details");
+                    if ($fsd.length) {
+                        $("#fleet_send_details .fleet_earliest_arrival").each(function(i) {
+                            var $this = $(this);
+                            var timeArray = $this.data('timeArray');
+                            timeArray[3]++;
+                            $this.data('timeArray', timeArray);
+                            $this.html(timeArray[3]);
+                        });
+                    }
+                    else {
+                        // DOM object has been destroyed, stop the timer
+                        clearInterval(tid);
+                        alert('timer stopped');
+                    }
+                },1000);
             });
             deferredViewAvailableFleets.fail(function(error) {
                 $("#fleet_send_details").html(error.message);
