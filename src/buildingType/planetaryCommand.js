@@ -9,13 +9,14 @@
 // module. As you can see, we need jQuery, Lacuna and Template (Pro'lly more later).
 // These modules are then loaded and sent into the function that can be seen in 
 // parameter 2.
-define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, Template, Body, Library) {
+define(['jquery', 'lacuna', 'template', 'body', 'library', 'text!templates/building/planetaryCommand.tmpl'], 
+function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
     
     // Now we need to load the file that has all of the HTML templates we'll be
     // using within this file. Once this template has been loaded, they can be
     // accessed through the Template.read object. An example of how this loading
     // can be seen below in the getTabs function.
-    Template.load(['building/planetaryCommand']);
+    Template.loadStrings(TmplBuildingPlanetaryCommand);
 
     // This function, at least to my way of thinking, is a JavaScript class. It
     // is what we use to represent it as a module for RequireJs to understand.

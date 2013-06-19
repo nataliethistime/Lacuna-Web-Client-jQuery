@@ -1,6 +1,7 @@
-define(['jquery', 'lacuna', 'template'], function($, Lacuna, Template) {
+define(['jquery', 'lacuna', 'template', 'text!templates/building/shipyard.tmpl'], 
+function($, Lacuna, Template, TmplBuildingShipyard) {
     
-    Template.load('building/shipyard');
+    Template.loadStrings(TmplBuildingShipyard);
 
     function Shipyard() {
         var scope = this;

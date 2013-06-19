@@ -1,6 +1,7 @@
-define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, Library, Template, Body) {
+define(['jquery', 'lacuna', 'library', 'template', 'body', 'text!templates/building/spacePort.tmpl', 'text!templates/widgets/fleet_controls.tmpl'], 
+function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsFleetControls) {
     
-    Template.load(['building/spacePort','widgets/fleet_controls']);
+    Template.loadStrings([TmplBuildingSpacePort, TmplWidgetsFleetControls]);
 
     function SpacePort() {
         var scope = this;
@@ -274,7 +275,7 @@ define(['jquery', 'lacuna', 'library', 'template', 'body'], function($, Lacuna, 
                     clearInterval(tid);
                 }
             },1000);
-        });
+        };
 
         scope.eventsAdded = 0;
 

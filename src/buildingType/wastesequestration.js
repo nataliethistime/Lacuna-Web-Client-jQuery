@@ -1,6 +1,6 @@
-
-define(['jquery', 'lacuna', 'template', 'body', 'library'], function($, Lacuna, Template, Body, Library) {
-    Template.load(['building/wastesequestration']);
+define(['jquery', 'lacuna', 'template', 'body', 'library', 'text!templates/building/wastesequestration.tmpl'], 
+function($, Lacuna, Template, Body, Library, TmplBuildingWasteSequestration) {
+    Template.loadStrings(TmplBuildingWasteSequestration);
     function WasteSequestration() {
         var scope = this;
 

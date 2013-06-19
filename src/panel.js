@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'jqueryUI', 'template'], function($, _, UI, Template) {
+define(['jquery', 'underscore', 'jqueryUI', 'template', 'text!templates/widgets/tabbed_panel.tmpl'], 
+function($, _, UI, Template, TmplTabbedPanel) {
 
-    Template.load('widgets/tabbed_panel');
+    Template.loadStrings(TmplTabbedPanel);
 
     function Panel() {
  

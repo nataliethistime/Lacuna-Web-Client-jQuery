@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'template', 'lacuna'], function($, _, Template, Lacuna) {
+define(['jquery', 'underscore', 'template', 'lacuna', 'text!templates/mapStars.tmpl'], 
+function($, _, Template, Lacuna, TmplMapStars) {
 
-    Template.load(['mapStars']);
+    Template.loadStrings(TmplMapStars);
 
     function MapStars() {
         // Use scope to reduce confusion about this.

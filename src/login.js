@@ -1,7 +1,7 @@
-define(['jquery', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire'],
-function($, Template, Z, MapStars, Panel, Lacuna, Empire) {
+define(['jquery', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire', 'text!templates/login.tmpl'],
+function($, Template, Z, MapStars, Panel, Lacuna, Empire, TmplLogin) {
 
-    Template.load(['login']);
+    Template.loadStrings(TmplLogin);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
     var empirePassword;
 

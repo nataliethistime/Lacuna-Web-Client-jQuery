@@ -1,8 +1,8 @@
-define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'panel', 'menu', 'queue'],
-function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue) {
+define(['jquery', 'lacuna', 'mapPlanet', 'login', 'template', 'panel', 'menu', 'queue', 'text!templates/game.tmpl'],
+function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue, TmplGame) {
     function Game() {
 
-        Template.load(['game']);
+        Template.loadStrings(TmplGame);
 
         this.start = function() {
             Panel.panelWidth = 800; // pixels 

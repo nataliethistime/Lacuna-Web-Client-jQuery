@@ -5,30 +5,25 @@ define(['jquery', 'underscore'], function($, _) {
         scope.file = [];
         scope.read = [];
         
-        scope.load = function(templates) {
-            if (! _.isArray(templates)) {
-                templates = [templates];
+        // Use loadStrings so we can replace the previous 'sync' call
+        // 
+        scope.loadStrings = function(strings) {
+            if (! _.isArray(strings)) {
+                strings = [strings];
             }
-            _.each(templates, function(file) {
-                // if the file is already loaded, then just return
-                if ( ! _.isUndefined(scope.file[file])) {
+
+            _.each(strings, function(string) {
+                var filename = $(string).filter('body').first().id;
+                if ( ! _.isUndefined(scope.file[filename])) {
                     return;
                 }
-                var url = 'templates/' + file + '.tmpl';
-                $.ajax({
-                    url     : url,
-                    async   : false,
-                    success : function(data) {
-                        var templates = $(data).filter('script');
-                        templates.each(function() {
-                            var textContent = $(this).html();
-                            textContent = textContent.replace('<![CDATA[', '');
-                            textContent = textContent.replace(']]>', '');
-                            scope.read[this.id] = _.template(textContent);
-                        });
-                    }
+                var templates = $(string).filter('script');
+                templates.each(function() {
+                    var textContent = $(this).html();
+                    textContent = textContent.replace('<![CDATA[', '');
+                    textContent = textContent.replace(']]>', '');
+                    scope.read[this.id] = _.template(textContent);
                 });
-                scope.file[file] = 1;
             });
         };
     }

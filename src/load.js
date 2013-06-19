@@ -13,10 +13,11 @@ if (window.location.hash !== '') {
 
 require.config({
     paths: {
-        jquery: 'js/jquery',
-        jqueryUI: 'js/jqueryUI',
-        zebra_cookie: 'js/zebra_cookie',
-        underscore: 'js/underscore'
+        jquery          : 'js/jquery',
+        jqueryUI        : 'js/jqueryUI',
+        zebra_cookie    : 'js/zebra_cookie',
+        underscore      : 'js/underscore',
+        templates       : '../templates'
     },
     shim: {
         jqueryUI: ['jquery'], // Attach jQueryUI to jQuery.

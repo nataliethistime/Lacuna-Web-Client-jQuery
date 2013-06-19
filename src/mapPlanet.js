@@ -1,6 +1,7 @@
 // This defines the HTML structure to contain the buildings to be displayed in the planet image.
 
-define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 'body', 'queue'], function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue) {
+define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 'body', 'queue', 'text!templates/mapPlanet.tmpl'], 
+function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, TmplMapPlanet) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -11,7 +12,7 @@ define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 
         // Cache for all the build timers that are set.
         scope.intervals = {};
 
-        Template.load(['mapPlanet']);
+        Template.loadStrings(TmplMapPlanet);
 
         // This only creates the HTML 'framework' into which the planet details are put
         // it relies on callbacks to update the content whenever the body changes
