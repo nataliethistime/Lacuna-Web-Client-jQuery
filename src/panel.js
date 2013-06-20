@@ -13,8 +13,9 @@ function($, _, UI, Template, TmplTabbedPanel) {
             // Generate tabbed panel, see http://jqueryui.com/tabs/ for details
             var DOMName = panel.name.replace(/\W/g,"_");
 
-            var tab_top = '';
-            var tab_bottom = '';
+            var tab_top = '',
+                tab_bottom = '';
+
             for (var i=0; i < panel.tabs.length; i++) {
                 var tab = panel.tabs[i];
                 tab_top += Template.read.widget_tabbed_panel_tab_top({
@@ -28,6 +29,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
                     tab_content : tab.content
                 });
             }
+            
             var content = Template.read.widget_tabbed_panel({
                 pre_tab_content : panel.preTabContent || '',
                 tab_top         : tab_top,
@@ -35,6 +37,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
                 dom_name        : DOMName,
                 panel_name      : panel.name
             });
+            
             $('#page').append(content);
 
             // Do this here to get a current version of the DOM Object.
@@ -57,12 +60,14 @@ function($, _, UI, Template, TmplTabbedPanel) {
                     effect      : 'fade',
                     duration    : 500
                 },
+                
                 open: function() {
                     // Initialize Tabs when the Dialog opens.
                     $tabEl.tabs({
                         active      : 0, // Default, open the first tab.
                         activate    : function(event, ui) {
                             var tab = panel.tabs[ui.newTab.index()];
+                            
                             // Generate the Tab object then pass it through.
                             if (typeof(tab.select) === 'function') {
                                 var tabObject = {
@@ -70,13 +75,18 @@ function($, _, UI, Template, TmplTabbedPanel) {
                                     index   : ui.newTab.index(),
                                     add     : function(html) {
                                         $(ui.newTab.context.hash).append(html);
+                                    },
+                                    html    : function(html) {
+                                        $(ui.newTab.context.hash).html(html);
                                     }
                                 };
+                                
                                 tab.select(tabObject);
                             }
                         }
                     });
                 },
+
                 close: function() { // Called when the Dialog is closed with the 'X'.
                     // Clear the DOM element.
                     $(this).dialog('destroy').remove();

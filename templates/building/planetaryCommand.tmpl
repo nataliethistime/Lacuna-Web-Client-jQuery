@@ -2,18 +2,45 @@
 <script id="building_planetary_command_planet_tab">
 <![CDATA[
     
-    <ul class="noDot">
+    <ul class="noDot left">
+        <li>
+            <span class="smallImg"><img class="smallFood" title="Food" src="<%= assetsUrl %>/ui/s/food.png" /></span>
+            <span><%= body.food_stored %> / <%= body.food_capacity %> @ <%= body.food_hour %>/hr</span>
+        </li>
+        <li>
+            <span class="smallImg"><img class="smallOre" title="Ore" src="<%= assetsUrl %>/ui/s/ore.png" /></span>
+            <span><%= body.ore_stored %> / <%= body.ore_capacity %> @ <%= body.ore_hour %>/hr</span>
+        </li>
+        <li>
+            <span class="smallImg"><img class="smallWater" title="Water" src="<%= assetsUrl %>/ui/s/water.png" /></span>
+            <span><%= body.water_stored %> / <%= body.water_capacity %> @ <%= body.water_hour %>/hr</span>
+        </li>
+        <li>
+            <span class="smallImg"><img class="smallEnergy" title="Energy" src="<%= assetsUrl %>/ui/s/energy.png" /></span>
+            <span><%= body.energy_stored %> / <%= body.energy_capacity %> @ <%= body.energy_hour %>/hr</span>
+        </li>
+        <li>
+            <span class="smallImg"><img class="smallWaste" title="Waste" src="<%= assetsUrl %>/ui/s/waste.png" /></span>
+            <span><%= body.waste_stored %> / <%= body.waste_capacity %> @ <%= body.waste_hour %>/hr</span>
+        </li>
+        <li>
+            <span class="smallImg"><img class="smallHappiness" title="Happiness" src="<%= assetsUrl %>/ui/s/happiness.png" /></span>
+            <span><%= body.happiness %> @ <%= body.happiness_hour %>/hr</span>
+        </li>
+    </ul>
+
+    <ul class="noDot left small-margin">
         <li>
             <span class="fixedWidth">Buildings:</span>
-            <span><%= buildings %></span>
+            <span><%= body.building_count %></span>
         </li>
         <li>
             <span class="fixedWidth">Planet Size:</span>
-            <span><%= planetSize %></span>
+            <span><%= body.size %></span>
         </li>
         <li>
             <span class="fixedWidth">Plots Available:</span>
-            <span><%= plotsAvailable %></span>
+            <span><%= body.plots_available %></span>
         </li>
         <li>
             <span class="fixedWidth">Population:</span>
@@ -25,19 +52,19 @@
         </li>
         <li>
             <span class="fixedWidth">Location:</span>
-            <span><%= location %></span>
+            <span><%= body.x %>, <%= body.y %></span>
         </li>
         <li>
             <span class="fixedWidth">Zone:</span>
-            <span><%= zone %></span>
+            <span><%= body.zone %></span>
         </li>
         <li>
             <span class="fixedWidth">Star:</span>
-            <span><%= star %></span>
+            <span><%= body.star_name %></span>
         </li>
         <li>
             <span class="fixedWidth">Orbit:</span>
-            <span><%= orbit %></span>
+            <span><%= body.orbit %></span>
         </li>
     </ul>
 

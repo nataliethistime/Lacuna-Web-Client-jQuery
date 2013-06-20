@@ -1,3 +1,5 @@
+
+
 // Hello!
 // You'll be reading this to gain a better understand of how everything here
 // is coded! You've come to the right place! Let's get started right away!
@@ -42,19 +44,15 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                 {
                     name: 'Planet',
                     content: Template.read.building_planetary_command_planet_tab({
-                        // This will be using a lot of the Body module.
-                        buildings: Body.get.building_count,
-                        planetSize: Body.get.size,
-                        plotsAvailable: Body.get.plots_available,
-                        population: Library.formatNum(Body.get.population),
-
-                        // Not easy to find a clean way to access this, leaving until further discussion.
-                        nextColonyCost: Library.formatNum(1),
                         
-                        location: Body.get.x + ', ' + Body.get.y,
-                        zone: Body.get.zone,
-                        star: Body.get.star_name,
-                        orbit: Body.get.orbit
+                        // Functions cannot be accessed when variables are
+                        // being pasted in. So, we do all of it's 
+                        // manipulation here.
+                        population: Library.formatNum(Body.get.population),
+                        nextColonyCost: Library.formatNum(1) + ' - TODO', // TODO
+
+                        body: Body.get,
+                        assetsUrl: window.assetsUrl
                     })
                 },
                 {
@@ -87,11 +85,6 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                 }
             ];
         };
-
-        // Add any events that need to be set up for the tabs
-        //
-        scope.addEvents = function(vBuilding, url) {
-        };
         
         scope.setupAbandonTab = function(tab) {
             $('#abandonPlanetButton').on('click', scope.abandonPlanet);
@@ -122,7 +115,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                         }));
                     });
 
-                    tab.add(Template.read.building_planetary_command_plans_heading({
+                    tab.html(Template.read.building_planetary_command_plans_heading({
                         content: content.join('')
                     }));
                     
@@ -183,6 +176,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                         newName
                     ]
                 });
+
                 deferredRename.done(function(o) {
                     if (o.result) {
                         Body.update({
@@ -194,5 +188,8 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         };
     }
 
+    // The define function must return what we want to be the class it
+    // represents. After much experimentation, we've found that this is the
+    // cleanest way to do it.
     return new PlanetaryCommand();
 });

@@ -67,6 +67,7 @@ label, .fixedWidth {
 .textbox, input[type="text"], input[type="password"] {
     width: 250px;
 }
+
 input.input_tiny {
     height:  10px;
 }
@@ -419,4 +420,8 @@ ul.leaders span + span {
 .ui-tabs-panel {
     height: 300px;
     overflow: auto;
+}
+
+.small-margin {
+    margin-left: 2%;
 }
