@@ -205,7 +205,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
 
                 deferredRename.done(function(o) {
                     if (o.result) {
-                        Body.update({
+                        Body.updateBody({
                             name: newName
                         });
                     }
