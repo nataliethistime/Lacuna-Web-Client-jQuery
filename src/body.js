@@ -10,7 +10,7 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
         scope.surface_image = '';
 
         // Update the body data from the data returned from the server
-        scope.updateBody = function(o) {
+        scope.update = function(o) {
             // body information can be in one of
             //   'result.status.body'   # Complete data of the body
             //   'result.body'          # Complete data of the body
@@ -56,7 +56,7 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
         };
 
         // Register an interest in the data returned from the server API calls
-        Lacuna.callbacks.add(scope.updateBody);
+        Lacuna.callbacks.add(scope.update);
 
         // Make a call to get this bodies buildings
         // 
@@ -72,8 +72,6 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
             deferredGetBuildings.done(function(o) {
                 // Update all the buildings
                 Buildings.update(o.result.buildings);
-                // Update the surface image
-//                scope.updateBody(o.result.body);
             });
         };
     }
