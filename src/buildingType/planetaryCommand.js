@@ -39,15 +39,33 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         // vBuilding is the building object returned from the 'view' call to the 
         // selected building.
         scope.getTabs = function(vBuilding, url) {
-            console.log(this);//debug
+            
+            // The getTabs function returns an array of tabs that will be
+            // displayed in the selected building panel. The properties
+            // of each object and their uses will be explain below.
             return [
                 {
+                    // Explains itself, it's the name label that the tab will
+                    // have both in the DOM and on the screen.
                     name: 'Planet',
+
+                    // Content is any of the HTML that can be thrown into the
+                    // tab straight away, without needing to send a request.
+                    // In this case, all of the data has been received in the 
+                    // previous server request (most likely 'view') and can be
+                    // spat out onto the screen.
+                    // As mentioned before, we use a template system for as
+                    // much of the HTML used in the client as possible. Which
+                    // ends up being about 99% of it. If we want a variable
+                    // passed into that template, we can pass it in this here
+                    // object. In this case, we are passing in strings and an
+                    // object, both of which are acceptable.
                     content: Template.read.building_planetary_command_planet_tab({
                         
                         // Functions cannot be accessed when variables are
                         // being pasted in. So, we do all of it's 
-                        // manipulation here.
+                        // manipulation here instead of inside the template
+                        // while it's being loaded.
                         population: Library.formatNum(Body.get.population),
                         nextColonyCost: Library.formatNum(1) + ' - TODO', // TODO
 
@@ -60,6 +78,14 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                     content: Template.read.building_planetary_command_abandon_tab({
                         name: Body.get.name
                     }),
+
+                    // The select option, in my opinion, is the most useful of
+                    // them all. :) It should be set to a function. This
+                    // function is then called when the user selects this tab.
+                    // Passed in as the first param of that function, is a tab
+                    // object, it has a few utilities which can be used on the
+                    // tab. They are covered in the scope.populatePlansTab 
+                    // function.
                     select: scope.setupAbandonTab
                 },
                 {
