@@ -35,7 +35,17 @@ The following is the list of buildings that needs to be implemented. If you thin
 * Park
 * PlanetaryCommand
     * @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting with the code here.
-        * The Planet, Abandon and Plans tabs have been started and the Rename tab started and finished. Planet tab just needs some values to be filled in and some styles fixed up. With the Abandon tab, due to the fact that we haven't implemented planet changing (@icydee?) I can't really do the it because a planet change would be required in there somewhere. Lastly, the Plans tab is mostly finished, I just need to make sure it looks right on other browsers.
+        * Finished:
+            * Planet Tab
+            * Rename Tab
+            * Plans Tab
+        * TODO:
+            * Abandon Tab:
+                * Abandoning a planet involves a planet change, which hasn't been implemented yet. @Vasari plans to look at this in the near future.
+            * Resources Tab
+            * Supply Chains Tab
+            * Storage Tab
+                * @Vasari plans to adapt the Storage Tab code as seen in the Waste Well into a separate module to be used by the Food, Ore, Water, Energy and Waste storing buildings.
 * PoliticsTraining
 * Ravine
 * Security

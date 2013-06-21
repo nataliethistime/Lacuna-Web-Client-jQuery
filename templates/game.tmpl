@@ -48,7 +48,10 @@
 
 <script id="game_menu_planet">
 <![CDATA[
-  <% if (planet_image) { %><img src="<%= assetsUrl %>/star_system/<%= planet_image %>.png" class="menuPlanetThumb"><% } %><%= planet_name %>
+  <% if (planet_image) { %>
+    <img src="<%= assetsUrl %>/star_system/<%= planet_image %>.png" class="menuPlanetThumb">
+  <% } %>
+  <span id="planetName"><%= planet_name %></span>
 ]]>
 </script>
 </body>

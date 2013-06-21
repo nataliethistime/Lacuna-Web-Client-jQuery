@@ -265,7 +265,7 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                         else if (mode === 'UST') {
                             $this.html(Library.formatDateEarliestToUST(timeArray));
                         }
-                        else if (mode == 'local') {
+                        else if (mode === 'local') {
                             $this.html(Library.formatDateEarliestToLocal(timeArray));
                         }
                     });

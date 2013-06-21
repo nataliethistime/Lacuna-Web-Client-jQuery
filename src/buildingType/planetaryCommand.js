@@ -204,10 +204,8 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                 });
 
                 deferredRename.done(function(o) {
-                    if (o.result) {
-                        Body.update({
-                            name: newName
-                        });
+                    if (o.result === 1) {
+                        $('#planetName').html(newName);
                     }
                 });
             }

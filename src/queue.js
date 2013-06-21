@@ -41,7 +41,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
         scope.remQueueItem = function(parent) {
             // Let grep remove the items (even duplicates)
             scope.queueItems = $.grep(scope.queueItems, function(a) {
-                return ! a.parent === parent;
+                return a.parent !== parent;
             });
         };
 
