@@ -39,13 +39,12 @@ The following is the list of buildings that needs to be implemented. If you thin
             * Planet Tab
             * Rename Tab
             * Plans Tab
+            * Resources Tab
+            * Storage Tab
         * TODO:
             * Abandon Tab:
                 * Abandoning a planet involves a planet change, which hasn't been implemented yet. @Vasari plans to look at this in the near future.
-            * Resources Tab
             * Supply Chains Tab
-            * Storage Tab
-                * @Vasari plans to adapt the Storage Tab code as seen in the Waste Well into a separate module to be used by the Food, Ore, Water, Energy and Waste storing buildings.
 * PoliticsTraining
 * Ravine
 * Security

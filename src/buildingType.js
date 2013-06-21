@@ -13,9 +13,23 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     var moduleTypes = {
         planetarycommand    :   'planetaryCommand',
         shipyard            :   'shipyard',
-        spaceport           :   'spaceport',
-        wastesequestration  :   'wastesequestration'
+        spaceport           :   'spaceport'
     };
+
+    // Array of building names for the buildings that have a 'Storage' tab.
+    // bnst = Buildings Needing Storage Tab.
+    var bnst = [
+        'Energy Reserve',
+        'Food Reserve',
+        'Interdimensional Rift',
+        'Lost City of Tyleon (A)',
+        'Ore Storage Tanks',
+        'Planetary Command Center',
+        'Ravine',
+        'Waste Exchanger',
+        'Waste Sequestration Well',
+        'Water Storage Tank'
+    ];
 
     // To try to reduce confusion over the various 'building' objects.
     // pBuilding, the building object returned from a planet 'get_buildings' call
@@ -23,7 +37,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     // buildingType is the generic object class representing that type of building
 
     function BuildingType() {
-        var scope = this;
+        var scope   = this;
         var modules = [];
 
         // View the building Dialog
@@ -46,6 +60,11 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     content : scope.getProductionTab(vBuilding)
                 }]
                 ;
+
+                // If the building stores stuff, slap a storage tab onto it.
+                if (_.indexOf(bnst, vBuilding.name) > -1) {
+                    tabs.push(scope.getStorageTab(vBuilding));
+                }
 
                 // Remove the leading slash from the url to get the building 'type'.
                 var building_type = url.replace('/', '');
@@ -240,6 +259,18 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 event.data.panel.close();
             });
         };
+
+        scope.getStorageTab = function(vBuilding) {
+
+            return {
+                name: 'Storage',
+                content: Template.read.building_storage_tab({
+                    vBuilding: vBuilding,
+                    assetsUrl: window.assetsUrl,
+                    library: Library
+                })
+            };
+        }
 
         scope.upgrade = function(event) {
 

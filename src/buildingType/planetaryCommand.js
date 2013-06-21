@@ -102,10 +102,6 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                 {
                     name: 'Supply Chains',
                     select: scope.populateChainsTab
-                },
-                {
-                    name: 'Storage',
-                    select: scope.populateStorageTab
                 }
             ];
         };
