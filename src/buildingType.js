@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     // Array of building names for the buildings that have a 'Storage' tab.
     // bnst = Buildings Needing Storage Tab.
     var bnst = [
+        'Distribution Center',
         'Energy Reserve',
         'Food Reserve',
         'Interdimensional Rift',
@@ -26,6 +27,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
         'Ore Storage Tanks',
         'Planetary Command Center',
         'Ravine',
+        'Supply Pod',
         'Waste Exchanger',
         'Waste Sequestration Well',
         'Water Storage Tank'
@@ -85,7 +87,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     else {
                         // it is a 'generic' building with no special handlers
                         modules[building_type] = DefaultBuildingType;
-                        scope.createTabs(tabs, vBuilding, url, modules[building_type]);
+                        scope.createTabs(tabs, vBuilding, url, modules[building_type], o.result);
                     }
                 }
             });
@@ -117,10 +119,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             else {
 
                 // Cleanup and paste the result into the vBuiding block.
-                if (result.status) {
-                    delete result.status;
-                }
-                
+                delete result.status;
                 buildingType.result = result;
 
                 // Add vBuilding to the building's scope.

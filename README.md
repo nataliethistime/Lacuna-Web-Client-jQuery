@@ -14,24 +14,18 @@ The following is the list of buildings that needs to be implemented. If you thin
 * Capitol
 * DeployedBleeder
 * Development
-* DistributionCenter
 * Embassy
-* EnergyReserve
 * Entertainment
-* FoodReserve
 * GeneticsLab
 * Intelligence
 * IntelTraining
-* InterDimensionalRift
 * LibraryOfJith
-* LostCityOfTyleon
 * MayhemTraining
 * MercenariesGuild
 * MiningMinistry
 * MissionCommand
 * Network19
 * Observatory
-* OreStorage
 * Park
 * PlanetaryCommand
     * @Vasari will be writing the code for this plus a bunch of explanatory notes for those starting with the code here.
@@ -46,7 +40,6 @@ The following is the list of buildings that needs to be implemented. If you thin
                 * Abandoning a planet involves a planet change, which hasn't been implemented yet. @Vasari plans to look at this in the near future.
             * Supply Chains Tab
 * PoliticsTraining
-* Ravine
 * Security
 * Shipyard
     * @Vasari is working on this one.
@@ -55,16 +48,12 @@ The following is the list of buildings that needs to be implemented. If you thin
     * @icydee plans to work on this, and on other bits of code that display lists of ships (starmaps etc.)
 * SpaceStationLab
 * SubspaceSupplyDepot
-* SupplyPod
 * TempleOfTheDrajilites
 * TheDillonForge
 * TheftTraining
 * ThemePark
 * Trade
 * Transporter
-* WasteExchanger
-* WasteSequestration
-* WaterStorage
 
 Git Notes
 =========
