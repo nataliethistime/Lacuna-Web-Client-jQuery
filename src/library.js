@@ -1,13 +1,12 @@
 define(['jquery'], function($) {
     function Library() {
 
-        // Returns true/false if the specified element exists.
+        // Returns true or false if the specified element exists.
         this.elExists = function(name) {
             return $('#' + name).length > 0;
         };
 
         // Converts 123456789 into 123,456,789.
-        // sorry, spaces in numbers is non-standard
         this.formatNum = function(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         };
@@ -48,10 +47,6 @@ define(['jquery'], function($) {
             else if(number >= 10000 || number <= -10000) {
                 //123k
                 return Math.floor(number/1000) + 'k';
-            }
-            else if(always) {
-                //8765
-                return Math.floor(number);
             }
             else {
                 //8765
@@ -96,6 +91,58 @@ define(['jquery'], function($) {
                 return [min, seconds].join(':');
             }
         };
+
+        this.upperFirstChar = function(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        };
+
+        this.foodTypes = [
+            "algae",
+            "apple",
+            "bean",
+            "beetle",
+            "burger",
+            "bread",
+            "cheese",
+            "chip",
+            "cider",
+            "corn",
+            "fungus",
+            "lapis",
+            "meal",
+            "milk",
+            "pancake",
+            "pie",
+            "potato",
+            "root",
+            "shake",
+            "soup",
+            "syrup",
+            "wheat"
+        ];
+
+        this.oreTypes = [
+            "anthracite",
+            "bauxite",
+            "beryl",
+            "chromite",
+            "chalcopyrite",
+            "fluorite",
+            "galena",
+            "goethite",
+            "gold",
+            "gypsum",
+            "halite",
+            "kerogen",
+            "magnetite",
+            "methane",
+            "monazite",
+            "rutile",
+            "sulfur",
+            "trona",
+            "uraninite",
+            "zircon"
+        ];
     }
 
     return new Library();

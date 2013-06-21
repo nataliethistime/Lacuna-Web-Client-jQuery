@@ -97,7 +97,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                 },
                 {
                     name: 'Resources',
-                    select: scope.populateResourcesTab
+                    content: scope.populateResourcesTab()
                 },
                 {
                     name: 'Supply Chains',
@@ -150,13 +150,51 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
             });
         };
 
-        scope.populateResourcesTab = function() {
-            
-        };
-
         scope.populateChainsTab = function() {
             // Makes server request, populates items into the tab.
         };
+
+        scope.populateResourcesTab = function() {
+            var food = [],
+                ore  = []
+            ;
+
+            // Food
+            _.each(Library.foodTypes, function(type) {
+
+                food.push(Template.read.building_planetary_command_resources_tab_row({
+                    typeName: type,
+                    resources: scope.result.food,
+                    displayName: Library.upperFirstChar(type),
+                    library: Library
+                }));
+
+            });
+
+            // Ore
+            _.each(Library.oreTypes.concat(['water', 'energy']), function(type) {
+            
+                ore.push(Template.read.building_planetary_command_resources_tab_row({
+                    typeName: type,
+                    resources: (type === 'water' || type === 'energy') ? scope.result.planet : scope.result.ore,
+                    displayName: Library.upperFirstChar(type),
+                    library: Library
+                }));
+
+            });
+
+            return [
+                // Food
+                '<table style="float: left;">',
+                    food.join(''),
+                '</table>',
+
+                // Ore
+                '<table style="float: right;">',
+                    ore.join(''),
+                '</table>'
+            ].join('');
+        }
 
         scope.populateStorageTab = function() {
             // Now that I've written this, I'm not sure it's needed.

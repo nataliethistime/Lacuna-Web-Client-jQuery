@@ -54,7 +54,7 @@ li {
     overflow: hidden;
 }
 
-label, .fixedWidth {
+.fixedWidth {
     display: inline-block;
     width: 150px;
 }
@@ -89,6 +89,18 @@ input.input_tiny {
 
 .left {
     float: left;
+}
+
+.right {
+    float: right;
+}
+
+.leftText {
+    text-align: left;
+}
+
+.rightText {
+    text-align: right;
 }
 
 .bold {
@@ -423,5 +435,5 @@ ul.leaders span + span {
 }
 
 .small-margin {
-    margin-left: 2%;
+    margin-left: 1%;
 }

@@ -78,7 +78,7 @@
 
 <script id="building_planetary_command_rename_tab">
 <![CDATA[
-    <label for="renamePlanetInput">New Planet Name:</label>
+    <label for="renamePlanetInput" class="fixedWidth">New Planet Name:</label>
     <input id="renamePlanetInput" type="text" placeholder="What would you like to name your planet?" />
     <button id="renamePlanetButton" type="button">Rename!</button>
 ]]>
@@ -110,6 +110,17 @@
         <li style="width: 50px;"  class="left"><%= plan.level %></li>
         <li style="width: 120px;" class="left"><%= plan.extra_level || 0 %></li>
     </ul><br />
+]]>
+</script>
+
+<script id="building_planetary_command_resources_tab_row">
+<![CDATA[
+    <tr>
+        <td style="width: 125px;"><%= displayName %></td>
+        <td style="width: 100px;" class="rightText"><%= resources[typeName + '_stored'] %></td>
+        <td style="width: 20px;" class="centerText">@</td>
+        <td style="width: 65px;"><%= library.reduceNum(resources[typeName + '_hour']) %>/hr</td>
+    </tr>
 ]]>
 </script>
 </body>
