@@ -39,18 +39,19 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             });
 
             deferredView.done(function(o) {
-                var vBuilding   = o.result.building;
-                var url         = pBuilding.url;
-                var tabs = [{
+                var vBuilding = o.result.building,
+                    url       = pBuilding.url
+                    tabs      = [{
                     name    : 'Production',
                     content : scope.getProductionTab(vBuilding)
-                }];
+                }]
+                ;
 
                 // Remove the leading slash from the url to get the building 'type'.
                 var building_type = url.replace('/', '');
 
                 if (modules[building_type]) {
-                    scope.createTabs(tabs, vBuilding, url, modules[building_type]);
+                    scope.createTabs(tabs, vBuilding, url, modules[building_type], o.result);
                 }
                 else {
                     if (moduleTypes[building_type]) {
@@ -59,7 +60,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                             // We only have to load it once, then we can use the cached value
                             // for convenience, put the url in the buildingType
                             modules[building_type] = buildingType;
-                            scope.createTabs(tabs, o.result, url, modules[building_type]);
+                            scope.createTabs(tabs, vBuilding, url, modules[building_type], o.result);
                         });
                     }
                     else {
@@ -73,11 +74,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
 
         // Add any building specific tabs, output the building Dialog box
         //
-        scope.createTabs = function(tabs, result, url, buildingType) {
+        scope.createTabs = function(tabs, vBuilding, url, buildingType, result) {
 
-            var vBuilding = result.building,
-                panelName = vBuilding.name + ' ' + vBuilding.level,
-                extraTabs, panel, repairTab        
+            var panelName = vBuilding.name + ' ' + vBuilding.level,
+                extraTabs, panel, repairTab
             ;
 
             if (vBuilding.efficiency < 100) {
@@ -97,14 +97,12 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             }
             else {
 
+                // Cleanup and paste the result into the vBuiding block.
+                delete result.status;
+                buildingType.result = result;
+
                 // Add vBuilding to the building's scope.
                 buildingType.building = vBuilding;
-
-                // In the case of the PCC, there is extra data included in the
-                // result. We need to account for this by putting it in the 
-                // buildingType object.
-                delete result.building; // It's already there.
-                buildingType.result = result;
 
                 // Then call it.
                 extraTabs = buildingType.getTabs.call(buildingType, vBuilding, url);
