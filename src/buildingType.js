@@ -117,7 +117,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             else {
 
                 // Cleanup and paste the result into the vBuiding block.
-                delete result.status;
+                if (result.status) {
+                    delete result.status;
+                }
+                
                 buildingType.result = result;
 
                 // Add vBuilding to the building's scope.
