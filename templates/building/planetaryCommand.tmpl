@@ -5,27 +5,27 @@
     <ul class="noDot left">
         <li>
             <span class="smallImg"><img class="smallFood" title="Food" src="<%= assetsUrl %>/ui/s/food.png" /></span>
-            <span><%= body.food_stored %> / <%= body.food_capacity %> @ <%= body.food_hour %>/hr</span>
+            <span><%= library.formatNum(body.food_stored) %> / <%= library.formatNum(body.food_capacity) %> @ <%= library.reduceNum(body.food_hour) %>/hr</span>
         </li>
         <li>
             <span class="smallImg"><img class="smallOre" title="Ore" src="<%= assetsUrl %>/ui/s/ore.png" /></span>
-            <span><%= body.ore_stored %> / <%= body.ore_capacity %> @ <%= body.ore_hour %>/hr</span>
+            <span><%= library.formatNum(body.ore_stored) %> / <%= library.formatNum(body.ore_capacity) %> @ <%= library.reduceNum(body.ore_hour) %>/hr</span>
         </li>
         <li>
             <span class="smallImg"><img class="smallWater" title="Water" src="<%= assetsUrl %>/ui/s/water.png" /></span>
-            <span><%= body.water_stored %> / <%= body.water_capacity %> @ <%= body.water_hour %>/hr</span>
+            <span><%= library.formatNum(body.water_stored) %> / <%= library.formatNum(body.water_capacity) %> @ <%= library.reduceNum(body.water_hour) %>/hr</span>
         </li>
         <li>
             <span class="smallImg"><img class="smallEnergy" title="Energy" src="<%= assetsUrl %>/ui/s/energy.png" /></span>
-            <span><%= body.energy_stored %> / <%= body.energy_capacity %> @ <%= body.energy_hour %>/hr</span>
+            <span><%= library.formatNum(body.energy_stored) %> / <%= library.formatNum(body.energy_capacity) %> @ <%= library.reduceNum(body.energy_hour) %>/hr</span>
         </li>
         <li>
             <span class="smallImg"><img class="smallWaste" title="Waste" src="<%= assetsUrl %>/ui/s/waste.png" /></span>
-            <span><%= body.waste_stored %> / <%= body.waste_capacity %> @ <%= body.waste_hour %>/hr</span>
+            <span><%= library.formatNum(body.waste_stored) %> / <%= library.formatNum(body.waste_capacity) %> @ <%= library.reduceNum(body.waste_hour) %>/hr</span>
         </li>
         <li>
             <span class="smallImg"><img class="smallHappiness" title="Happiness" src="<%= assetsUrl %>/ui/s/happiness.png" /></span>
-            <span><%= body.happiness %> @ <%= body.happiness_hour %>/hr</span>
+            <span><%= library.formatNum(body.happiness) %> @ <%= library.reduceNum(body.happiness_hour) %>/hr</span>
         </li>
     </ul>
 
@@ -44,11 +44,11 @@
         </li>
         <li>
             <span class="fixedWidth">Population:</span>
-            <span><%= population %></span>
+            <span><%= library.formatNum(body.population) %></span>
         </li>
         <li>
             <span class="fixedWidth">Next Colony Cost:</span>
-            <span><%= nextColonyCost %></span>
+            <span><%= library.formatNum(result.next_colony_cost) %></span>
         </li>
         <li>
             <span class="fixedWidth">Location:</span>

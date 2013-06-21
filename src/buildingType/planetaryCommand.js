@@ -39,7 +39,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         // vBuilding is the building object returned from the 'view' call to the 
         // selected building.
         scope.getTabs = function(vBuilding, url) {
-            
+            console.log(scope);//debug
             // The getTabs function returns an array of tabs that will be
             // displayed in the selected building panel. The properties
             // of each object and their uses will be explain below.
@@ -59,18 +59,16 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                     // ends up being about 99% of it. If we want a variable
                     // passed into that template, we can pass it in this here
                     // object. In this case, we are passing in strings and an
-                    // object, both of which are acceptable.
+                    // object, both of which can be used like normal JavaScript
+                    // inside the template.
                     content: Template.read.building_planetary_command_planet_tab({
-                        
-                        // Functions cannot be accessed when variables are
-                        // being pasted in. So, we do all of it's 
-                        // manipulation here instead of inside the template
-                        // while it's being loaded.
-                        population: Library.formatNum(Body.get.population),
-                        nextColonyCost: Library.formatNum(1) + ' - TODO', // TODO
 
                         body: Body.get,
-                        assetsUrl: window.assetsUrl
+                        result: scope.result, // For the next colony cost.
+                        assetsUrl: window.assetsUrl,
+
+                        // You can even call functions inside these templates!
+                        library: Library
                     })
                 },
                 {
@@ -153,7 +151,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         };
 
         scope.populateResourcesTab = function() {
-            // Makes server request, populates items into the tab.
+            
         };
 
         scope.populateChainsTab = function() {
@@ -167,9 +165,9 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         // Function that makes the actual abandon call to the server.
         scope.abandonPlanet = function() {
             Lacuna.confirm(
-                'Are you sure you want to abandon ' + Body.get.name + '?',
-                'Look out!',
-                function(response) {
+                'Are you sure you want to abandon ' + Body.get.name + '?', // Message
+                'Look out!', // Title of the Dialog.
+                function(response) { // Callback fired when user makes a selection.
                 
                 if (response) {
                     var deferredAbandon = Lacuna.send({
@@ -180,6 +178,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                             Body.get.id
                         ]
                     });
+
                     deferredAbandon.done(function(o) {
                         // TODO
                     });

@@ -59,7 +59,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                             // We only have to load it once, then we can use the cached value
                             // for convenience, put the url in the buildingType
                             modules[building_type] = buildingType;
-                            scope.createTabs(tabs, vBuilding, url, modules[building_type]);
+                            scope.createTabs(tabs, o.result, url, modules[building_type]);
                         });
                     }
                     else {
@@ -73,11 +73,15 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
 
         // Add any building specific tabs, output the building Dialog box
         //
-        scope.createTabs = function(tabs, vBuilding, url, buildingType) {
+        scope.createTabs = function(tabs, result, url, buildingType) {
 
-            var panelName = vBuilding.name + ' ' + vBuilding.level;            
+            var vBuilding = result.building,
+                panelName = vBuilding.name + ' ' + vBuilding.level,
+                extraTabs, panel, repairTab        
+            ;
+
             if (vBuilding.efficiency < 100) {
-                var repairTab = {
+                repairTab = {
                     name    : 'Repair',
                     content : Template.read.building_repair({
                         assets_url  : window.assetsUrl,
@@ -96,14 +100,20 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 // Add vBuilding to the building's scope.
                 buildingType.building = vBuilding;
 
+                // In the case of the PCC, there is extra data included in the
+                // result. We need to account for this by putting it in the 
+                // buildingType object.
+                delete result.building; // It's already there.
+                buildingType.result = result;
+
                 // Then call it.
-                var extraTabs = buildingType.getTabs.call(buildingType, vBuilding, url);
+                extraTabs = buildingType.getTabs.call(buildingType, vBuilding, url);
 
                 if (extraTabs.length) {
                     tabs = tabs.concat(extraTabs);
                 }
             }
-            var panel = Panel.newTabbedPanel({
+            panel = Panel.newTabbedPanel({
                 draggable       : true,
                 name            : panelName,
                 preTabContent   : scope.getBuildingHeader(vBuilding, url),
