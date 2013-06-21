@@ -437,3 +437,7 @@ ul.leaders span + span {
 .small-margin {
     margin-left: 1%;
 }
+
+.danger {
+    color: red;
+}

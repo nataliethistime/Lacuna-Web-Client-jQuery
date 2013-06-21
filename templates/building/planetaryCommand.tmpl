@@ -86,7 +86,13 @@
 
 <script id="building_planetary_command_plans_none">
 <![CDATA[
-    <p>These are not the plans you are looking for. Move along.</p>
+    <p class="centerText">These are not the plans you are looking for. Move along.</p>
+]]>
+</script>
+
+<script id="building_planetary_command_chains_none">
+<![CDATA[
+    <p class="centerText">There are not any Supply Chains incoming to this body.</p>
 ]]>
 </script>
 
@@ -121,6 +127,34 @@
         <td style="width: 20px;" class="centerText">@</td>
         <td style="width: 65px;"><%= library.reduceNum(resources[typeName + '_hour']) %>/hr</td>
     </tr>
+]]>
+</script>
+
+<script id="building_planetary_command_chains_heading">
+<![CDATA[
+    <ul>
+        <li style="width: 200px;" class="left bold">From Body</li>
+        <li style="width: 100px;" class="left bold">Resource</li>
+        <li style="width: 100px;"  class="left bold">/hr</li>
+        <li style="width: 100px;" class="left bold">Efficiencey</li>
+    </ul><br />
+    <%= content %>
+]]>
+</script>
+
+<script id="building_planetary_command_chain">
+<![CDATA[
+    <ul>
+        <li style="width: 200px;" class="left">
+            <% if (chain.stalled === 1) { %>
+                <span class="danger bold">(STALLED)</span>
+            <% } %>
+            <%= chain.from_body.name %>
+        </li>
+        <li style="width: 100px;" class="left"><%= library.upperFirstChar(chain.resource_type) %></li>
+        <li style="width: 100px;"  class="left"><%= chain.resource_hour %></li>
+        <li style="width: 100px;" class="left"><%= chain.percent_transferred %></li>
+    </ul><br />
 ]]>
 </script>
 </body>

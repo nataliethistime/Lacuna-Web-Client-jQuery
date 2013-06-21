@@ -146,8 +146,66 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
             });
         };
 
-        scope.populateChainsTab = function() {
-            // Makes server request, populates items into the tab.
+        scope.populateChainsTab = function(tab) {
+            var deferedViewChains = Lacuna.send({
+                module: '/planetarycommand',
+                method: 'view_incoming_supply_chains',
+                params: [
+                    Lacuna.getSession(),
+                    scope.building.id
+                ]
+            });
+
+            deferedViewChains.done(function(o) {
+
+                // Fake data to test with as a real test case can't be setup.
+                o.result.supply_chains = [{
+                    "id" : "id-goes-here",
+                    "from_body" : {
+                        "id" : "id-goes-here",
+                        "name" : "Mars",
+                        "x" : 0,
+                        "y" : -123,
+                        "image" : "station"
+                    },
+                    "resource_hour" : 10000000,
+                    "resource_type" : 'water',
+                    "percent_transferred" : 95,
+                    "stalled" : 0
+                }, {
+                    "id" : "id-goes-here",
+                    "from_body" : {
+                        "id" : "id-goes-here",
+                        "name" : "Mars",
+                        "x" : 0,
+                        "y" : -123,
+                        "image" : "station"
+                    },
+                    "resource_hour" : 10000000,
+                    "resource_type" : 'something shiny',
+                    "percent_transferred" : 64,
+                    "stalled" : 1
+                }];//debug
+
+                if (o.result.supply_chains.length) {
+                    var content = [];
+
+                    _.each(o.result.supply_chains, function(chain) {
+
+                        content.push(Template.read.building_planetary_command_chain({
+                            chain: chain,
+                            library: Library
+                        }));
+                    });
+
+                    tab.html(Template.read.building_planetary_command_chains_heading({
+                        content: content.join('')
+                    }));
+                }
+                else {
+                    tab.html(Template.read.building_planetary_command_chains_none());
+                }
+            });
         };
 
         scope.populateResourcesTab = function() {
@@ -191,10 +249,6 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                 '</table>'
             ].join('');
         }
-
-        scope.populateStorageTab = function() {
-            // Now that I've written this, I'm not sure it's needed.
-        };
 
         // Function that makes the actual abandon call to the server.
         scope.abandonPlanet = function() {

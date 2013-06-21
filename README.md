@@ -39,6 +39,7 @@ The following is the list of buildings that needs to be implemented. If you thin
             * Abandon Tab:
                 * Abandoning a planet involves a planet change, which hasn't been implemented yet. @Vasari plans to look at this in the near future.
             * Supply Chains Tab
+                * Due to the fact that the Supply Chain API is not working in the YUI client, I can't setup a test supply chain. Meaning, everything I've coded there is untested. We'll be able to fix this when the Trade Ministry gets implemented. Unless, there's an account on the server using a supply chain right now, I'll have to get @icydee to have a look.
 * PoliticsTraining
 * Security
 * Shipyard
