@@ -34,6 +34,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                             Lacuna.getSession()
                         ]
                     });
+
                     deferred.done(function(o) {
                         // Remove the session cookie.
                         $.cookie.destroy('lacuna-expanse-session');
@@ -48,7 +49,8 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         // Kill everything in the queue.
                         Queue.killall();
 
-                        $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'hidden');
+                        $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap')
+                            .css('visibility', 'hidden');
                         $('#starsParent').css('visibility', 'visible');
 
                         Login.start();
