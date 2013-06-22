@@ -37,6 +37,7 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                 resizable: false
             });
         };
+        
         // standard alert box 
         scope.alert = function(text, title) {
             scope.dialog({
