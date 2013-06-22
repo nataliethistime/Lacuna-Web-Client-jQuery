@@ -6,8 +6,11 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
     function Lacuna() {
         // Helper for jQuery's weird scope management.
         var scope = this;
-        scope.status = {};
         scope.sessionId = 0;
+
+        // Callbacks that want to extract data (such as status, body, empire) from
+        // each and every API call.
+        scope.callbacks = $.Callbacks();
 
         // Helper function for the below confirm() and alert().
         scope.dialog = function(args) {
@@ -78,10 +81,6 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
             }
         };
 
-        // Callbacks that want to extract data (such as status,body,empire) from
-        // each and every API call.
-        scope.callbacks = $.Callbacks();
-
         // Method to make a call to the Server API.
         // call it like so:
         //
@@ -121,8 +120,6 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
             });
 
             deferred.done(function(data, status, xhr) {
-                scope.status = data.result.status || {};
-
                 // Inform everyone who is interested in a change in the data.
                 scope.callbacks.fire(data);
             });
@@ -134,15 +131,11 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                 // Get the error block the server returned.
                 var response = $.parseJSON(jqXHR.responseText || ''),
                     error = response.error || {
-                        message: 'Response content type is not JSON.'
+                        message: 'Cannot read response.'
                     };
                 if (error.code === 1006) {
-                    // Clear all the panels.
-                    //$('#lacuna').fadeOut(500, function() {
-                        $('#lacuna').html('');
-//                        require("login").start();
-                        scope.alert('Session expired. :(');
-                    //});
+                    $('#lacuna').html('');
+                    scope.alert('Session expired. :(');
                 }
                 else {
                     // Call the error function, or alert the human readable error message.
@@ -154,12 +147,14 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                     }
                 }
             });
+
             deferred.always(function(jqXHR, textStatus, errorThrown) {
                 scope.hidePulser();
                 if (typeof(args.complete) === 'function') {
                     args.complete(textStatus);
                 }
             });
+            
             return deferred;
         };
 

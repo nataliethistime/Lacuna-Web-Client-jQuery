@@ -6,11 +6,8 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        // Cache for the buildings rendered on the planet.
+        // Cache for buildings being displayed in the planet.
         scope.buildings = {};
-
-        // Cache for all the build timers that are set.
-        scope.intervals = {};
 
         Template.loadStrings(TmplMapPlanet);
 
@@ -61,7 +58,6 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
             );
  
             // Update the body specific data when it changes
-            Body.callbacks.add(scope.update_body);
             Body.backgroundCallbacks.add(scope.update_background);
 
             // Final bits
@@ -103,10 +99,11 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
             var idStr           = building.idStr,
                 el              = $('#' + idStr),
                 idStrCenter     = idStr + '_center',
-                idStrCounter    = idStr + '_counter'
+                idStrCounter    = idStr + '_counter',
+                backgroundImg   = ('\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\'' || '');
             ;
 
-            el.css('background', 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\') no-repeat transparent');
+            el.css('background', 'url(' + backgroundImg + ') no-repeat transparent');
             el.html(Template.read.game_mapPlanet_building_level({
                 pending_build   : building.pending_build,
                 idStrCounter    : idStrCounter,
@@ -117,7 +114,7 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
                 needs_repair    : building.efficiency < 100 ? 1 : 0
             }));
 
-            scope.buildings[idStr] = building;
+            scope.buildings[idStr] = building; // Should this even be here??
             if (building.pending_build) {
                 Queue.addQueueItem(idStrCounter,  building.pending_build.seconds_remaining);
             }

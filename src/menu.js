@@ -6,11 +6,14 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
         scope.renderMenu = function() {
             $('#menu_to_starmap').on({
                 click: function(e) {
-                    $('#buildingsParent').css('visibility', 'hidden');
-                    $('#starsParent').css('visibility', 'visible');
+                    $('#buildingsParent , #menu_to_starmap')
+                        .css('visibility', 'hidden');
+                    
+                    $('#starsParent, #menu_to_planetmap')
+                        .css('visibility', 'visible');
+
                     $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
-                    $('#menu_to_starmap').css('visibility', 'hidden');
-                    $('#menu_to_planetmap').css('visibility', 'visible');
+                    
                     MapStars.renderStars();
                 }
             });
@@ -43,8 +46,10 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         delete Lacuna.status;
 
                         // Clear all the buildings data.
-                        Buildings.buildings = {};
-                        MapPlanet.renderPlanet();
+                        //Buildings.buildings = {}; // Debug: good.
+                        //MapPlanet.renderPlanet(); // Debug: good.
+                        // Clear all the callback data as well..
+                        Buildings.destroy();
 
                         // Kill everything in the queue.
                         Queue.killall();

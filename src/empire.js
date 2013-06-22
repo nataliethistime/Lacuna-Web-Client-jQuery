@@ -4,26 +4,23 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
     function Empire() {
         var scope = this;
         
-        // callbacks that want to be informed when the Empire status changes
-        scope.callbacks = $.Callbacks();
-        
-        // Get the empire data itself
+        // Getter of the latest Empire block. Usage: Empire.get.<item>
         scope.get = {};
 
         // Callback method to be called whenever Lacuna.send is done
-        scope.updateEmpire = function(o) {
+        scope.update = function(o) {
             if (o.result.status) {
                 // Empire data can come directly from the result or from the status
                 var empireData = o.result.status.empire || o.result.empire;
                 if ( ! _.isEqual(scope.get, empireData)) {
                     scope.get = _.clone(empireData);
-                    // Fire all callbacks that care about Empire changes.
-                    scope.callbacks.fire(scope.get);
                 }
             }
         };
 
-        Lacuna.callbacks.add(scope.updateEmpire);
+        // Tell Lacuna to call Empire.update when new empire data comes in.
+        // Note: needs to be defined after the definition of scope.update.
+        Lacuna.callbacks.add(scope.update);
 
         // Specific call to get the empire status (not usually needed)
         // 
@@ -35,8 +32,6 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
                     Lacuna.getSession()
                 ]
             });
-            // We don't actually care about the 'done' since updateEmpire is called
-            // via a callback in Lacuna
         };
     }
 

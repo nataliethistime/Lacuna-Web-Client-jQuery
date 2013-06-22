@@ -3,9 +3,9 @@
 define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings, Lacuna) {
     function Body() {
         var scope = this;
-        scope.callbacks = $.Callbacks();
         scope.backgroundCallbacks = $.Callbacks();
         
+        // Getter of the latest Body block. Usage:  Body.get.<item>
         scope.get = {};
         scope.surface_image = '';
 
@@ -48,14 +48,15 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
                     refresh_buildings = 1;
                 }
                 _.extend(scope.get, newBody);
-                scope.callbacks.fire(scope.get);
+                
                 if (refresh_buildings) {
                     scope.get_buildings(newBody.id);
                 }
             }
         };
 
-        // Register an interest in the data returned from the server API calls
+        // Tell Lacuna to call Body.update when new body data comes in.
+        // Note: needs to be defined after the definition of scope.update.
         Lacuna.callbacks.add(scope.update);
 
         // Make a call to get this bodies buildings
@@ -69,6 +70,7 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
                     body_id
                 ]
             });
+
             deferredGetBuildings.done(function(o) {
                 // Update all the buildings
                 Buildings.update(o.result.buildings);

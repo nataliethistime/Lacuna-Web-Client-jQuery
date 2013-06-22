@@ -24,7 +24,7 @@ define(['jquery', 'underscore'], function($, _) {
         }
 
         // Return a single building based on the x,y co-ordinate
-        scope.get_building_at_xy = function(x,y) {
+        scope.get_building_at_xy = function(x, y) {
             var idStr = scope.get_idStr(x,y);
             return scope.buildings[idStr];
         };
@@ -44,8 +44,8 @@ define(['jquery', 'underscore'], function($, _) {
                 var new_building    = loaded_buildings[keys[i]],
                     idStr           = scope.get_idStr(new_building.x, new_building.y)
                 ;
-                // add a few useful bits to the new building
-                //new_building.id     = keys[i];
+
+                // Add a few useful bits to the new building.
                 new_building.idStr  = idStr;
                 new_building.id     = keys[i];
 
@@ -55,6 +55,29 @@ define(['jquery', 'underscore'], function($, _) {
                     scope.callbacks[idStr].fire(new_building);
                 }
             }
+        };
+
+        scope.destroy = function() {
+
+            // Get current buildings, clear them, then update them. This is
+            // done to properly clear the entire planet field. That  is the
+            // (data, callbacks and the actual HTML elements.
+
+            var buildings = scope.buildings,
+                keys      = Object.keys(buildings)
+            ;
+
+            _.each(keys, function(key) {
+                console.log('Attempting to clean: ' + JSON.stringify(buildings[key]));
+                buildings[key] = {
+                    // Seems like I have work to do in this lil block. :D
+                };
+            });
+
+
+            // NOW, we can clear it all! :D
+            scope.buildings = {};
+            scope.callbacks = {};
         };
     }
 

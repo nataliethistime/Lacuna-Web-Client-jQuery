@@ -77,10 +77,7 @@ function($, Template, Z, MapStars, Panel, Lacuna, Empire, TmplLogin) {
 
         scope.login = function() {
             empireName      = $('#empire').val();
-
-            // TODO: Re-enable this before we go live!
-            empirePassword  = 'secret56';
-//            empirePassword  = $('#password').val();            empirePassword  = $('#password').val();
+            empirePassword  = Lacuna.debugMode ? 'secret56' : $('#password').val();
 
             var deferredLogin = Lacuna.send({
                 module  : '/empire',
@@ -115,7 +112,7 @@ function($, Template, Z, MapStars, Panel, Lacuna, Empire, TmplLogin) {
                 method  : 'get_status',
                 params  : [{
                     'session_id'    : Lacuna.getSession(),
-                    'body_id'       : Lacuna.status.empire.home_planet_id
+                    'body_id'       : require('empire').get.home_planet_id
                 }]
             });
             deferredGetStatus.done(function() {
