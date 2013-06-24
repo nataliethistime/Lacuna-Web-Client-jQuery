@@ -6,7 +6,7 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        // Cache for buildings being displayed in the planet.
+        // Cache for buildings being displayed on the planet surface.
         scope.buildings = {};
 
         Template.loadStrings(TmplMapPlanet);
@@ -114,7 +114,7 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
                 needs_repair    : building.efficiency < 100 ? 1 : 0
             }));
 
-            scope.buildings[idStr] = building; // Should this even be here??
+            scope.buildings[idStr] = building;
             if (building.pending_build) {
                 Queue.addQueueItem(idStrCounter,  building.pending_build.seconds_remaining);
             }

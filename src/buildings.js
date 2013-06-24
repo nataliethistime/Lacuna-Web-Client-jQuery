@@ -69,15 +69,23 @@ define(['jquery', 'underscore'], function($, _) {
 
             _.each(keys, function(key) {
                 console.log('Attempting to clean: ' + JSON.stringify(buildings[key]));
-                buildings[key] = {
-                    // Seems like I have work to do in this lil block. :D
-                };
+                // level, name, url, image
+                buildings[key].level = '';
+                buildings[key].name  = '';
+                buildings[key].url   = '';
+                buildings[key].image = '';
+
+                console.log('It is now: ' + JSON.stringify(buildings[key]));
             });
+
+            console.log(scope.callbacks);//debug
+
+            scope.update(scope.buildings);
 
 
             // NOW, we can clear it all! :D
-            scope.buildings = {};
-            scope.callbacks = {};
+            //scope.buildings = {};
+            //scope.callbacks = {};
         };
     }
 

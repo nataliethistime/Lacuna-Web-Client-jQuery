@@ -51,14 +51,20 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         // Clear all the callback data as well..
                         Buildings.destroy();
 
+                        // Do some logging so I can see what's going on.
+                        console.log(MapPlanet.buildings);//debug
+                        console.log(Buildings.buildings);//debug
+
                         // Kill everything in the queue.
                         Queue.killall();
 
+                        /* //debug
                         $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap')
                             .css('visibility', 'hidden');
                         $('#starsParent').css('visibility', 'visible');
 
                         Login.start();
+                        */ //end debug block
                     });
                 }
             });
