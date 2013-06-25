@@ -39,7 +39,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         // vBuilding is the building object returned from the 'view' call to the 
         // selected building.
         scope.getTabs = function(vBuilding, url) {
-            console.log(scope);//debug
+            
             // The getTabs function returns an array of tabs that will be
             // displayed in the selected building panel. The properties
             // of each object and their uses will be explain below.
@@ -83,7 +83,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                     // Passed in as the first param of that function, is a tab
                     // object, it has a few utilities which can be used on the
                     // tab. They are covered in the scope.populatePlansTab 
-                    // function.
+                    // function below.
                     select: scope.setupAbandonTab
                 },
                 {
