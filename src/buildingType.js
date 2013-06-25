@@ -39,8 +39,9 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
     // buildingType is the generic object class representing that type of building
 
     function BuildingType() {
-        var scope   = this;
-        var modules = [];
+        var scope   = this,
+            modules = []
+        ;
 
         // View the building Dialog
         scope.view = function(pBuilding) {
@@ -132,6 +133,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     tabs = tabs.concat(extraTabs);
                 }
             }
+            
             panel = Panel.newTabbedPanel({
                 draggable       : true,
                 name            : panelName,
@@ -248,6 +250,17 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             ].join('');
         };
 
+        scope.getStorageTab = function(vBuilding) {
+            return {
+                name: 'Storage',
+                content: Template.read.building_storage_tab({
+                    vBuilding: vBuilding,
+                    assetsUrl: window.assetsUrl,
+                    library: Library
+                })
+            };
+        };
+
         scope.repair = function(event) {
             var deferredRepair = Lacuna.send({
                 module  : event.data.url,
@@ -261,18 +274,6 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 event.data.panel.close();
             });
         };
-
-        scope.getStorageTab = function(vBuilding) {
-
-            return {
-                name: 'Storage',
-                content: Template.read.building_storage_tab({
-                    vBuilding: vBuilding,
-                    assetsUrl: window.assetsUrl,
-                    library: Library
-                })
-            };
-        }
 
         scope.upgrade = function(event) {
 

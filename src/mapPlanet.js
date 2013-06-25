@@ -1,87 +1,147 @@
 // This defines the HTML structure to contain the buildings to be displayed in the planet image.
 
-define(['jquery', 'lacuna', 'library', 'buildingType', 'buildings', 'template', 'body', 'queue', 'text!templates/mapPlanet.tmpl'], 
-function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, TmplMapPlanet) {
+define(['jquery', 'underscore', 'lacuna', 'library', 'buildingType', 'template', 'body', 'queue', 'text!templates/mapPlanet.tmpl'], 
+function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlanet) {
     function MapPlanet() {
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        // Cache for buildings being displayed on the planet surface.
+        // Cache for buildings being displayed in the planet.
         scope.buildings = {};
 
         Template.loadStrings(TmplMapPlanet);
 
-        // This only creates the HTML 'framework' into which the planet details are put
-        // it relies on callbacks to update the content whenever the body changes
-        // In this way we only need to generate the framework once, not every time the body 
-        // changes.
-        scope.renderPlanet = function() {
-            var buildingsTemplate = [];
-            
-            // Remove event listeners.
+        // Used to display a different planet to what is on the screen.
+        // If you want to update the current planet, see scope.refreshPlanet()
+        // below.
+        scope.showPlanet = function(bodyId) {
+
+            // Firstly, clear all of the previous data. This creates a blank
+            // slate for the buildings to be put on.
+            scope.resetPlanetView();
+
+            // Make the 'get_buildings' request and then display it all on
+            // the screen.
+            scope.getBuildings(bodyId);
+        };
+
+        // Do the final bits of the render process.
+        scope.finishPlanetView = function() {
+            scope.centerView();
+            $('#buildingsDraggableChild').draggable();
+        };
+
+        scope.resetPlanetView = function() {
+            // Remove event listeners from previous view.
             $('#buildingsParent').off('click mouseenter mouseleave');
 
+            // Clear the cache of buildings data.
+            scope.buildings = {};
+
+            var content = [];
             for (var x = -5; x < 6; x++) {
                 for (var y = -5; y < 6; y++) {
-                    var idStr       = Buildings.get_idStr(x,y),
+                    var idStr       = scope.getIdStr(x,y),
                         idStrCenter = idStr + '_center'
                     ;
-                    buildingsTemplate[buildingsTemplate.length] = Template.read.game_mapPlanet_plot({
+
+                    content.push(Template.read.game_mapPlanet_plot({
                         assetsUrl       : window.assetsUrl,
                         idStr           : idStr,
                         idStrCenter     : idStrCenter,
                         x               : x,
                         y               : y,
                         size            : 100
-                    });
+                    }));
 
-                    // Mouse over effects.
                     $('#buildingsParent').on({
+                        // Mouseover effects
                         mouseenter: scope.displayTileBorder,
                         mouseleave: scope.hideTileBorder,
+                        
+                        // Click handler.
                         click: scope.handleBuildingClick
                     }, '#' + idStr, {
                         borderEl: idStr,
                         centerEl: idStrCenter
                     });
-
-                    // Update the building specific data when it changes
-                    Buildings.callbackAdd(x, y, scope.update_building);
                 }
             }
- 
+
             // Send it to the DOM.
             $('#buildingsParent').html([
                 '<div id="buildingsDraggableChild">',
-                buildingsTemplate.join(''),
-                '</div>'].join('')
-            );
- 
-            // Update the body specific data when it changes
-            Body.backgroundCallbacks.add(scope.update_background);
-
-            // Final bits
-            scope.resize();
-            $('#buildingsDraggableChild').draggable();
+                    content.join(''),
+                '</div>'
+            ].join(''));
         };
 
-        // What to do when the 'body' details change
-        // Note, we can also do this if the screen is resized
-        scope.update_body = function(loadedBody) {
-            $('#planets').html(Template.read.game_menu_planet({
-                assetsUrl       : window.assetsUrl,
-                planet_image    : loadedBody.image,
-                planet_name     : loadedBody.name
-            }));
+        // Function that makes the 'get_buildings' call.
+        // Pases loaded data onto scope.loadBuildings.
+        scope.getBuildings = function(bodyId) {
+            var deferredGetBuildings = Lacuna.send({
+                module: '/body',
+                method: 'get_buildings',
+
+                params: [
+                    Lacuna.getSession(), // Session Id
+                    bodyId               // Body Id
+                ]
+            });
+
+            deferredGetBuildings.done(scope.loadBuildings);
+        };
+
+        scope.loadBuildings = function(o) {
+
+            // Then we're just updating the entire list of buildings.
+            if (_.size(scope.buildings) === 0) {
+                
+                // Loop.. and... update!
+                _.each(o.result.buildings, function(item, key) {
+                    scope.updateBuilding(item, key);
+                });
+            }
+            else {
+                // We're doing a planet *refresh* where I need to figure
+                // out the object game.
+            }
+
+            scope.finishPlanetView();
+        }; 
+
+        scope.updateBuilding = function(building, id) {
+            var idStr      = scope.getIdStr(building.x, building.y),
+                buildingEl = $('#' + idStr),
+                centerEl   = $('#' + idStr + '_center')
+            ;
+            
+            // Add some interesting things to the building.
+            building.id    = id;
+            building.idStr = idStr;
+            building.idStrCenter = idStr + '_center';
+
+            // Make the CSS changes.
+            buildingEl.css(
+                'background-image',
+                'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\')'
+            );
+
+            centerEl.addClass('buildings-level-center').html(building.level);
+
+            // Add the building the the cache.
+            scope.buildings[idStr] = building;
         };
 
         // What to do if the surface_image changes
-        scope.update_background = function(surface_image) {
+        scope.updateSurface = function(surface_image) {
             $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/planet_side/" + surface_image + ".jpg')");
         };
 
+        Body.backgroundCallbacks.add(scope.updateSurface);
+
         // To call if the screen is resized
-        scope.resize = function() {
+        scope.centerView = function() {
             // Center the view.
             var parent  = $('#lacuna'), // Basically, the height of the screen.
                 height  = parent.height(),
@@ -94,30 +154,9 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
             });
         };
 
-        // What to do if the building changes
-        scope.update_building = function(building) {
-            var idStr           = building.idStr,
-                el              = $('#' + idStr),
-                idStrCenter     = idStr + '_center',
-                idStrCounter    = idStr + '_counter',
-                backgroundImg   = ('\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\'' || '');
-            ;
-
-            el.css('background', 'url(' + backgroundImg + ') no-repeat transparent');
-            el.html(Template.read.game_mapPlanet_building_level({
-                pending_build   : building.pending_build,
-                idStrCounter    : idStrCounter,
-                idStrCenter     : idStrCenter,
-                building_level  : building.level,
-                efficiency_width : 10,
-                efficiency      : building.efficiency,
-                needs_repair    : building.efficiency < 100 ? 1 : 0
-            }));
-
-            scope.buildings[idStr] = building;
-            if (building.pending_build) {
-                Queue.addQueueItem(idStrCounter,  building.pending_build.seconds_remaining);
-            }
+        // Get the unique ID for a plot
+        scope.getIdStr = function(x, y) {
+            return 'plot_' + x + '_' + y;
         };
 
         // Called when the user clicks on a building.
@@ -134,7 +173,7 @@ function($, Lacuna, Library, BuildingType, Buildings, Template, Body, Queue, Tmp
             } else {
                 // Open build panel.
                 // TODO
-                Lacuna.alert("This is the building panel.");
+                Lacuna.alert("This is the build-a-building panel.");
             }
         };
 

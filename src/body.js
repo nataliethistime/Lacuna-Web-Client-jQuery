@@ -1,6 +1,6 @@
 // This contains the current Body data, typically updated from any 'Status' return
 //
-define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings, Lacuna) {
+define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
     function Body() {
         var scope = this;
         scope.backgroundCallbacks = $.Callbacks();
@@ -50,7 +50,8 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
                 _.extend(scope.get, newBody);
                 
                 if (refresh_buildings) {
-                    scope.get_buildings(newBody.id);
+                    // Refresh the planet view but don't fadeout and in again.
+                    // Instead, just update the specific building.
                 }
             }
         };
@@ -58,24 +59,6 @@ define(['jquery', 'underscore', 'buildings', 'lacuna'], function($, _, Buildings
         // Tell Lacuna to call Body.update when new body data comes in.
         // Note: needs to be defined after the definition of scope.update.
         Lacuna.callbacks.add(scope.update);
-
-        // Make a call to get this bodies buildings
-        // 
-        scope.get_buildings = function(body_id) {
-            var deferredGetBuildings = Lacuna.send({
-                module  : '/body',
-                method  : 'get_buildings',
-                params  : [
-                    Lacuna.getSession(),
-                    body_id
-                ]
-            });
-
-            deferredGetBuildings.done(function(o) {
-                // Update all the buildings
-                Buildings.update(o.result.buildings);
-            });
-        };
     }
 
     return new Body();

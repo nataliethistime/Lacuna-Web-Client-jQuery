@@ -1,5 +1,5 @@
-define(['jquery', 'template', 'zebra_cookie', 'mapStars', 'panel', 'lacuna', 'empire', 'text!templates/login.tmpl'],
-function($, Template, Z, MapStars, Panel, Lacuna, Empire, TmplLogin) {
+define(['jquery', 'template', 'zebra_cookie', 'mapPlanet', 'panel', 'lacuna', 'empire', 'text!templates/login.tmpl'],
+function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin) {
 
     Template.loadStrings(TmplLogin);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -85,7 +85,7 @@ function($, Template, Z, MapStars, Panel, Lacuna, Empire, TmplLogin) {
                 params  : [{
                     'name'      : empireName,
                     'password'  : empirePassword,
-                    'api_key'   : 'anonymous'
+                    'api_key'   : 'anonymous' // Make sure to use a real one in release.
                 }]
             });
 
@@ -115,11 +115,14 @@ function($, Template, Z, MapStars, Panel, Lacuna, Empire, TmplLogin) {
                     'body_id'       : require('empire').get.home_planet_id
                 }]
             });
-            deferredGetStatus.done(function() {
+            
+            deferredGetStatus.done(function(o) {
                 scope.panel.close();
                 // Log in to the planet view
-                $('#gameHeader, #gameFooter, #buildingsParent').css('visibility', 'visible');
+                $('#gameHeader, #gameFooter').css('visibility', 'visible');
                 $('#starsParent').css('visibility', 'hidden');
+
+                MapPlanet.showPlanet(require('empire').get.home_planet_id);
             });
         };
     }

@@ -1,4 +1,5 @@
-define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body', 'buildings', 'queue'], function($, Lacuna, Template, Login, MapPlanet, MapStars, Body, Buildings, Queue) {
+define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body', 'queue'], 
+    function($, Lacuna, Template, Login, MapPlanet, MapStars, Body, Queue) {
     function Menu() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -17,17 +18,20 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                     MapStars.renderStars();
                 }
             });
+
             $('#menu_to_planetmap').on({
                 click: function(e) {
-                    $('#buildingsParent').css('visibility', 'visible');
-                    $('#starsParent').css('visibility', 'hidden');
+                    $('#buildingsParent, #menu_to_starmap')
+                        .css('visibility', 'visible');
+                    $('#starsParent, #menu_to_planetmap')
+                        .css('visibility', 'hidden');
                     $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
-                    $('#menu_to_starmap').css('visibility', 'visible');
-                    $('#menu_to_planetmap').css('visibility', 'hidden');
+                    
                     // Fire the callbacks to redisplay the planet image
                     Body.backgroundCallbacks.fire();
                 }
             });
+            
             $('#menu_logout').on({
                 click: function(e) {
                     var deferred = Lacuna.send({
@@ -45,30 +49,38 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         // Delete all the status data to avoid "confusion."
                         delete Lacuna.status;
 
-                        // Clear all the buildings data.
-                        //Buildings.buildings = {}; // Debug: good.
-                        //MapPlanet.renderPlanet(); // Debug: good.
-                        // Clear all the callback data as well..
-                        Buildings.destroy();
-
-                        // Do some logging so I can see what's going on.
-                        console.log(MapPlanet.buildings);//debug
-                        console.log(Buildings.buildings);//debug
-
                         // Kill everything in the queue.
                         Queue.killall();
 
-                        /* //debug
                         $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap')
                             .css('visibility', 'hidden');
                         $('#starsParent').css('visibility', 'visible');
 
                         Login.start();
-                        */ //end debug block
                     });
                 }
             });
         };
+
+        // What to do when the 'body' details change.
+        // Gets called via callback when a new body data is brought in.
+        scope.updateBody = function(o) {
+            var status = o.result.status || o.result,
+                body   = status.body
+            ;
+
+            if (body) {
+                $('#planets').html(Template.read.game_menu_planet({
+                    assetsUrl       : window.assetsUrl,
+                    planet_image    : body.image,
+                    planet_name     : body.name
+                }));
+            }
+
+            // In here we will populate the (basic) planet list.
+        };
+
+        Lacuna.callbacks.add(scope.updateBody);
     }
 
     return new Menu();
