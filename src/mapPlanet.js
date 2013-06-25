@@ -101,14 +101,13 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
                 _.each(o.result.buildings, function(item, key) {
                     scope.updateBuilding(item, key);
                 });
+
+                scope.finishPlanetView();
             }
             else {
-                // We're doing a planet *refresh* where I need to figure
-                // out the object game.
+                // TODO: figure out how to get the objects that have changed.
             }
-
-            scope.finishPlanetView();
-        }; 
+        };
 
         scope.updateBuilding = function(building, id) {
             var idStr      = scope.getIdStr(building.x, building.y),
@@ -137,7 +136,9 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
                 needs_repair     : building.efficiency < 100 ? 1 : 0
             }));
 
-            // TODO: Insert build timer handling here.
+            if (building.pending_build) {
+                Queue.addQueueItem(building.idStrCounter, building.pending_build.seconds_remaining);
+            }
 
             // Add the building the the cache.
             scope.buildings[idStr] = building;
@@ -162,11 +163,6 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
                 top     : (height / 2) - 550,
                 left    : (width / 2) - 550
             });
-        };
-
-        // Get the unique ID for a plot
-        scope.getIdStr = function(x, y) {
-            return 'plot_' + x + '_' + y;
         };
 
         // Called when the user clicks on a building.
@@ -209,6 +205,15 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
             });
             // Then the level/build number/image.
             $('#' + e.data.centerEl).css('display', 'none');
+        };
+
+        // Get the unique ID for a plot
+        scope.getIdStr = function(x, y) {
+            return 'plot_' + x + '_' + y;
+        };
+
+        scope.getBuildingAtCoords = function(x, y) {
+            return scope.buildings[scope.getIdStr(x, y)];
         };
     }
 

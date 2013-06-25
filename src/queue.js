@@ -54,11 +54,11 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
                 _.each(scope.queueItems, function(item, index) {
 
                     var increment = item.direction === 'up' ? 1 : -1,
-                        newTime   = Library.formatTime((item.currentTime * 1) + increment),
+                        newTime   = Library.formatTime(parseInt(item.currentTime, 10) + increment),
                         el        = document.getElementById(item.parent)
                     ;
 
-                    if (el) {
+                    if (el && parseInt(item.currentTime, 10) > 0 ) {
                         el.innerHTML = newTime;
 
                         // Update the object containing the actual value.
@@ -66,7 +66,7 @@ define(['jquery', 'underscore', 'library'], function($, _, Library) {
                     }
                     else {
                         // Something destroyed the element and it needs to be removed from
-                        // the queue.
+                        // the queue or the timer ran out.
                         scope.remQueueItem(item);
                     }
                 });
