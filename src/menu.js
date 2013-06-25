@@ -1,5 +1,5 @@
-define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body', 'queue'], 
-    function($, Lacuna, Template, Login, MapPlanet, MapStars, Body, Queue) {
+define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body', 'queue', 'empire'], 
+    function($, Lacuna, Template, Login, MapPlanet, MapStars, Body, Queue, Empire) {
     function Menu() {
         // Helper for jQuery's weird scope management.
         var scope = this;
@@ -15,7 +15,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
 
                     $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
                     
-                    MapStars.renderStars();
+                    MapStars.renderStars('');
                 }
             });
 
@@ -47,14 +47,14 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         $.cookie.destroy('lacuna-expanse-session');
                             
                         // Delete all the status data to avoid "confusion."
-                        delete Lacuna.status;
+                        Empire.destroy();
+                        Body.destroy(); 
 
                         // Kill everything in the queue.
                         Queue.killall();
 
-                        $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap')
+                        $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap, #starsParent')
                             .css('visibility', 'hidden');
-                        $('#starsParent').css('visibility', 'visible');
 
                         Login.start();
                     });
@@ -63,7 +63,9 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
         };
 
         // What to do when the 'body' details change.
-        // Gets called via callback when a new body data is brought in.
+        // This is for the planet information at the bottom of the screen, 
+         // *NOT* for the  body block of the status data. That's different.
+        // Gets called via callback when new body data is brought in.
         scope.updateBody = function(o) {
             var status = o.result.status || o.result,
                 body   = status.body

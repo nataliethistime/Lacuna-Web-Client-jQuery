@@ -112,14 +112,13 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
 
         scope.updateBuilding = function(building, id) {
             var idStr      = scope.getIdStr(building.x, building.y),
-                buildingEl = $('#' + idStr),
-                centerEl   = $('#' + idStr + '_center')
-            ;
+                buildingEl = $('#' + idStr);
             
             // Add some interesting things to the building.
             building.id    = id;
             building.idStr = idStr;
             building.idStrCenter = idStr + '_center';
+            building.idStrCounter = idStr + '_counter';
 
             // Make the CSS changes.
             buildingEl.css(
@@ -127,7 +126,18 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
                 'url(\'' + window.assetsUrl + '/planet_side/100/' + building.image + '.png\')'
             );
 
-            centerEl.addClass('buildings-level-center').html(building.level);
+            // Update the level and efficiency indicator.
+            buildingEl.html(Template.read.game_mapPlanet_building_level({
+                pending_build    : building.pending_build,
+                idStrCounter     : building.idStrCounter,
+                idStrCenter      : building.idStrCenter,
+                building_level   : building.level,
+                efficiency_width : 10,
+                efficiency       : building.efficiency,
+                needs_repair     : building.efficiency < 100 ? 1 : 0
+            }));
+
+            // TODO: Insert build timer handling here.
 
             // Add the building the the cache.
             scope.buildings[idStr] = building;
@@ -171,8 +181,7 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
                 // Open view panel.
                 BuildingType.view(scope.buildings[e.data.borderEl]);
             } else {
-                // Open build panel.
-                // TODO
+                // TODO: Open build panel.
                 Lacuna.alert("This is the build-a-building panel.");
             }
         };

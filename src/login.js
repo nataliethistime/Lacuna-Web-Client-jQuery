@@ -119,8 +119,8 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin) {
             deferredGetStatus.done(function(o) {
                 scope.panel.close();
                 // Log in to the planet view
-                $('#gameHeader, #gameFooter').css('visibility', 'visible');
-                $('#starsParent').css('visibility', 'hidden');
+                $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap').css('visibility', 'visible');
+                $('#starsParent, #menu_to_planetmap').css('visibility', 'hidden');
 
                 MapPlanet.showPlanet(require('empire').get.home_planet_id);
             });

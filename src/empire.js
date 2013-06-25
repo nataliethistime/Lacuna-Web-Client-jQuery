@@ -33,6 +33,11 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
                 ]
             });
         };
+
+        // Clears all data and callbacks.
+        scope.destroy = function() {
+            scope.get = {};
+        };
     }
 
     return new Empire();
