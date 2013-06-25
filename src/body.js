@@ -56,11 +56,10 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
             }
         };
 
-        // Clears all data and callbacks.
+        // Clears all data.
         scope.destroy = function() {
             scope.get = {};
             scope.surface_image = '';
-            scope.backgroundCallbacks.empty();
         };
 
         // Tell Lacuna to call Body.update when new body data comes in.
