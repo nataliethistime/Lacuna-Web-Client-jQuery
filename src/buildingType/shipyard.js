@@ -10,21 +10,18 @@ function($, Lacuna, Template, TmplBuildingShipyard) {
             return [
                 {
                     name: 'Build Queue',
-                    content: Template.read.building_shipyard_build_queue_tab(),
-                    select: scope.getQueueTab
+                    select: scope.populateQueueTab
                 },
                 {
                     name: 'Build Fleets',
-                    content: Template.read.building_shipyard_build_ship_tab()
+                    select: scope.populateBuildTab
                 }
             ];
         };
-        scope.addEvents = function(vBuilding, url) {
-        };
 
-        scope.getQueueTab = function(tab) {
+        scope.populateQueueTab = function(tab) {
             var deferredViewBuildQueue = Lacuna.send({
-                module  : url,
+                module  : '/shipyard',
                 method  : 'view_build_queue',
                 params  : [{
                     session_id      : Lacuna.getSession(),
@@ -32,6 +29,7 @@ function($, Lacuna, Template, TmplBuildingShipyard) {
                     no_paging       : 1
                 }]
             });
+
             deferredViewBuildQueue.done(function(o) {
                 var content = [];
 
@@ -48,6 +46,34 @@ function($, Lacuna, Template, TmplBuildingShipyard) {
                     tab.add('<span class="center">No ships are currently building at this Shipyard.</span>');
                 }
             });
+        };
+
+        scope.populateBuildTab = function(tab) {
+            var content              = [],
+                deferredGetBuildable = Lacuna.send({
+                module: '/shipyard',
+                method: 'get_buildable',
+
+                params: [
+                    Lacuna.getSession(),
+                     scope.building.id
+                ]
+            });
+
+            deferredGetBuildable.done(function(o) {
+                _.each(o.result.buildable, function(ship) {
+                    content.push(Template.read.building_shipyard_build_ship_item({
+                        ship: JSON.stringify(ship),
+                        assetsUrl: window.assetsUrl
+                    }));
+                });
+            });
+
+            tab.html([
+                '<ul>',
+                    content.join(''),
+                '</ul>'
+            ].join(''));
         };
     }
 

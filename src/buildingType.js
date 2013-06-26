@@ -231,7 +231,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                 up_water_cost   : Library.formatNum(vBuilding.upgrade.cost.water || 0),
                 up_energy_cost  : Library.formatNum(vBuilding.upgrade.cost.energy || 0),
                 up_waste_cost   : Library.formatNum(vBuilding.upgrade.cost.waste || 0),
-                up_time_cost    : Library.formatNum(vBuilding.upgrade.cost.time || 15),
+                up_time_cost    : Library.formatTime(vBuilding.upgrade.cost.time || 15),
                 up_food_bad     : parseInt(vBuilding.upgrade.cost.food, 10) > parseInt(Body.get.food_storage, 10),
                 up_ore_bad      : parseInt(vBuilding.upgrade.cost.ore, 10) > parseInt(Body.get.ore_storage, 10),
                 up_water_bad    : parseInt(vBuilding.upgrade.cost.water, 10) > parseInt(Body.get.water_storage, 10),

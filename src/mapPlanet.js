@@ -155,6 +155,7 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
             }
             
             $('#lacuna').css('background-image', image);
+            Body.surface_image = image;
         };
 
         Body.backgroundCallbacks.add(scope.updateSurface);
