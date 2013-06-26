@@ -22,7 +22,7 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                         widget_fleet_send   : Template.read.widget_fleet_send({})
                     }),
                     select  : function(e) {
-                        scope.addEvents(vBuilding, url);
+                        scope.addEvents(vBuilding, url, scope.eventGetAvailableFleet);
                     }
                 },
                 {
@@ -56,13 +56,14 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                     content.push(Template.read.building_space_port_view_toolbar({}));
                     _.each(o.result.fleets, function(fleet) {
                         content.push(Template.read.building_space_port_view_item({
-                            assetsUrl   : window.assetsUrl,
-                            fleet       : fleet,
-                            Library     : Library
+                            assetsUrl       : window.assetsUrl,
+                            fleet           : fleet,
+                            Library         : Library
                         }));
                     });
                 }
                 $("#fleet_view_details").html(content.join(''));
+                scope.addEvents(vBuilding, url, scope.viewAllFleets);
             });
         };
 
@@ -132,14 +133,15 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
             });
 
             deferredScuttleFleet.done(function(o) {
-                scope.viewAllFleets(e.data.vBuilding, e.data.url);
+                e.data.callback(e.data.vBuilding, e.data.url);
             });
             deferredScuttleFleet.always(function(status) {
                 // re-enable the event handler
                 e.data.domObj.one('click', '.fleet_scuttle_button', {
                     vBuilding   : e.data.vBuilding,
                     url         : e.data.url,
-                    domObj      : e.data.domObj
+                    domObj      : e.data.domObj,
+                    callback    : e.data.callback
                     }, scope.eventFleetScuttle
                 );
             });
@@ -208,9 +210,9 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                     content.push(Template.read.building_space_port_view_toolbar({}));
                     _.each(o.result.available, function(fleet) {
                         content.push(Template.read.building_space_port_view_item({
-                            assetsUrl   : window.assetsUrl,
-                            fleet       : fleet,
-                            Library     : Library
+                            assetsUrl       : window.assetsUrl,
+                            fleet           : fleet,
+                            Library         : Library
                         }));
                     });
                 }
@@ -224,7 +226,7 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                 $("#fleet_send_details").html(error.message);
             });
             deferredViewAvailableFleets.always(function(status) {
-                e.data.domObj.one('click', '#send_available_fleet_button', {
+                e.data.domObj.one('click', '#get_available_fleet_button', {
                     vBuilding   : e.data.vBuilding,
                     url         : e.data.url,
                     domObj      : e.data.domObj
@@ -249,6 +251,14 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                     timeArray   : $this.html().split(':'),
                     mode        : 'earliest'
                 });
+            });
+
+            // Update the
+            var notifyPromise = Library.notifyTimerInfinite(1000);
+            notifyPromise.progress(function(iteration) {
+                Lacuna.debug("Iteration ".iteration);
+            }).fail(function(e) {
+                Lacuna.debug(e);
             });
 
             // Now set up a one second timer to increment all the arrival time DOM objects.
@@ -279,7 +289,7 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
 
         scope.eventsAdded = 0;
 
-        scope.addEvents = function(vBuilding, url) {
+        scope.addEvents = function(vBuilding, url, callback) {
             // Make sure we only add them once.
             if (scope.eventsAdded) {
                 return;
@@ -301,7 +311,8 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
             $tab_parent.one('click', '.fleet_scuttle_button', {
                 vBuilding   : vBuilding, 
                 url         : url, 
-                domObj      : $tab_parent 
+                domObj      : $tab_parent,
+                callback    : callback
                 }, scope.eventFleetScuttle);
 
             $tab_parent.one('click', '.fleet_recall_button', {
@@ -310,7 +321,7 @@ function($, Lacuna, Library, Template, Body, TmplBuildingSpacePort, TmplWidgetsF
                 domObj      : $tab_parent 
                 }, scope.eventFleetRecall);
 
-            $tab_parent.one('click', '#send_available_fleet_button', {
+            $tab_parent.one('click', '#get_available_fleet_button', {
                 vBuilding   : vBuilding, 
                 url         : url,
                 domObj      : $tab_parent

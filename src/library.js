@@ -156,6 +156,35 @@ define(['jquery'], function($) {
             "uraninite",
             "zircon"
         ];
+        // function to return an interval with notification
+        //  'millis' is the time in milliseconds between notifications
+        //  'count'  is the number of times to iterate.
+        //  
+        this.notifyTimer = function(millis, count) {
+            var deferred = $.Deferred();
+            if (count <= 0) {
+                deferred.reject("Negative repeat count "+count);
+            }
+            var iteration = 0;
+            var id = setInterval(function() {
+                deferred.notify(++iteration, count);
+                if (iteration >= count) {
+                    clearInterval(id);
+                    deferred.resolve();
+                }
+            }, millis);
+            return deferred.promise();
+        };
+        // function to notify forever (well, at least until it goes out of scope)
+        //
+        this.notifyTimerInfinite = function(millis) {
+            var deferred = $.Deferred();
+            var iteration = 0;
+            var id = setInterval(function() {
+                deferred.notify(++iteration);
+            }, millis);
+            return deferred.promise();
+        };
     }
 
     return new Library();
