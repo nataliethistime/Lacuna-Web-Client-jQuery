@@ -145,8 +145,16 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
         };
 
         // What to do if the surface_image changes
-        scope.updateSurface = function(surface_image) {
-            $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/planet_side/" + surface_image + ".jpg')");
+        scope.updateSurface = function(surfaceImage) {
+            var image;
+            if (surfaceImage != '') {
+                image = "url('" + window.assetsUrl + "/planet_side/" + surfaceImage + ".jpg')";
+            }
+            else {
+                image = '';
+            }
+            
+            $('#lacuna').css('background-image', image);
         };
 
         Body.backgroundCallbacks.add(scope.updateSurface);

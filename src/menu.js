@@ -28,7 +28,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                     $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
                     
                     // Fire the callbacks to redisplay the planet image
-                    Body.backgroundCallbacks.fire();
+                    Body.backgroundCallbacks.fire('');
                 }
             });
             
@@ -53,8 +53,13 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         // Kill everything in the queue.
                         Queue.killall();
 
+                        // Hide everything.
                         $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap, #starsParent')
                             .css('visibility', 'hidden');
+
+                        // I think it feels nice to use the last planet surface
+                        // as the login background instead of the star field. :)
+                        //Body.backgroundCallbacks.fire('');
 
                         Login.start();
                     });

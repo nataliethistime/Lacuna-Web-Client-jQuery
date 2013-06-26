@@ -107,6 +107,10 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
         };
         
         scope.setupAbandonTab = function(tab) {
+            // Assigning click events to an element is very simple.
+            // The first parameter is a string name for the event to be 
+            // listened for. The second, is the function to called when the event
+            // is fired.
             $('#abandonPlanetButton').on('click', scope.abandonPlanet);
         };
 
@@ -159,6 +163,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
             deferedViewChains.done(function(o) {
 
                 // Fake data to test with as a real test case can't be setup.
+                /*
                 o.result.supply_chains = [{
                     "id" : "id-goes-here",
                     "from_body" : {
@@ -186,6 +191,7 @@ function($, Lacuna, Template, Body, Library, TmplBuildingPlanetaryCommand) {
                     "percent_transferred" : 64,
                     "stalled" : 1
                 }];//debug
+                */
 
                 if (o.result.supply_chains.length) {
                     var content = [];
