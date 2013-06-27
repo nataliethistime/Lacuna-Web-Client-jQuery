@@ -56,7 +56,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             });
 
             deferredView.done(function(o) {
-                var vBuilding = o.result.building,
+                var vBuilding = scope.vBuilding = o.result.building,
                     url       = pBuilding.url
                     tabs      = [{
                     name    : 'Production',
@@ -295,6 +295,9 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
 
             deferredUpgrade.done(function(o) {      
                event.data.panel.close();
+               
+               // Extend so that we're passing a complete vBuilding around.
+               require('mapPlanet').updateBuilding(_.extend(scope.vBuilding, o.result.building));
             });
         };
 
@@ -315,9 +318,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     });
                     deferredDowngrade.done(function(o) {
                         // Close the panel.
-                        event.data.panel.close(function() {
-                            // nothing to do, building updates take care of themselves now
-                        });
+                        event.data.panel.close();
+
+                        // Extend so that we're passing a complete vBuilding around.
+                        require('mapPlanet').updateBuilding(_.extend(scope.vBuilding, o.result.building));
                     });
                 }
             });
@@ -338,9 +342,10 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
                     });
                     deferredDemolish.done(function(o) {                        
                         // Close the panel.
-                        event.data.panel.close(function() {
-                            // nothing to do, building updates take care of themselves now
-                        });
+                        event.data.panel.close();
+
+                        // Extend so that we're passing a complete vBuilding around.
+                        require('mapPlanet').updateBuilding(_.extend(scope.vBuilding, o.result.building));
                     });
                 }
             });

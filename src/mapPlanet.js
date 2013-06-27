@@ -114,7 +114,7 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
                 buildingEl = $('#' + idStr);
             
             // Add some interesting things to the building.
-            building.id    = id;
+            building.id    = building.id || id;
             building.idStr = idStr;
             building.idStrCenter = idStr + '_center';
             building.idStrCounter = idStr + '_counter';
@@ -141,7 +141,14 @@ function($, _, Lacuna, Library, BuildingType, Template, Body, Queue, TmplMapPlan
             }
 
             // Add the building the the cache.
-            scope.buildings[idStr] = building;
+            // Make sure we don't destroy data that needs to be there.
+            // I.E. Server doesn't return URL when you upgrade a building.
+            if (!scope.buildings[idStr]) {
+                scope.buildings[idStr] = building;
+            }
+            else {
+                scope.buildings[idStr] = _.extend(scope.buildings[idStr], building);
+            }
         };
 
         // What to do if the surface_image changes
