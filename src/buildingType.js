@@ -136,6 +136,7 @@ define(['jquery', 'underscore', 'lacuna', 'library', 'template', 'body', 'panel'
             
             panel = Panel.newTabbedPanel({
                 draggable       : true,
+                resizable       : false,
                 name            : panelName,
                 preTabContent   : scope.getBuildingHeader(vBuilding, url),
                 tabs            : tabs

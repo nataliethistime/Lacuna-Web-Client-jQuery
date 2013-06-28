@@ -107,6 +107,14 @@ input.input_tiny {
     font-weight: bold;
 }
 
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration : underline;
+}
+
 .wide {
     width: 100%;
 }
@@ -282,7 +290,7 @@ input.input_tiny {
 }
 
 .smallImg {
-    display         : inline-block;
+    /*display         : inline-block;*/
     width           : 25px;
     vertical-align  : middle;
     text-align      : center;
@@ -435,9 +443,13 @@ ul.leaders span + span {
 }
 
 .small-margin {
-    margin-left: 1%;
+    margin-left: 5px;
 }
 
 .danger {
     color: red;
+}
+
+.no-wrap {
+    white-space: nowrap;
 }

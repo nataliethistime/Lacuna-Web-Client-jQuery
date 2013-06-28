@@ -49,7 +49,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
 
             // .. and then the Dialog that everything sits in.
             $dialogEl.dialog({
-                resizable   : true,
+                resizable   : panel.resizable,
                 draggable   : panel.draggable   || false,
                 width       : panel.width || scope.panelWidth,
                 show: {
@@ -75,9 +75,18 @@ function($, _, UI, Template, TmplTabbedPanel) {
                                     index   : ui.newTab.index(),
                                     add     : function(html) {
                                         $(ui.newTab.context.hash).append(html);
+
+                                        // If any buttons were added, do their fancy stuff.
+                                        $(ui.newTab.context.hash + ' :button').button();
                                     },
                                     html    : function(html) {
                                         $(ui.newTab.context.hash).html(html);
+
+                                        // If any buttons were added, do their fancy stuff.
+                                        $(ui.newTab.context.hash + ' :button').button();
+                                    },
+                                    gotoTab: function(index) {
+                                        this.tabEl.tabs('option', 'active', index);
                                     }
                                 };
                                 

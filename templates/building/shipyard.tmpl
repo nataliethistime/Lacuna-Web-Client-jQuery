@@ -4,29 +4,60 @@
 ]]>
 </script>
 
-<script id="building_shipyard_build_ship_item">
+<script id="building_shipyard_buildable_container">
 <![CDATA[
+    <div class="container" id="fleetsBuildableHeader">
+        <span>Message about number of ships that can be queued.</span>
+        <select>
+            <option value="all">All</option>
+            <option value="colonization">Colonization</option>
+            <option value="intelligence">Intelligence</option>
+            <option value="mining">Mining</option>
+            <option value="trade">Trade</option>
+            <option value="war">War</option>
+        </select>
 
-    <%= ship %><br /><hr /><br />
-  
-
-
-  <!--/*
-
-    <li id="yui-gen624">
-    <div class="yui-gb" style="margin-bottom:2px;" id="yui-gen672">
-        <div class="yui-u first" style="width:15%;background:transparent url(//d16cbq0l6kkf21.cloudfront.net/assets/star_system/field.png) no-repeat center;text-align:center;">        <img src="//d16cbq0l6kkf21.cloudfront.net/assets/ships/barge.png" style="width:100px;height:100px;" class="shipImage">    </div>
-        <div class="yui-u" style="width:63%">
-            <span class="shipName">Barge</span>:         
-            <div class="shipDesc" style="display: none;">Versatile transport ship. Can be used to push resources between your colonies, trade with other empires, or gather ore from mining platforms. <a href="http://community.lacunaexpanse.com/wiki/barge" target="_blank">More Information on Wiki</a></div>
-            <div><label style="font-weight:bold;">Cost:</label>            <span style="white-space:nowrap;"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/food.png" title="Food" class="smallFood">2541</span>            <span style="white-space:nowrap;"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/ore.png" title="Ore" class="smallOre">40273</span>            <span style="white-space:nowrap;"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/water.png" title="Water" class="smallWater">7429</span>            <span style="white-space:nowrap;"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/energy.png" title="Energy" class="smallEnergy">23851</span>            <span style="white-space:nowrap;"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/waste.png" title="Waste" class="smallWaste">4140</span>            <span style="white-space:nowrap;"><img src="//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/time.png" title="Time" class="smallTime">0:15</span>        </div>
-            <div><label style="font-weight:bold;">Attributes:</label><span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">Speed: </label>5951</span> <span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">Berth Level: </label>1</span> <span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">Hold Size: </label>470400</span> <span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">Max Occupants: </label>1344</span> <span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">Combat: </label>0</span> <span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">Stealth: </label>13181</span> </div>
-        </div>
-        <div class="yui-u" style="width:18%"> <input type="text" style="width:25px;" id="ship_barge" value="1"> <button type="button">Build</button></div>
+        <div id="fleetsBuildableContainer"></div>
     </div>
-    </li>
+]]> 
+</script>
 
-  */-->
+<script id="building_shipyard_build_fleet_item">
+<![CDATA[
+    <li style="margin-bottom: 2px; display: inline-block;">
+        <div class="left fleet_view_first">
+            <!-- Ship Image -->
+            <img style="height: 115px; width: 115px;" src="<%= assetsUrl %>/ships/<%= fleetType %>.png" />
+        </div>
+        <div class="left small-margin inline-block">
+            <label class="bold underline"><%= fleet.type_human %></label>
+            <div style="width: 400px;">
+                <span class="bold">Cost:</span>
+                <span class="smallImg no-wrap"><img class="smallFood" title="Food" src="<%= assetsUrl %>/ui/s/food.png" /><%= fleet.cost.food %></span>
+                <span class="smallImg no-wrap"><img class="smallWater" title="Water" src="<%= assetsUrl %>/ui/s/water.png" /><%= fleet.cost.water %></span>
+                <span class="smallImg no-wrap"><img class="smallOre" title="Ore" src="<%= assetsUrl %>/ui/s/ore.png" /><%= fleet.cost.ore %></span>
+                <span class="smallImg no-wrap"><img class="smallEnergy" title="Energy" src="<%= assetsUrl %>/ui/s/energy.png" /><%= fleet.cost.energy %></span>
+                <span class="smallImg no-wrap"><img class="smallWaste" title="Waste" src="<%= assetsUrl %>/ui/s/waste.png" /><%= fleet.cost.waste %></span>
+                <span class="smallImg no-wrap"><img class="smallTime" title="Time" src="<%= assetsUrl %>/ui/s/time.png" /><%= library.formatTime(fleet.cost.seconds) %></span>
+            </div>
+            <div style="width: 400px;">
+                <span class="bold">Attributes:</span>
+                <span class="small-margin no-wrap"><span class="italic">Berth Level: </span><%= fleet.attributes.berth_level %></span>
+                <span class="small-margin no-wrap"><span class="italic">Combat: </span><%= fleet.attributes.combat %></span>
+                <span class="small-margin no-wrap"><span class="italic">Hold Size: </span><%= fleet.attributes.hold_size %></span>
+                <br />
+                <span class="small-margin no-wrap"><span class="italic">Max Occupants: </span><%= fleet.attributes.max_occupants %></span>
+                <span class="small-margin no-wrap"><span class="italic">Speed: </span><%= fleet.attributes.speed %></span>
+                <span class="small-margin no-wrap"><span class="italic">Stealth: </span><%= fleet.attributes.stealth %></span>
+            </div>
+        </div>
+            <% if (fleet.can) { %>
+                <div class="right">
+                    <input type="text" value="1" id="<%= fleetType %>_quantity" style="width: 25px;" />
+                    <button type="button" id="<%= fleetType %>_button">Build</button>
+                </div>
+            <% } %>
+    </li><br />
 ]]>
 </script>
 </body>

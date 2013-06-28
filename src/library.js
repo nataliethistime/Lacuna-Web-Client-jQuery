@@ -12,39 +12,39 @@ define(['jquery'], function($) {
         };
 
         this.reduceNum = function(number) {
-            if(number >= 100000000000000000 || number <= -100000000000000000) {
+            if (number >= 100000000000000000 || number <= -100000000000000000) {
                 //101Q
                 return Math.floor(number/1000000000000000) + 'Q';
             }
-            else if(number >= 1000000000000000 || number <= -1000000000000000) {
+            else if (number >= 1000000000000000 || number <= -1000000000000000) {
                 //75.3Q
                 return (Math.floor(number/100000000000000) / 10) + 'Q';
             }
-            else if(number >= 100000000000000 || number <= -100000000000000) {
+            else if (number >= 100000000000000 || number <= -100000000000000) {
                 //101T
                 return Math.floor(number/1000000000000) + 'T';
             }
-            else if(number >= 1000000000000 || number <= -1000000000000) {
+            else if (number >= 1000000000000 || number <= -1000000000000) {
                 //75.3T
                 return (Math.floor(number/100000000000) / 10) + 'T';
             }
-            else if(number >= 100000000000 || number <= -100000000000) {
+            else if (number >= 100000000000 || number <= -100000000000) {
                 //101B
                 return Math.floor(number/1000000000) + 'B';
             }
-            else if(number >= 1000000000 || number <= -1000000000) {
+            else if (number >= 1000000000 || number <= -1000000000) {
                 //75.3B
                 return (Math.floor(number/100000000) / 10) + 'B';
             }
-            else if(number >= 100000000 || number <= -100000000) {
+            else if (number >= 100000000 || number <= -100000000) {
                 //101M
                 return Math.floor(number/1000000) + 'M';
             }
-            else if(number >= 1000000 || number <= -1000000) {
+            else if (number >= 1000000 || number <= -1000000) {
                 //75.3M
                 return (Math.floor(number/100000) / 10) + 'M';
             }
-            else if(number >= 10000 || number <= -10000) {
+            else if (number >= 10000 || number <= -10000) {
                 //123k
                 return Math.floor(number/1000) + 'k';
             }
@@ -84,16 +84,29 @@ define(['jquery'], function($) {
                 min = Math.floor(sleft / 60),
                 seconds = Math.floor(sleft % 60);
             if (day > 0) {
-                return [day, hour, min, seconds].join(':');
-            } else if (hour > 0) {
-                return [hour, min, seconds].join(':');
-            } else {
-                return [min, seconds].join(':');
+                return [day, this.lengthen(hour), this.lengthen(min), this.lengthen(seconds)].join(':');
+            }
+            else if (hour > 0) {
+                return [hour, this.lengthen(min), this.lengthen(seconds)].join(':');
+            }
+            else {
+                return [this.lengthen(min), this.lengthen(seconds)].join(':');
+            }
+        };
+
+        this.lengthen = function(number) {
+            number = number.toString();
+            
+            if (number.length === 1) {
+                return "0" + number;
+            }
+            else {
+                return number;
             }
         };
 
         this.upperFirstChar = function(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
+            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
         };
 
         this.foodTypes = [
