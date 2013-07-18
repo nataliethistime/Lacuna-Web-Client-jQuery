@@ -73,6 +73,32 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin) {
             });
 
             $('#loginButton').click(scope.login);
+            $('#empireCreateButton').click(scope.empire_create);
+        };
+
+        scope.empire_create = function() {
+            var empireName          = $('#empireName').val(),
+                empirePass          = $('#empirePass').val(),
+                empirePassConfirm   = $('#empirePassConfirm').val(),
+                empireEmail         = $('#empireEmail').val(),
+                empireDesc          = $('#empireDesc').val(),
+                empireFriendCode    = $('#empireFriendCode').val()
+            ;
+            var deferredCreate = Lacuna.send({
+                module  : '/empire',
+                method  : 'login',
+                params  : [{
+                    'name'              : $('#empireName').val(),
+                    'password'          : $('#empirePass').val(),
+                    'password1'         : $('#empirePassConfirm').val(),
+                    'captcha_guid'      : '1f4846e5-1d73-46d8-82c6-eddb6103d49e',
+                    'captcha_solution'  : $('#empireCaptcha').val(),
+                    'email'             : $('#empireEmail').val(),
+                    'invite_code'       : $('#empireFriendCode').val()
+                }]
+            });
+        //    deferredCreate.done(function(o) {
+                
         };
 
         scope.login = function() {

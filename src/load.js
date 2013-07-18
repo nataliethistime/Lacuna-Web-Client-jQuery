@@ -14,7 +14,7 @@ if (window.location.hash !== '') {
 require.config({
     paths: {
         jquery          : 'js/jquery',
-        jqueryUI        : 'js/jqueryUI',
+        jqueryUI        : 'js/jquery-ui-1.10.3.custom',
         zebra_cookie    : 'js/zebra_cookie',
         underscore      : 'js/underscore',
         templates       : '../templates'

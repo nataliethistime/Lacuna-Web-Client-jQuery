@@ -23,7 +23,88 @@
 
 <script id="login_create_empire_tab">
 <![CDATA[
-  Woot!
+  <form name="empireForm" autocomplete="no">
+    <table>
+      <tr>
+        <td>
+          <table>
+            <tr>
+              <td><label for="empireName" title="Empire name must be between 3 and 30 characters"><span class="requiredField">* </span>Empire Name</label></td>
+              <td><input type="text" id="empireName" maxlength="30"></td>
+            </tr>
+            <tr>
+              <td><label for="empirePass" title="Password must be between 6 and 30 characters long."><span class="requiredField">* </span>Password</label></td>
+              <td><input type="password" id="empirePass" maxlength="30"></td>
+            </tr>
+            <tr>
+              <td><label for="empirePass" title="Passwords must be the same."><span class="requiredField">* </span>Password Confirm</label></td>
+              <td><input type="password" id="empirePassConfirm" maxlength="30"></td>
+            </tr>
+            <tr>
+              <td><label for="empireEmail" title="Used for password recovery and notifications.">Email</label></td>
+              <td><input type="text" id="empireEmail"></td>
+            </tr>
+            <tr>
+              <td><label for="empireDesc" title="Description of your empire to show to other players.">Description</label></td>
+              <td><textarea id="empireDesc"></textarea></td>
+            </tr>
+            <tr>
+              <td><label for="empireFriendCode" title="If you don't have a friend invite code, this can be ignored.">Invite Code</label></td>
+              <td><input type="text" id="empireFriendCode"></td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table>
+            <tr>
+              <td colspan="2" width="300">
+                <img alt width="300" height="80" src="https://us1.lacunaexpanse.com//captcha/1f/1f4846e5-1d73-46d8-82c6-eddb6103d49e.png" id="empireCaptchaImage">
+              </td>
+              <td>
+                <button id="empireRefreshCaptcha" type="button">
+                  <img alt="Refresh" src="https://d16cbq0l6kkf21.cloudfront.net/assets/ui/s/refresh.png">
+                </button>
+              </td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <td>
+                <span class="requiredField">* </span><label for="empireCaptcha">Answer</label>
+              </td>
+              <td>
+                <input type="text" id="empireCaptcha">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="requiredField">* </span>
+              </td>
+              <td>
+                <input type="checkbox" id="empireAgreeTOS">
+                <label for="empireAgreeTOS">I agree to the <a href="http://www.lacunaexpanse.com/terms/" target="_blank">TOS</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="requiredField">* </span>
+              </td>
+              <td>
+                <input type="checkbox" id="empireAgreeRules">
+                <label for="empireAgreeRules">I agree to abide by <a href="http://www.lacunaexpanse.com/rules/" target="_blank">the rules</a>
+              </td>
+            </tr>
+           </table>
+         </td>
+      </tr>
+    </table>
+  </form>
+  <div class="ft">
+    <span class="button-group">
+      <button type="button" class="default" id="empireCreateButton" >Create</button>
+      <button type="button" id="empireCancelButton">Cancel</button>
+    </span>
+  </div>
 ]]>
 </script>
 
