@@ -1,5 +1,5 @@
-define(['jquery', 'template', 'zebra_cookie', 'mapPlanet', 'panel', 'lacuna', 'empire', 'text!templates/login.tmpl'],
-function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin) {
+define(['jquery', 'template', 'zebra_cookie', 'mapPlanet', 'panel', 'lacuna', 'empire', 'text!templates/login.tmpl', 'form_wizard'],
+function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard) {
 
     Template.loadStrings(TmplLogin);
     var empireName = $.cookie.read('lacuna-expanse-empire-name') || '';
@@ -74,6 +74,7 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin) {
 
             $('#loginButton').click(scope.login);
             $('#empireCreateButton').click(scope.empire_create);
+            $('#empireForm').formToWizard();
         };
 
         scope.empire_create = function() {

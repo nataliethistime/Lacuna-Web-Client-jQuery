@@ -17,17 +17,19 @@ require.config({
         jqueryUI        : 'js/jquery-ui-1.10.3.custom',
         zebra_cookie    : 'js/zebra_cookie',
         underscore      : 'js/underscore',
-        templates       : '../templates'
+        templates       : '../templates',
+        form_wizard     : 'js/formToWizard'
     },
     shim: {
-        jqueryUI: ['jquery'], // Attach jQueryUI to jQuery.
-        underscore: {
-            exports: '_'
+        jqueryUI        : ['jquery'], // Attach jQueryUI to jQuery.
+        underscore : {
+            exports     : '_'
         },
-        zebra_cookie: ['jquery'], // Attach zebra_cookie to jQuery.
+        zebra_cookie    : ['jquery'], // Attach zebra_cookie to jQuery.
+        form_wizard     : ['jquery'],
 
         // Bust caching of the JS files.
-        urlArgs : 'bust=' + new Date().getTime()
+        urlArgs         : 'bust=' + new Date().getTime()
     }
 });
 
