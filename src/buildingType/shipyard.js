@@ -18,7 +18,8 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
                     select: scope.getBuildable
                 },
                 {
-                    name: 'Repair Fleets'
+                    name: 'Repair Fleets',
+                    content: 'TODO'
                     // TODO
                 }
             ];
@@ -36,6 +37,7 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
             });
 
             deferredViewBuildQueue.done(function(o) {
+                scope.queueTab = tab;
                 scope.populateQueueTab(o.result.ships_building, tab);
             });
         };
@@ -47,17 +49,20 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
 
                 params: [
                     Lacuna.getSession(),
-                     scope.building.id
+                    scope.building.id
                 ]
             });
 
             deferredGetBuildable.done(function(o) {
-                scope.populateBuildableTab(o.result.buildable, tab);
+                scope.buildableTab = tab;
+                scope.populateBuildableTab(o.result.buildable);
             });
         };
 
-        scope.populateQueueTab = function(fleetsBuilding, tab) {
-            var content = [];
+        scope.populateQueueTab = function(fleetsBuilding) {
+            var content = [],
+                tab     = scope.QueueTab || 
+                Panel.getTabUtil('Shipyard ' + scope.building.level, 1);
 
             if (fleetsBuilding > 0) {
 
@@ -69,11 +74,11 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
             }
             else {
                 // No ships are currently building.
-                tab.add('<p class="centerText">No fleets are currently building at this Shipyard.</p>');
+                scope.queueTab.add('<p class="centerText">No fleets are currently building at this Shipyard.</p>');
             }
         };
 
-        scope.populateBuildableTab = function(buildable, tab) {
+        scope.populateBuildableTab = function(buildable) {
 
             var content = [],
                 keys    = _.keys(buildable).sort()
@@ -125,8 +130,8 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
                 }]
             });
 
-            deferredBuildFleet.done(function() {
-                // GOTO tab 0
+            deferredBuildFleet.done(function(o) {
+                scope.buildableTab.gotoTab(1);
                 scope.populateQueueTab(o.result.fleets_building);
             });
         };

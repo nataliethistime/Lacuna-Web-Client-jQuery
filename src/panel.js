@@ -11,7 +11,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
         // All the fun stuff with Panels.
         scope.newTabbedPanel = function(panel) {
             // Generate tabbed panel, see http://jqueryui.com/tabs/ for details
-            var DOMName = panel.name.replace(/\W/g,"_");
+            var DOMName = scope.getDOMName(panel.name);
 
             var tab_top = '',
                 tab_bottom = '';
@@ -86,7 +86,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
                                         $(ui.newTab.context.hash + ' :button').button();
                                     },
                                     gotoTab: function(index) {
-                                        this.tabEl.tabs('option', 'active', index);
+                                        $tabEl.tabs('option', 'active', index);
                                     }
                                 };
                                 
@@ -117,6 +117,15 @@ function($, _, UI, Template, TmplTabbedPanel) {
                     this.tabEl.tabs('option', 'active', index);
                 }
             };
+        };
+
+        scope.getDOMName = function(name) {
+            return name.replace(/\W/g,"_");
+        };
+
+        scope.getTabUtil = function(panelName, tabIndex) {
+            // <%= dom_name %>_Tab-<%= tab_id %>
+            
         };
     }
     
