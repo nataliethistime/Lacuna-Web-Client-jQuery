@@ -1,88 +1,60 @@
 <body id="login">
 <script id="login_main_tab">
 <![CDATA[
-  <table class="centerTable" id="loginPanel">
-    <tr>
-      <td><label>Empire Name</label></td>
-      <td><input type="text" id="empire" value="<%= empire_name %>" /></td>
-    </tr>
-    <tr>
-      <td><label>Password</label>
-      <td><input type="password" id="password" /></td>
-    </tr>
-    <tr>
-      <td><label>Remember Empire?</label></td>
-      <td>
-        <input id="rememberEmpire" type="checkbox" checked="checked" />
-        <button type="button" style="float:right;" id="loginButton">Login</button>
-      </td>
-    </tr>
-  </table>
+  <span class="input_title" title="Enter your empire name, not case sensitive">Empire Name</span>
+  <input type="text" id="empire" value="<%= empire_name %>" /><br />
+  <span class="input_title" title="Enter your password. Case sensitive">Password</span>
+  <input type="password" id="password" /><br />
+  <span class="input_title" title="Remember this empire on this computer">Remember Empire</span>
+  <input id="rememberEmpire" type="checkbox" checked="checked" /><br />
+  <button type="button" style="float:right;" id="loginButton">Login</button>
 ]]>
 </script>
 
 <script id="login_create_empire_tab">
 <![CDATA[
-    <style type="text/css">
-        fieldset { border: none; width:620px;}
-
-        #empireForm .title {
-            float   : left;
-            width   : 200px;
-            clear   : both;
-        }
-        .ftw_prev { float:left;}
-        .ftw_next { float:right;}
-        .speciesButton {margin-bottom: 10px;}
-
-        #steps { list-style:none; width:100%; overflow:hidden; margin:0px; padding:0px;}
-        #steps li {font-size:24px; float:left; padding:10px; color:#b0b1b3;}
-        #steps li span {font-size:11px; display:block;}
-        #steps li.current { color:#fff;}
-    </style>
-
   <form id="empireForm" autocomplete="no">
     <fieldset>
       <legend>Account Details</legend>
-      <span class="title" title="Empire name must be between 3 and 30 characters">Empire Name</span>
+      <span class="input_title" title="Empire name must be between 3 and 30 characters">Empire Name</span>
       <input type="text" id="empireName" maxlength="30"><br />
-      <span class="title" title="Password must be between 6 and 30 characters long.">Password</span>
+      <span class="input_title" title="Password must be between 6 and 30 characters long.">Password</span>
       <input type="password" id="empirePass" maxlength="30"><br />
-      <span class="title" title="Passwords must match.">Confirm Password</span>
+      <span class="input_title" title="Passwords must match.">Confirm Password</span>
       <input type="password" id="empirePassConfirm" maxlength="30"><br />
-      <span class="title" title="Used for password recovery and notifications.">Email</span>
+      <span class="input_title" title="Used for password recovery and notifications.">Email</span>
       <input type="text" id="empireEmail"><br />
-      <span class="title" title="If you don't have a friend invite code, this can be ignored.">Invite Code</span>
+      <span class="input_title" title="If you don't have a friend invite code, this can be ignored.">Invite Code</span>
       <input type="text" id="empireFriendCode"><br />
       
     </fieldset>
     <fieldset>
       <legend>Confirm your humanity</legend>
-      <span class="title" >
+      <span class="input_title" title="Get a new Captcha.">
         <button id="empireRefreshCaptcha" type="button" width="40">
-          <img alt="Refresh" src="https://d16cbq0l6kkf21.cloudfront.net/assets/ui/s/refresh.png">
+          <img alt="Get a new Captcha." src="https://d16cbq0l6kkf21.cloudfront.net/assets/ui/s/refresh.png">
         </button>
       </span>
-      <img style="margin-bottom: 10px;" width="300" height="80" src="https://us1.lacunaexpanse.com//captcha/1f/1f4846e5-1d73-46d8-82c6-eddb6103d49e.png" id="empireCaptchaImage"><br />
-      <span class="title" title="Answer to the Captcha.">Answer</span>
+      <img alt="Get a new Captcha." style="margin-bottom: 10px;" width="300" height="80" src="https://us1.lacunaexpanse.com//captcha/1f/1f4846e5-1d73-46d8-82c6-eddb6103d49e.png" id="empireCaptchaImage"><br />
+      <span class="input_title" title="Answer to the Captcha.">Answer</span>
       <input type="text" id="empireCaptcha"><br />
-      <span class="title" title="Agree to the TOCs">I agree to the <a href="http://www.lacunaexpanse.com/terms/" target="_blank">TOS</a></span>
+      <span class="input_title" title="Agree to the TOCs">I agree to the <a href="http://www.lacunaexpanse.com/terms/" target="_blank">TOS</a></span>
       <input type="checkbox" id="empireAgreeTOS"><br />
-      <span class="title" title="Agree to abide by the rules.">I agree to abide by <a href="http://www.lacunaexpanse.com/rules/" target="_blank">the rules</a></span>
+      <span class="input_title" title="Agree to abide by the rules.">I agree to abide by <a href="http://www.lacunaexpanse.com/rules/" target="_blank">the rules</a></span>
       <input type="checkbox" id="empireAgreeRules"><br />
     </fieldset>
     <fieldset>
       <legend>Create Species</legend>
-      <span style="margin-bottom: 10px;" class="title" title="Choose from one of these presets.">Presets</span>
-      <button class="speciesButton speciesAverage" type="button">Average</button>
-      <button class="speciesButton speciesResilient" type="button">Resilient</button>
-      <button class="speciesButton speciesWarmonger" type="button">Warmonger</button>
-      <button class="speciesButton speciesViral" type="button">Viral</button>
-      <button class="speciesButton speciesTrader" type="button">Trader</button>
+      <span style="margin-bottom: 10px;" class="input_title" title="Choose from one of these presets.">Presets</span>
+      <button class="big_bottom speciesAverage" type="button">Average</button>
+      <button class="big_bottom speciesResilient" type="button">Resilient</button>
+      <button class="big_bottom speciesWarmonger" type="button">Warmonger</button>
+      <button class="big_bottom speciesViral" type="button">Viral</button>
+      <button class="big_bottom speciesTrader" type="button">Trader</button>
       <br />
-      <span class="title" title="The name of your species.">Species Name</span>
+      <span class="input_title" title="The name of your species.">Species Name</span>
       <input type="text" id="empireSpecies"><br />
-      <span class="title" title="A Description of your species for others to see.">Species Description</span>
+      <span class="input_title" title="A Description of your species for others to see.">Species Description</span>
       <textarea id="empireSpeciesDesc"></textarea><br />
     </fieldset>
     <fieldset>

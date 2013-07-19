@@ -14,7 +14,7 @@
         $(submmitButtonName).hide();
 
         // 2
-        $(element).before("<ul id='steps'></ul>");
+        $(element).before("<ul id='ftw_steps'></ul>");
 
         steps.each(function(i) {
             $(this).wrap("<div id='step" + i + "'></div>");
@@ -25,7 +25,7 @@
             var name = $legend.html();
             $legend.hide();
 
-            $("#steps").append("<li id='stepDesc" + i + "'>Step " + (i + 1) + "<span>" + name + "</span></li>");
+            $("#ftw_steps").append("<li id='stepDesc" + i + "'>Step " + (i + 1) + "<span>" + name + "</span></li>");
 
             if (i == 0) {
                 createNextButton(i);
@@ -69,7 +69,7 @@
         }
 
         function selectStep(i) {
-            $("#steps li").removeClass("current");
+            $("#ftw_steps li").removeClass("current");
             $("#stepDesc" + i).addClass("current");
         }
 

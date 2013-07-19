@@ -370,6 +370,22 @@ input.input_tiny {
     text-align: center;
     line-height: 1;
 }
+
+.input_title {
+    float   : left;
+    width   : 200px;
+    clear   : both;
+}
+                          
+.ftw_prev { float:left;}
+.ftw_next { float:right;}
+.big_bottom {margin-bottom: 10px;}
+
+#ftw_steps { list-style:none; width:100%; overflow:hidden; margin:0px; padding:0px;}
+#ftw_steps li {font-size:24px; float:left; padding:10px; color:#b0b1b3;}
+#ftw_steps li span {font-size:11px; display:block;}
+#ftw_steps li.current { color:#fff;}
+
 li {
     line-height: normal;
 }
