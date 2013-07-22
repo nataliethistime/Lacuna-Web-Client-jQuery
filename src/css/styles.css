@@ -371,6 +371,7 @@ input.input_tiny {
     line-height: 1;
 }
 
+
 .input_title {
     float   : left;
     width   : 200px;
@@ -386,8 +387,39 @@ input.input_tiny {
 #ftw_steps li span {font-size:11px; display:block;}
 #ftw_steps li.current { color:#fff;}
 
+.tab_content {
+    text-align  : left;
+}
+
+.tab_content_half {
+    display     : inline-block; 
+    width       : 330px;
+    margin-right : 20px;
+}
+.input_title_short {
+    float   : left;
+    width   : 150px;
+    clear   : both;
+}
+
 li {
     line-height: normal;
+}
+
+.slider {
+    width   : 150px;
+    float   : right;
+    margin-bottom : 10px;
+}
+
+.slider_value {
+    width   : 30px;
+    float   : right;
+}
+
+#slider_total_points {
+    font-size   : 24px;
+    margin-bottom : 10px;
 }
 
 ul.leaders {

@@ -65,6 +65,16 @@ function($, _, UI, Template, TmplTabbedPanel) {
                     // Initialize Tabs when the Dialog opens.
                     $tabEl.tabs({
                         active      : 0, // Default, open the first tab.
+                        create      : function(event, ui) {
+                            // This tells us when the tab content has been created
+                            // so we can add event handlers on the content
+                            $.each(panel.tabs, function(key, value) {
+                                var tab = panel.tabs[key];
+                                if (typeof(tab.create) === 'function') {
+                                    tab.create();
+                                }
+                            });
+                        },
                         activate    : function(event, ui) {
                             var tab = panel.tabs[ui.newTab.index()];
                             
