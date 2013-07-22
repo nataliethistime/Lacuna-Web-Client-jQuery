@@ -20,7 +20,7 @@ function($, _, Template, Lacuna, TmplMapStars) {
         
         var defaults = {
             parentContainer     : '#starmap',   // The parent div to contain the starmap
-            zoomLevel           : 5,            // Default zoom level
+            zoomLevel           : 1,            // Default zoom level
             viewX               : 0,            // The start X unit in the starmap
             viewY               : 0,            // The start Y unit in the starmap
             tileWidth           : 70,           // Width of a tile in starmap units
@@ -378,7 +378,8 @@ function($, _, Template, Lacuna, TmplMapStars) {
                         tileHtml += star_div;
                         // Map each planet of this star onto the tile
                         var bodies = star.bodies;
-                        for (var b=0; b<bodies.length; b++) {
+
+                        for (var b=0; bodies && b<bodies.length; b++) {
                             var body        = bodies[b];
                             // An attempt to get sensible sizes for planets/asteroids
                             var image_size  = (body.size < 30 ? 50 : (body.size - 30) / 2 + 75) * scope.unitSizePx() / 100;
