@@ -60,21 +60,20 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
         };
 
         scope.populateQueueTab = function(fleetsBuilding) {
-            var content = [],
-                tab     = scope.QueueTab || 
-                Panel.getTabUtil('Shipyard ' + scope.building.level, 1);
+            var content = []
+            ;
 
             if (fleetsBuilding > 0) {
 
                 _.each(fleetsBuilding, function(fleet) {
                     content.push(Template.read.building_shipyard_build_ship_item({
-                        // TODO
+                        fleet : fleet
                     }));
                 });
             }
             else {
                 // No ships are currently building.
-                scope.queueTab.add('<p class="centerText">No fleets are currently building at this Shipyard.</p>');
+                scope.queueTab.html('<p class="centerText">No fleets are currently building at this Shipyard.</p>');
             }
         };
 

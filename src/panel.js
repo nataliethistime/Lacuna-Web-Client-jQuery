@@ -49,9 +49,9 @@ function($, _, UI, Template, TmplTabbedPanel) {
 
             // .. and then the Dialog that everything sits in.
             $dialogEl.dialog({
-                resizable   : panel.resizable,
-                draggable   : panel.draggable   || false,
-                width       : panel.width || scope.panelWidth,
+                resizable   : panel.resizable || false,
+                draggable   : panel.draggable || false,
+                width       : panel.width     || scope.panelWidth,
                 show: {
                     effect      : 'fade',
                     duration    : 500
@@ -131,11 +131,6 @@ function($, _, UI, Template, TmplTabbedPanel) {
 
         scope.getDOMName = function(name) {
             return name.replace(/\W/g,"_");
-        };
-
-        scope.getTabUtil = function(panelName, tabIndex) {
-            // <%= dom_name %>_Tab-<%= tab_id %>
-            
         };
     }
     
