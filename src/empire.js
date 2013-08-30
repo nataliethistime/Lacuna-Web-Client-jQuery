@@ -8,13 +8,15 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
         scope.get = {};
 
         // Callback method to be called whenever Lacuna.send is done
-        scope.update = function(o) {
-            if (o.result.status) {
-                // Empire data can come directly from the result or from the status
-                var empireData = o.result.status.empire || o.result.empire;
-                if ( ! _.isEqual(scope.get, empireData)) {
-                    scope.get = _.clone(empireData);
-                }
+        scope.update = function(newStatus) {
+            var newEmpire = newStatus.empire;
+
+            if (!newEmpire) {
+                return;
+            }
+            
+            if ( ! _.isEqual(scope.get, newEmpire)) {
+                scope.get = _.clone(newEmpire);
             }
         };
 
@@ -24,7 +26,7 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
 
         // Specific call to get the empire status (not usually needed)
         // 
-        scope.get_status = function() {
+        scope.getStatus = function() {
             var deferredStatus = Lacuna.send({
                 module  : '/empire',
                 method  : 'get_status',

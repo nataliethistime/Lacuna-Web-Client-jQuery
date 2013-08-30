@@ -122,7 +122,14 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
 
             deferred.done(function(data, status, xhr) {
                 // Inform everyone who is interested in a change in the data.
-                scope.callbacks.fire(data);
+
+                // The status block is at the 'root' of the object.
+                if (args.method == 'get_status') {
+                    scope.callbacks.fire(data.result);    
+                }
+                else if (data.result.status) {
+                    scope.callbacks.fire(data.result.status);
+                }
             });
 
             deferred.fail(function(jqXHR, textStatus, errorThrown) {
@@ -134,7 +141,14 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                     error = response.error || {message: 'Cannot read response.'};
                 
                 if (error.code === 1006) {
-                    $('#lacuna').html('');
+
+                    // Clear all the data that the client might be keeping
+                    // track of at the time the session expires.
+                    scope.clearData();
+
+                    // Show the login panel first so that the 'Session Expired'
+                    // alert is rendered on top of the panel.
+                    require('login').buildPanel();
                     scope.alert('Session expired. :(');
                 }
                 else {
@@ -162,8 +176,12 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
         scope.getSession = function() {
             return scope.sessionId || '';
         };
+
         scope.setSession = function(session) {
             scope.sessionId = session;
+
+            // Add the session Id to a cookie.
+            $.cookie.write('lacuna-expanse-session', session, 60 * 60 * 2); // 2 hours
         };
 
         scope.showPulser = function() {
@@ -193,6 +211,29 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
             $.getJSON(url, function(json) {
                 scope.resources = json;
             });
+        };
+
+        scope.clearData = function() {
+
+            // Remove the session cookie.
+            $.cookie.destroy('lacuna-expanse-session');
+
+            // Delete all the status data to avoid "confusion."            
+            require('empire').destroy();
+            require('body').destroy(); 
+
+            // Kill everything in the queue.
+            require('queue').killall();
+
+            // Hide everything.
+            $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap, #starsParent')
+                .css('visibility', 'hidden');
+
+            // I think it feels nice to use the last planet surface
+            // as the login background instead of the star field. :)
+            // If you disagree, uncomment this line, last I cared,
+            // it worked as it should.
+            //require('body').backgroundCallbacks.fire('');
         };
     }
     

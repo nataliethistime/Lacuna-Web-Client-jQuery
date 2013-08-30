@@ -42,26 +42,12 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         ]
                     });
 
+                    // I would like to put all this code inside a Game.logout
+                    // kind of function, but that would make a circular dependency.
                     deferred.done(function(o) {
-                        // Remove the session cookie.
-                        $.cookie.destroy('lacuna-expanse-session');
-                            
-                        // Delete all the status data to avoid "confusion."
-                        Empire.destroy();
-                        Body.destroy(); 
-
-                        // Kill everything in the queue.
-                        Queue.killall();
-
-                        // Hide everything.
-                        $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap, #menu_to_planetmap, #starsParent')
-                            .css('visibility', 'hidden');
-
-                        // I think it feels nice to use the last planet surface
-                        // as the login background instead of the star field. :)
-                        // If you disagree, uncomment this line, last I cared,
-                        // it worked as it should.
-                        //Body.backgroundCallbacks.fire('');
+                        if (o.result) {
+                            Lacuna.clearData();
+                        }
                     });
                 }
             });
@@ -69,22 +55,23 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
 
         // What to do when the 'body' details change.
         // This is for the planet information at the bottom of the screen, 
-         // *NOT* for the  body block of the status data. That's different.
+        // *NOT* for the  body block of the status data. That's different.
         // Gets called via callback when new body data is brought in.
-        scope.updateBody = function(o) {
-            var status = o.result.status || o.result,
-                body   = status.body
-            ;
+        scope.updateBody = function(newStatus) {
 
-            if (body) {
-                $('#planets').html(Template.read.game_menu_planet({
-                    assetsUrl       : window.assetsUrl,
-                    planet_image    : body.image,
-                    planet_name     : body.name
-                }));
+            var newBody = newStatus.body;
+
+            if (!newBody) {
+                return;
             }
 
-            // In here we will populate the (basic) planet list.
+            $('#planets').html(Template.read.game_menu_planet({
+               assetsUrl       : window.assetsUrl,
+                planet_image    : newStatus.body.image,
+                planet_name     : newStatus.body.name
+            }));
+                
+            // TODO: populate the planet list at the bottom of the screen.
         };
 
         Lacuna.callbacks.add(scope.updateBody);

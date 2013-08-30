@@ -10,10 +10,10 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         var scope = this;
 
         scope.innit = function() {
-            var session_id = $.cookie.read('lacuna-expanse-session') || '';
+            var sessionId = $.cookie.read('lacuna-expanse-session') || '';
             
-            if (session_id != '') {
-                scope.loginFromSessionCookie(session_id);
+            if (sessionId != '') {
+                scope.loginFromSessionCookie(sessionId);
             }
             else {
                 scope.buildPanel();
@@ -36,6 +36,14 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         };
 
         scope.buildPanel = function() {
+
+            // This function is called when the session expires. If this happens
+            // when the user was requesting a piece of the star map, it's most
+            // likely that multiple requests are coming through. Meaning, the
+            // session expired error was thrown multiple times. This should cure it.
+            if (scope.panelBuilt) {
+                return;
+            }
 
             // Build the Login Panel.
             scope.panel = Panel.newTabbedPanel({
@@ -74,6 +82,8 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
 
             // And for the standard hitting of the 'login' button.
             $('#loginButton').click(scope.login);
+
+            scope.panelBuilt = true;
         };
 
         scope.refreshCaptch = function() {
@@ -327,6 +337,8 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         scope.loginSuccess = function() {
             // This kicks things off for the first time. The response is monitored in lacuna.js
             // and callbacks are made to update the planet view and menus
+            console.log(require('empire').get);//debug
+            console.log(require('body').get);//debug
             var deferredGetStatus = Lacuna.send({
                 module  : '/body',
                 method  : 'get_status',
@@ -338,7 +350,14 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
             });
             
             deferredGetStatus.done(function(o) {
-                scope.panel.close();
+                // Need to make sure we don't attempt to close a panel that
+                // isn't there. Which would happen in the case of logging in
+                // from a session stored in a cookie.
+                if (scope.panelBuilt) {
+                    scope.panel.close();
+                    scope.panelBuilt = false;
+                }   
+
                 // Log in to the planet view
                 $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap').css('visibility', 'visible');
                 $('#starsParent, #menu_to_planetmap').css('visibility', 'hidden');
