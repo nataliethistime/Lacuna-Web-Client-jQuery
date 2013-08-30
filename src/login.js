@@ -148,8 +148,6 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         };
 
         scope.eventsCreateEmpireTab = function() {
-            // TODO: track down the code for Recaptcha.
-            /*
             Recaptcha.create(
                 // We need to get this from the lacuna.conf file
                 // TODO
@@ -160,7 +158,6 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                     callback    : Recaptcha.focus_response_field
                 }
             );
-*/
 
             var displayNext = 0;
             // Whenever we update the empire name, check if the name is already taken
