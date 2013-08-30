@@ -4,31 +4,29 @@ function($, Lacuna, MapPlanet, Login, Template, Panel, Menu, Queue, TmplGame) {
 
         Template.loadStrings(TmplGame);
 
-        this.start = function() {
-            Panel.panelWidth = 800; // pixels 
+        this.innit = function() {
+            Panel.panelWidth = 800; // pixels
 
-            var url = window.location.href;
-            // Remove any tailing 'index.html' or similar.
-            var n = url.lastIndexOf('/') + 1;
-            url = url.substring(0, n) + 'resources.json';
+            // Get the resources.json file loaded.
+            Lacuna.getResources();
             
-            $.getJSON(url, function(json) {
-                Lacuna.Resources = json;
-            });
-            
+            // Add in the HTML for the main game window.
             $('#lacuna').html(Template.read.game_main_screen({
                 assetsUrl       : window.assetsUrl
             }));
+
+            // Hide the UI elements not needed for the login screen.
             $('#gameHeader, #gameFooter')
                 .css('visibility', 'hidden');
 
-            Menu.renderMenu();
+            Menu.innit();
 
-            // Open the login screen.
-            Login.start();
-
-            // Start the main loop, which is used later.
+            // Start the main loop, which is used later. I think that it's
+            // easier to just run it throughout the existence of the client.
             Queue.start();
+            
+            // Open the login screen.
+            Login.innit();
         };
     }
     

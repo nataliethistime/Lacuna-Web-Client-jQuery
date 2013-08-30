@@ -69,11 +69,13 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
                 }]
             });
         };
- 
+        
+        // Check if we need to enable 'debug mode'
+        scope.debugMode = (window.debug || window.location.toString().search('debug') > 0);
+        
         // Posts a debug message if debug mode is switched on,
         // either via the URL parameter or window.debug
         // declared in index.html.
-        scope.debugMode = (window.debug || window.location.toString().search('debug') > 0);
         scope.debug = function(message) {
             // Check if debug mode is on.
             if (scope.debugMode) {
@@ -109,8 +111,7 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
             });
 
             scope.debug('Sending to server: ' + data);
-            var url = window.url;
-            url = url.substring(0, url.length - 1) + args.module;
+            var url = window.url.substring(0, window.url.length - 1) + args.module;
 
             var deferred = $.ajax({
                 data        : data,
@@ -130,9 +131,8 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
 
                 // Get the error block the server returned.
                 var response = $.parseJSON(jqXHR.responseText || ''),
-                    error = response.error || {
-                        message: 'Cannot read response.'
-                    };
+                    error = response.error || {message: 'Cannot read response.'};
+                
                 if (error.code === 1006) {
                     $('#lacuna').html('');
                     scope.alert('Session expired. :(');
@@ -173,15 +173,26 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
             $('#pulser').css('visibility', 'hidden');
         };
 
-        // Resources TODO: Not sure this belongs in here...
+        // TODO: Not sure this belongs in here...
         scope.getBuildingDesc = function(url) {
             return [
-                scope.Resources.buildings[url].description || '',
+                scope.resources.buildings[url].description || '',
                 '<br />',
-                '<a href="', scope.Resources.buildings[url].wiki, '" target="_blank">',
+                '<a href="', scope.resources.buildings[url].wiki, '" target="_blank">',
                 ' More information on the Wiki.',
                 '</a>'
             ].join('');
+        };
+
+        scope.getResources = function() {
+            var url = window.location.href;
+
+            // Remove any tailing 'index.html' or similar.
+            url = url.substring(0, url.lastIndexOf('/') + 1) + 'resources.json';
+            
+            $.getJSON(url, function(json) {
+                scope.resources = json;
+            });
         };
     }
     

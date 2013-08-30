@@ -44,5 +44,5 @@ requirejs(['jquery', 'game'], function($, Game) {
     }
 
     // Now that everything is loaded, start the game! :D
-    Game.start();
+    Game.innit();
 });

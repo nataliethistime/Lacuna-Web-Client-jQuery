@@ -9,9 +9,10 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        scope.start = function() {
-            var session_id = $.cookie.read('lacuna-expanse-session');
-            if (session_id) {
+        scope.innit = function() {
+            var session_id = $.cookie.read('lacuna-expanse-session') || '';
+            
+            if (session_id != '') {
                 scope.loginFromSessionCookie(session_id);
             }
             else {
@@ -19,21 +20,18 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
             }
         };
 
-        scope.loginFromSessionCookie = function(session_id) {
-            Lacuna.send({
-                module: '/empire',
-                method: 'get_status',
+        scope.loginFromSessionCookie = function(sessionId) {
+            var deferredStatus = Lacuna.send({
+                module : '/empire',
+                method : 'get_status',
+                params : [
+                    sessionId
+                ]
+            });
 
-                params: [
-                    session_id
-                ],
-
-                success: function(o) {
-                    Lacuna.setSession(session_id);
-
-                    scope.loginSuccess();
-                },
-                scope: this
+            deferredStatus.done(function(o) {
+                Lacuna.setSession(sessionId);
+                scope.loginSuccess();
             });
         };
 
@@ -45,21 +43,28 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                 tabs: [
                     {
                         name        : 'Login',
-                        content     : scope.contentLoginTab()
+                        content     : Template.read.login_main_tab({
+                            empire_name : empireName
+                        })
                     },
                     {
                         name        : 'Create Empire',
-                        content     : scope.contentCreateEmpireTab(),
+                        content     : Template.read.login_create_empire_tab({
+                            // TODO
+                        }),
                         create      : scope.eventsCreateEmpireTab
                     },
                     {
                         name        : 'Forgot Password?',
-                        content     : scope.contentForgotPasswordTab()
+                        content     : Template.read.login_forgot_password_tab({
+                            // TODO
+                        })
                     }
                 ]
             });
 
-            // Add the login event handlers.
+            // Add the login event handlers for when the user hits the 'enter'
+            // key on their keyboard.
             $('#empire, #password').keydown(function(event) {
                 // Check if the 'enter' key was hit.
                 if (event.which === 13) {
@@ -67,22 +72,8 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                 }
             });
 
+            // And for the standard hitting of the 'login' button.
             $('#loginButton').click(scope.login);
-        };
-
-        scope.contentLoginTab = function() {
-            return Template.read.login_main_tab({
-                empire_name : empireName
-            });
-        };
-
-        scope.contentCreateEmpireTab = function() {
-            return Template.read.login_create_empire_tab({
-            });
-        };
-
-        scope.contentForgotPasswordTab = function() {
-            return Template.read.login_forgot_password_tab({});
         };
 
         scope.refreshCaptch = function() {
@@ -95,6 +86,7 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                 method  : 'fetch_captcha',
                 params  : [{}]
             });
+
             deferredFetchCaptcha.done(function(o) {
                 $('#empireCaptchaImg').attr('src', o.result.url);
             });
@@ -146,6 +138,8 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         };
 
         scope.eventsCreateEmpireTab = function() {
+            // TODO: track down the code for Recaptcha.
+            /*
             Recaptcha.create(
                 // We need to get this from the lacuna.conf file
                 // TODO
@@ -156,6 +150,7 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                     callback    : Recaptcha.focus_response_field
                 }
             );
+*/
 
             var displayNext = 0;
             // Whenever we update the empire name, check if the name is already taken
@@ -337,6 +332,7 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                 method  : 'get_status',
                 params  : [{
                     'session_id'    : Lacuna.getSession(),
+                    // Fresh require() so that values are updated.
                     'body_id'       : require('empire').get.home_planet_id
                 }]
             });

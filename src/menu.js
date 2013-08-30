@@ -4,7 +4,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
         // Helper for jQuery's weird scope management.
         var scope = this;
 
-        scope.renderMenu = function() {
+        scope.innit = function() {
             $('#menu_to_starmap').on({
                 click: function(e) {
                     $('#buildingsParent , #menu_to_starmap')
@@ -59,9 +59,9 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
 
                         // I think it feels nice to use the last planet surface
                         // as the login background instead of the star field. :)
+                        // If you disagree, uncomment this line, last I cared,
+                        // it worked as it should.
                         //Body.backgroundCallbacks.fire('');
-
-                        Login.start();
                     });
                 }
             });

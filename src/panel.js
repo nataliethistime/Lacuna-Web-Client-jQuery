@@ -13,7 +13,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
             // Generate tabbed panel, see http://jqueryui.com/tabs/ for details
             var DOMName = scope.getDOMName(panel.name);
 
-            var tab_top = '',
+            var tab_top    = '',
                 tab_bottom = '';
 
             for (var i=0; i < panel.tabs.length; i++) {
