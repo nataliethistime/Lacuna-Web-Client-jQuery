@@ -304,6 +304,9 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
 
         scope.login = function() {
             empireName      = $('#empire').val();
+            // While we are testing this thing on icy's private testing server,
+            // each empire has the same password and we can just log into any
+            // empire that is convenient.
             empirePassword  = Lacuna.debugMode ? 'secret56' : $('#password').val();
 
             var deferredLogin = Lacuna.send({
@@ -334,8 +337,7 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
         scope.loginSuccess = function() {
             // This kicks things off for the first time. The response is monitored in lacuna.js
             // and callbacks are made to update the planet view and menus
-            console.log(require('empire').get);//debug
-            console.log(require('body').get);//debug
+            
             var deferredGetStatus = Lacuna.send({
                 module  : '/body',
                 method  : 'get_status',
@@ -359,6 +361,7 @@ function($, Template, Z, MapPlanet, Panel, Lacuna, Empire, TmplLogin, FormWizard
                 $('#gameHeader, #gameFooter, #buildingsParent, #menu_to_starmap').css('visibility', 'visible');
                 $('#starsParent, #menu_to_planetmap').css('visibility', 'hidden');
 
+                // And finally, innit the planet view for the first time!
                 MapPlanet.showPlanet(require('empire').get.home_planet_id);
             });
         };

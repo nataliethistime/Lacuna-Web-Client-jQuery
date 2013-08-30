@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
             if (!newEmpire) {
                 return;
             }
-            
+
             if ( ! _.isEqual(scope.get, newEmpire)) {
                 scope.get = _.clone(newEmpire);
             }
@@ -23,18 +23,6 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
         // Tell Lacuna to call Empire.update when new empire data comes in.
         // Note: needs to be defined after the definition of scope.update.
         Lacuna.callbacks.add(scope.update);
-
-        // Specific call to get the empire status (not usually needed)
-        // 
-        scope.getStatus = function() {
-            var deferredStatus = Lacuna.send({
-                module  : '/empire',
-                method  : 'get_status',
-                params  : [
-                    Lacuna.getSession()
-                ]
-            });
-        };
 
         // Clears all data.
         scope.destroy = function() {

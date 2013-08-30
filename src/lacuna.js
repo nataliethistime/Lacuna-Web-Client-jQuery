@@ -123,8 +123,11 @@ define(['jquery', 'underscore', 'jqueryUI'], function($, _) {
             deferred.done(function(data, status, xhr) {
                 // Inform everyone who is interested in a change in the data.
 
-                // The status block is at the 'root' of the object.
-                if (args.method == 'get_status') {
+                // The surface image of a planet is returned in a special body
+                // block in a get_buildings request. Get over it. In other cases,
+                // the status block is at the 'root' of the object. Both cases can
+                // be handled in the same manner.
+                if (args.method === 'get_status' || args.method === 'get_buildings') {
                     scope.callbacks.fire(data.result);    
                 }
                 else if (data.result.status) {

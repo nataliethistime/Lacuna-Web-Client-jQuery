@@ -25,10 +25,7 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         .css('visibility', 'visible');
                     $('#starsParent, #menu_to_planetmap')
                         .css('visibility', 'hidden');
-                    $('#lacuna').css('background-image', "url('" + window.assetsUrl + "/star_system/field.png')");
-                    
-                    // Fire the callbacks to redisplay the planet image
-                    Body.backgroundCallbacks.fire('');
+                    $('#lacuna').css('background-image', Body.surface_image);
                 }
             });
             
@@ -42,11 +39,10 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
                         ]
                     });
 
-                    // I would like to put all this code inside a Game.logout
-                    // kind of function, but that would make a circular dependency.
                     deferred.done(function(o) {
                         if (o.result) {
                             Lacuna.clearData();
+                            Login.buildPanel(); // fall back to the login screen.
                         }
                     });
                 }
@@ -61,14 +57,16 @@ define(['jquery', 'lacuna', 'template', 'login', 'mapPlanet', 'mapStars', 'body'
 
             var newBody = newStatus.body;
 
-            if (!newBody) {
+            // We are always being passed a body block, just need to make sure
+            // it has what we want in it.
+            if (!newBody || !newBody.name || !newBody.image) {
                 return;
             }
 
             $('#planets').html(Template.read.game_menu_planet({
-               assetsUrl       : window.assetsUrl,
-                planet_image    : newStatus.body.image,
-                planet_name     : newStatus.body.name
+               assetsUrl        : window.assetsUrl,
+                planet_image    : newBody.image,
+                planet_name     : newBody.name
             }));
                 
             // TODO: populate the planet list at the bottom of the screen.

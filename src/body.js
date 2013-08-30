@@ -11,11 +11,6 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
 
         // Update the body data with the data returned from the server
         scope.update = function(newStatus) {
-            // body information can be in one of
-            //   'result.status.body'   # Complete data of the body
-            //   'result.body'          # Complete data of the body
-            //   'result.body'          # only the 'surface_image' in the case of call to get_buildings
-            //
 
             var newBody = newStatus.body;
 
@@ -23,15 +18,15 @@ define(['jquery', 'underscore', 'lacuna'], function($, _, Lacuna) {
                 return;
             }
 
-            console.log(newBody);//debug
+            if (newBody.surface_image && scope.surface_image !== newBody.surface_image) {
+                scope.surface_image = newBody.surface_image;
+                scope.backgroundCallbacks.fire(scope.surface_image);
+            }
 
-            // Just merge the fucking thing.
+            // Just merge the fucking thing. 'nuff said.
             if ( ! _.isEqual(scope.get, newBody)) {
                 _.extend(scope.get, newBody);
             }
-
-            // TODO: code something that updates the surface image of a body.
-            // TODO: code something that updates the planet info and list at the bottom of the screen.
         };
 
         // General purpose destroy method, used when the game logs out.
