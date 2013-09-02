@@ -16,16 +16,16 @@ function($, _, UI, Template, TmplTabbedPanel) {
             var tab_top    = '',
                 tab_bottom = '';
 
-            for (var i=0; i < panel.tabs.length; i++) {
+            for (var i = 0; i < panel.tabs.length; i++) {
                 var tab = panel.tabs[i];
                 tab_top += Template.read.widget_tabbed_panel_tab_top({
                     dom_name    : DOMName,
-                    tab_id      : i+1,
+                    tab_id      : i + 1,
                     tab_name    : tab.name
                 });
                 tab_bottom += Template.read.widget_tabbed_panel_tab_bottom({
                     dom_name    : DOMName,
-                    tab_id      : i+1,
+                    tab_id      : i + 1,
                     tab_content : tab.content
                 });
             }
@@ -61,7 +61,7 @@ function($, _, UI, Template, TmplTabbedPanel) {
                     duration    : 500
                 },
                 
-                open: function() {
+                create: function() {
                     // Initialize Tabs when the Dialog opens.
                     $tabEl.tabs({
                         active      : 0, // Default, open the first tab.
