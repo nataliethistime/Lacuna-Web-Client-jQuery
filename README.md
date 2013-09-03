@@ -68,7 +68,7 @@ nightmare that Lacuna-Server-Open got into. (see the network graph about 12
 months ago for an example).
 
 # First Principles
-    Do not use the github 'Merge pull request' Button, ever.
+    Do not use the Github 'Merge pull request' Button, ever.
     Do not use 'git pull origin master'
     Do not use 'git merge master'
     Always use 'git pull --ff-only origin master'
@@ -95,7 +95,7 @@ This is what has happened.
          /
     D---E---F       master (on your local)
 
-The last time you pulled down the code from the origin (github) was at revision
+The last time you pulled down the code from the origin (Github) was at revision
 E. You since committed change F locally.
 
 Meanwhile someone else pulled down the same revision, E and made changes A and B.
@@ -133,10 +133,8 @@ public, then someone else may have your original changes and things can get in a
 mess. There are ways around this, but it requires a deeper understanding than I
 can impart in these comments!
 
-When, and only when, you have merged from the master repository (currently vasari)
-in this way, you can push your changes to your own repository on github.
-
-(sorry this was so long, I did not have sufficient time to make it shorter).
+When, and only when, you have merged from the master repository (currently Vasari)
+in this way, you can push your changes to your own repository on Github.
 
 
 ###Merging to gh-pages
@@ -153,19 +151,10 @@ in this way, you can push your changes to your own repository on github.
 
     $ git checkout master
     $ git pull --ff-only origin master
-    $ git remote add tmtowtdi http://github.com/tmtowtdi/Lacuna-Web-Client-jQuery.git
+    $ git remote add tmtowtdi http://Github.com/tmtowtdi/Lacuna-Web-Client-jQuery.git
     $ git fetch tmtowtdi
     $ git checkout tmtowtdi/master
     $ git rebase master
     $ git checkout master
     $ git merge --ff-only tmtowtdi/master
     $ git push origin master
-
-Grunt 'n' stuff Notes
-=====================
-
-The source urls for the libraries used in this project are. (Note, I plan to write a script that automatically updates all of these)
-
-* jQuery - http://code.jquery.com/jquery-latest.js
-* RequireJs - https://raw.github.com/jrburke/requirejs/master/require.js
-* Zebra_Cookie - https://raw.github.com/stefangabos/Zebra_Cookie/master/public/javascript/zebra_cookie.src.js
