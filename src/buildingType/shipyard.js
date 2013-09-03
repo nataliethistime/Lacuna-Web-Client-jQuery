@@ -38,7 +38,7 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
 
             deferredViewBuildQueue.done(function(o) {
                 scope.queueTab = tab;
-                scope.populateQueueTab(o.result.ships_building, tab);
+                scope.populateQueueTab(o.result.ships_building);
             });
         };
 
@@ -63,18 +63,23 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
             var content = []
             ;
 
-            if (fleetsBuilding > 0) {
-
-                _.each(fleetsBuilding, function(fleet) {
-                    content.push(Template.read.building_shipyard_build_ship_item({
-                        fleet : fleet
-                    }));
-                });
-            }
-            else {
+            if (!fleetsBuilding.length) {
                 // No ships are currently building.
                 scope.queueTab.html('<p class="centerText">No fleets are currently building at this Shipyard.</p>');
+                return;
             }
+
+            while (fleetsBuilding.length) {
+                var fleet = fleetsBuilding.pop();
+
+                content.push(Template.read.building_shipyard_build_queue_item({
+                    fleet : fleet
+                }));
+            }
+
+            console.log(scope);//debug
+            // undefined because the tab has never been selected. Fuck.
+            scope.queueTab.html(content.join(''));
         };
 
         scope.populateBuildableTab = function(buildable) {
@@ -131,6 +136,7 @@ function($, _, Lacuna, Template, Library, TmplBuildingShipyard) {
 
             deferredBuildFleet.done(function(o) {
                 scope.buildableTab.gotoTab(1);
+                console.log(o);//debug
                 scope.populateQueueTab(o.result.fleets_building);
             });
         };

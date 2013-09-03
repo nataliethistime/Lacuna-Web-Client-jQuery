@@ -7,7 +7,7 @@
 <script id="building_shipyard_buildable_container">
 <![CDATA[
     <div class="container" id="fleetsBuildableHeader">
-        <span>Message about number of ships that can be queued.</span>
+        <span>TODO: Message about number of ships that can be queued.</span>
         <select>
             <option value="all">All</option>
             <option value="colonization">Colonization</option>
@@ -22,11 +22,18 @@
 ]]> 
 </script>
 
+<script type="building_shipyard_build_queue_item">
+<![CDATA[
+    <%= JSON.stringify(fleet) %>
+    <br />
+    <br />
+]]>
+</script>
+
 <script id="building_shipyard_build_fleet_item">
 <![CDATA[
     <li style="margin-bottom: 2px; display: inline-block;">
         <div class="left fleet_view_first">
-            <!-- Ship Image -->
             <img style="height: 115px; width: 115px;" src="<%= assetsUrl %>/ships/<%= fleetType %>.png" />
         </div>
         <div class="left small-margin inline-block">
