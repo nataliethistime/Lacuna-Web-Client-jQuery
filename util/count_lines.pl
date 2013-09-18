@@ -33,7 +33,6 @@ sub wanted {
     if (m/\.js$|\.tmpl$|\.pl$/i and
         $File::Find::dir !~ m/src\/js/i and
         $File::Find::dir !~ m/node_modules/i and
-        not $_ eq 'r.js' and
         not $_ eq 'Lacuna-Web-Client-jQuery-Build.js') {
 
         say('Reading ' . $File::Find::name) if ($debug);
