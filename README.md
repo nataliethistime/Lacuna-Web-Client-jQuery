@@ -1,3 +1,6 @@
+###Thanks to all those who contributed, but this project is no longer moving.:(
+
+
 Lacuna-Web-Client-jQuery
 ========================
 
